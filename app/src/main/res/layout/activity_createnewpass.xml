@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
+
+    <ImageView
+        android:id="@+id/blobTop"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:src="@drawable/blob1"
+        android:scaleType="fitXY"
+        app:layout_constraintTop_toTopOf="parent"
+
+        />
+
+    <TextView
+    android:id="@+id/txtForgot"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="Tạo mật khẩu mới"
+    app:layout_constraintTop_toBottomOf="@id/blobTop"
+    app:layout_constraintStart_toStartOf="parent"
+    android:layout_marginStart="20dp"
+    android:textSize="30sp"
+    android:textStyle="bold"
+    android:layout_marginTop="60dp"
+    android:textColor="@android:color/black"/>
+
+    <TextView
+    android:id="@+id/txtDescription"
+    android:layout_width="400dp"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="20dp"
+    android:layout_marginTop="8dp"
+    android:paddingStart="10dp"
+
+    android:text="Nhập địa chỉ email liên kết với tài khoản của bạn và chúng tôi sẽ gửi một email kèm hướng dẫn để đặt lại mật khẩu của bạn."
+    android:textColor="#a2a2a2"
+    android:textSize="17sp"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintHorizontal_bias="1.0"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/txtForgot" />
+
+
+
+
+    <com.google.android.material.textfield.TextInputLayout
+    android:id="@+id/password"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    app:endIconMode="password_toggle"
+    app:layout_constraintTop_toBottomOf="@id/txtDescription"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    android:layout_marginTop="20dp"
+        >
+    <com.google.android.material.textfield.TextInputEditText
+        android:layout_width="390dp"
+        android:layout_height="wrap_content"
+        android:hint="Mật khẩu mới"
+        android:inputType="textPassword" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+    android:id="@+id/RePassword"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    app:endIconMode="password_toggle"
+    app:layout_constraintTop_toBottomOf="@id/password"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    android:layout_marginTop="20dp"
+        >
+    <com.google.android.material.textfield.TextInputEditText
+        android:layout_width="390dp"
+        android:layout_height="wrap_content"
+        android:hint="xác nhận mật khẩu"
+        android:inputType="textPassword" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <Button
+    android:id="@+id/btnRegister"
+    android:layout_width="300dp"
+    android:layout_height="wrap_content"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:backgroundTint="@null"
+    app:layout_constraintTop_toBottomOf="@id/RePassword"
+    android:layout_marginTop="20dp"
+    android:background="@drawable/button"
+    android:backgroundTint="#55ACFE"
+    android:text="Đăng ký"
+    android:textSize="20sp"
+    android:padding="10dp"
+    android:textStyle="bold"
+    android:textColor="@android:color/white"
+        />
+
+
+
+
+
+
+
+
+    <ImageView
+        android:id="@+id/blobBottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:src="@drawable/blob2"
+        android:scaleType="fitXY"
+
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+
+
