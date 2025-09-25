@@ -109,7 +109,7 @@
 
 
     <LinearLayout
-        android:id="btnGG"
+        android:id="@+id/btnGG"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:background="@drawable/button"
