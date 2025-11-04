@@ -53,6 +53,7 @@
 
 
     <Button
+        android:id="@+id/get_started"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:text="Get Start"

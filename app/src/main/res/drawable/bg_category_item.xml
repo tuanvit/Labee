@@ -1,0 +1,16 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- lớp bóng -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#33000000"/> <!-- màu bóng -->
+            <corners android:radius="12dp"/>
+        </shape>
+    </item>
+    <!-- lớp chính -->
+    <item android:left="0dp" android:top="0dp">
+        <shape android:shape="rectangle">
+            <solid android:color="#FFFFFF"/>
+            <corners android:radius="12dp"/>
+        </shape>
+    </item>
+</layer-list>

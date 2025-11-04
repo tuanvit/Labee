@@ -4,4 +4,11 @@
         <!-- Customize your dark theme here. -->
         <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
     </style>
+    
+    <style name="Theme.Lazabee" parent="Base.Theme.Lazabee" />
+    
+    <style name="Theme.Lazabee.NoActionBar" parent="Theme.Lazabee">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
 </resources>

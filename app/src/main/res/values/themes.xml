@@ -4,6 +4,11 @@
     </style>
 
     <style name="Theme.Lazabee" parent="Base.Theme.Lazabee" />
+    
+    <style name="Theme.Lazabee.NoActionBar" parent="Theme.Lazabee">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
 
     <style name="OtpEditTextStyle">
         <item name="android:layout_width">50dp</item>
