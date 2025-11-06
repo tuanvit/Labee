@@ -23,7 +23,7 @@ public class FavoriteController {
             HttpServletRequest httpRequest) {
         String userId = (String) httpRequest.getAttribute("userId");
         FavoriteResponse response = favoriteService.addToFavorites(userId, productId);
-        return ResponseEntity.ok(ApiResponse.success(response, "Added to favorites successfully"));
+        return ResponseEntity.ok(ApiResponse.success("Added to favorites successfully", response));
     }
 
     @GetMapping
@@ -39,7 +39,7 @@ public class FavoriteController {
             HttpServletRequest httpRequest) {
         String userId = (String) httpRequest.getAttribute("userId");
         favoriteService.removeFromFavorites(userId, productId);
-        return ResponseEntity.ok(ApiResponse.success(null, "Removed from favorites successfully"));
+        return ResponseEntity.ok(ApiResponse.success("Removed from favorites successfully", null));
     }
 
     @GetMapping("/{productId}/check")

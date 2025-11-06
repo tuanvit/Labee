@@ -24,7 +24,7 @@ public class OrderController {
             HttpServletRequest httpRequest) {
         String userId = (String) httpRequest.getAttribute("userId");
         OrderResponse response = orderService.placeOrder(userId, request);
-        return ResponseEntity.ok(ApiResponse.success(response, "Order placed successfully"));
+        return ResponseEntity.ok(ApiResponse.success("Order placed successfully", response));
     }
 
     @GetMapping

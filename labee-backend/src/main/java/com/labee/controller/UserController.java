@@ -30,6 +30,6 @@ public class UserController {
             HttpServletRequest httpRequest) {
         String userId = (String) httpRequest.getAttribute("userId");
         UserProfileResponse response = userService.updateProfile(userId, request);
-        return ResponseEntity.ok(ApiResponse.success(response, "Profile updated successfully"));
+        return ResponseEntity.ok(ApiResponse.success("Profile updated successfully", response));
     }
 }
