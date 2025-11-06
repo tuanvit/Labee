@@ -42,7 +42,7 @@ public class AddressController {
             HttpServletRequest httpRequest) {
         String userId = (String) httpRequest.getAttribute("userId");
         AddressResponse response = addressService.updateAddress(userId, addressId, request);
-        return ResponseEntity.ok(ApiResponse.success(response, "Address updated successfully"));
+        return ResponseEntity.ok(ApiResponse.success("Address updated successfully", response));
     }
 
     @DeleteMapping("/{addressId}")
@@ -51,7 +51,7 @@ public class AddressController {
             HttpServletRequest httpRequest) {
         String userId = (String) httpRequest.getAttribute("userId");
         addressService.deleteAddress(userId, addressId);
-        return ResponseEntity.ok(ApiResponse.success(null, "Address deleted successfully"));
+        return ResponseEntity.ok(ApiResponse.success("Address deleted successfully", null));
     }
 
     @PutMapping("/{addressId}/set-default")
@@ -60,6 +60,6 @@ public class AddressController {
             HttpServletRequest httpRequest) {
         String userId = (String) httpRequest.getAttribute("userId");
         AddressResponse response = addressService.setDefaultAddress(userId, addressId);
-        return ResponseEntity.ok(ApiResponse.success(response, "Default address set successfully"));
+        return ResponseEntity.ok(ApiResponse.success("Default address set successfully", response));
     }
 }
