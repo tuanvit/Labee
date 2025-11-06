@@ -44,14 +44,14 @@ public class AuthService {
         userRepository.save(user);
 
         // Generate JWT token
-        String token = jwtUtil.generateToken(user.getEmail(), user.getUserId(), user.getRole().name());
+        String token = jwtUtil.generateToken(user.getEmail(), user.getUserId(), user.getRole());
 
         return AuthResponse.builder()
                 .token(token)
                 .userId(user.getUserId())
                 .email(user.getEmail())
                 .fullName(user.getFullName())
-                .role(user.getRole().name())
+                .role(user.getRole())
                 .build();
     }
 
@@ -72,14 +72,14 @@ public class AuthService {
         }
 
         // Generate JWT token
-        String token = jwtUtil.generateToken(user.getEmail(), user.getUserId(), user.getRole().name());
+        String token = jwtUtil.generateToken(user.getEmail(), user.getUserId(), user.getRole());
 
         return AuthResponse.builder()
                 .token(token)
                 .userId(user.getUserId())
                 .email(user.getEmail())
                 .fullName(user.getFullName())
-                .role(user.getRole().name())
+                .role(user.getRole())
                 .build();
     }
 }

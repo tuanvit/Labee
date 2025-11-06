@@ -1,5 +1,6 @@
 package com.labee.security;
 
+import com.labee.model.enums.Role;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -52,10 +53,10 @@ public class JwtUtil {
         return extractExpiration(token).before(new Date());
     }
 
-    public String generateToken(String username, String userId, String role) {
+    public String generateToken(String username, String userId, Role role) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("userId", userId);
-        claims.put("role", role);
+        claims.put("role", role.name());
         return createToken(claims, username);
     }
 
