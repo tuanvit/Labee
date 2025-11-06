@@ -1,10 +1,8 @@
-
 package com.labee.model.enums;
 
-public class PaymentMethod {
-    CREDIT_CAR // the tin dung
-    COD, //thanh toan cod
-    BANK_TRANSFER, //chuyen khoan ngan hang
-    E_WALLET //TIEN dien tu
-
+public enum PaymentMethod {
+    COD,              // Cash on Delivery
+    BANK_TRANSFER,    // Chuyển khoản
+    CREDIT_CARD,      // Thẻ tín dụng
+    E_WALLET          // Ví điện tử
 }
