@@ -40,14 +40,33 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home);
+        android.util.Log.d("HomeActivity", "onCreate started");
 
-        initViews();
-        initViewModel();
-        setupRecyclerView();
-        setupCategoryFilter();
-        setupClickListeners();
-        loadProducts();
+        try {
+            setContentView(R.layout.activity_home);
+            android.util.Log.d("HomeActivity", "setContentView done");
+
+            initViews();
+            android.util.Log.d("HomeActivity", "initViews done");
+
+            initViewModel();
+            android.util.Log.d("HomeActivity", "initViewModel done");
+
+            setupRecyclerView();
+            android.util.Log.d("HomeActivity", "setupRecyclerView done");
+
+            setupCategoryFilter();
+            android.util.Log.d("HomeActivity", "setupCategoryFilter done");
+
+            setupClickListeners();
+            android.util.Log.d("HomeActivity", "setupClickListeners done");
+
+            loadProducts();
+            android.util.Log.d("HomeActivity", "loadProducts called");
+        } catch (Exception e) {
+            android.util.Log.e("HomeActivity", "Error in onCreate", e);
+            Toast.makeText(this, "Error: " + e.getMessage(), Toast.LENGTH_LONG).show();
+        }
     }
 
     private void initViews() {
@@ -125,18 +144,28 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void loadProducts() {
+        android.util.Log.d("HomeActivity", "loadProducts: isLoading=" + isLoading + ", isLastPage=" + isLastPage);
+
         if (isLoading || isLastPage)
             return;
 
         isLoading = true;
         progressBar.setVisibility(View.VISIBLE);
 
+        android.util.Log.d("HomeActivity",
+                "Calling productViewModel.getProducts(page=" + currentPage + ", size=" + pageSize + ")");
+
         productViewModel.getProducts(currentPage, pageSize).observe(this, response -> {
+            android.util.Log.d("HomeActivity",
+                    "Response received: " + (response != null ? response.isSuccess() : "null"));
+
             progressBar.setVisibility(View.GONE);
             isLoading = false;
 
             if (response != null && response.isSuccess() && response.getData() != null) {
                 List<Product> newProducts = response.getData().getContent();
+                android.util.Log.d("HomeActivity",
+                        "Products loaded: " + (newProducts != null ? newProducts.size() : "null"));
 
                 if (newProducts != null && !newProducts.isEmpty()) {
                     // Filter by category if selected
@@ -161,6 +190,7 @@ public class HomeActivity extends AppCompatActivity {
                 }
             } else {
                 String errorMessage = response != null ? response.getMessage() : "Failed to load products";
+                android.util.Log.e("HomeActivity", "Error loading products: " + errorMessage);
                 Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show();
             }
         });
