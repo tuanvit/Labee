@@ -54,29 +54,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void setupObservers() {
-        authViewModel.getLoginResult().observe(this, loginResponse -> {
-            if (loginResponse != null) {
-                if (loginResponse.isSuccess()) {
-                    Toast.makeText(this, "Đăng nhập thành công!", Toast.LENGTH_SHORT).show();
-                    navigateToMain();
-                } else {
-                    Toast.makeText(this, loginResponse.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-
-        authViewModel.getIsLoading().observe(this, isLoading -> {
-            if (isLoading != null) {
-                progressBar.setVisibility(isLoading ? View.VISIBLE : View.GONE);
-                btnLogin.setEnabled(!isLoading);
-            }
-        });
-
-        authViewModel.getErrorMessage().observe(this, errorMessage -> {
-            if (errorMessage != null) {
-                Toast.makeText(this, "Lỗi: " + errorMessage, Toast.LENGTH_LONG).show();
-            }
-        });
+        // No need for separate observers now, we observe in the login click listener
     }
 
     private void setupClickListeners() {
@@ -85,7 +63,7 @@ public class LoginActivity extends AppCompatActivity {
             String password = etPassword.getText().toString().trim();
 
             if (validateInput(email, password)) {
-                authViewModel.login(email, password);
+                performLogin(email, password);
             }
         });
 
@@ -95,6 +73,26 @@ public class LoginActivity extends AppCompatActivity {
 
         tvForgotPassword.setOnClickListener(v -> {
             startActivity(new Intent(this, ForgotPasswordActivity.class));
+        });
+    }
+
+    private void performLogin(String email, String password) {
+        progressBar.setVisibility(View.VISIBLE);
+        btnLogin.setEnabled(false);
+
+        authViewModel.login(email, password).observe(this, response -> {
+            progressBar.setVisibility(View.GONE);
+            btnLogin.setEnabled(true);
+
+            if (response != null && response.isSuccess()) {
+                Toast.makeText(this, "Đăng nhập thành công!", Toast.LENGTH_SHORT).show();
+                navigateToMain();
+            } else {
+                String errorMsg = (response != null && response.getMessage() != null)
+                        ? response.getMessage()
+                        : "Đăng nhập thất bại";
+                Toast.makeText(this, errorMsg, Toast.LENGTH_SHORT).show();
+            }
         });
     }
 
