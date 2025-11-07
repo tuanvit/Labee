@@ -31,6 +31,12 @@ public interface ApiService {
     @GET("api/products/{id}")
     Call<ApiResponse<Product>> getProductById(@Path("id") Long productId);
 
+    @GET("api/products/search")
+    Call<ApiResponse<PageResponse<Product>>> searchProducts(
+            @Query("keyword") String keyword,
+            @Query("page") int page,
+            @Query("size") int size);
+
     @GET("api/cart")
     Call<ApiResponse<List<CartItem>>> getCart();
 

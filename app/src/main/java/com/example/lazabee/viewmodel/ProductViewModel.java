@@ -26,6 +26,10 @@ public class ProductViewModel extends AndroidViewModel {
         return productRepository.getProductById(productId);
     }
 
+    public LiveData<ApiResponse<PageResponse<Product>>> searchProducts(String keyword, int page, int size) {
+        return productRepository.searchProducts(keyword, page, size);
+    }
+
     // Wrapper to expose product detail as separate LiveData
     private LiveData<ApiResponse<Product>> productDetailLiveData;
 

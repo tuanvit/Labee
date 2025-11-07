@@ -3,16 +3,21 @@ package com.example.lazabee.view;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.lazabee.R;
 import com.example.lazabee.adapter.ProductAdapter;
 import com.example.lazabee.data.model.Product;
 import com.example.lazabee.viewmodel.ProductViewModel;
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,6 +26,8 @@ public class HomeActivity extends AppCompatActivity {
     private RecyclerView rvProducts;
     private ProductAdapter productAdapter;
     private ProgressBar progressBar;
+    private ChipGroup chipGroupCategories;
+    private ImageView btnSearch;
     private ProductViewModel productViewModel;
 
     private List<Product> productList = new ArrayList<>();
@@ -28,6 +35,7 @@ public class HomeActivity extends AppCompatActivity {
     private int pageSize = 20;
     private boolean isLoading = false;
     private boolean isLastPage = false;
+    private String selectedCategory = null; // null = all categories
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,16 +45,56 @@ public class HomeActivity extends AppCompatActivity {
         initViews();
         initViewModel();
         setupRecyclerView();
+        setupCategoryFilter();
+        setupClickListeners();
         loadProducts();
     }
 
     private void initViews() {
         rvProducts = findViewById(R.id.rvProducts);
         progressBar = findViewById(R.id.progressBar);
+        chipGroupCategories = findViewById(R.id.chipGroupCategories);
+        btnSearch = findViewById(R.id.btnSearch);
     }
 
     private void initViewModel() {
         productViewModel = new ViewModelProvider(this).get(ProductViewModel.class);
+    }
+
+    private void setupClickListeners() {
+        btnSearch.setOnClickListener(v -> {
+            Intent intent = new Intent(this, SearchActivity.class);
+            startActivity(intent);
+        });
+    }
+
+    private void setupCategoryFilter() {
+        chipGroupCategories.setOnCheckedStateChangeListener((group, checkedIds) -> {
+            if (checkedIds.isEmpty())
+                return;
+
+            int checkedId = checkedIds.get(0);
+
+            if (checkedId == R.id.chipAll) {
+                selectedCategory = null;
+            } else if (checkedId == R.id.chipElectronics) {
+                selectedCategory = "electronics";
+            } else if (checkedId == R.id.chipFashion) {
+                selectedCategory = "fashion";
+            } else if (checkedId == R.id.chipHome) {
+                selectedCategory = "home";
+            } else if (checkedId == R.id.chipSports) {
+                selectedCategory = "sports";
+            } else if (checkedId == R.id.chipBeauty) {
+                selectedCategory = "beauty";
+            }
+
+            // Reset and reload with new category
+            currentPage = 0;
+            productList.clear();
+            isLastPage = false;
+            loadProducts();
+        });
     }
 
     private void setupRecyclerView() {
@@ -91,6 +139,17 @@ public class HomeActivity extends AppCompatActivity {
                 List<Product> newProducts = response.getData().getContent();
 
                 if (newProducts != null && !newProducts.isEmpty()) {
+                    // Filter by category if selected
+                    if (selectedCategory != null) {
+                        List<Product> filtered = new ArrayList<>();
+                        for (Product p : newProducts) {
+                            if (p.getCategoryId() != null && p.getCategoryId().equalsIgnoreCase(selectedCategory)) {
+                                filtered.add(p);
+                            }
+                        }
+                        newProducts = filtered;
+                    }
+
                     productList.addAll(newProducts);
                     productAdapter.notifyDataSetChanged();
                     currentPage++;

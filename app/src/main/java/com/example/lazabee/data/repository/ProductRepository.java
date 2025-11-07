@@ -77,4 +77,34 @@ public class ProductRepository {
 
         return result;
     }
+
+    public LiveData<ApiResponse<PageResponse<Product>>> searchProducts(String keyword, int page, int size) {
+        MutableLiveData<ApiResponse<PageResponse<Product>>> result = new MutableLiveData<>();
+
+        apiService.searchProducts(keyword, page, size).enqueue(
+                new Callback<ApiResponse<PageResponse<Product>>>() {
+                    @Override
+                    public void onResponse(Call<ApiResponse<PageResponse<Product>>> call,
+                            Response<ApiResponse<PageResponse<Product>>> response) {
+                        if (response.isSuccessful() && response.body() != null) {
+                            result.setValue(response.body());
+                        } else {
+                            ApiResponse<PageResponse<Product>> errorResponse = new ApiResponse<>();
+                            errorResponse.setSuccess(false);
+                            errorResponse.setMessage("No products found");
+                            result.setValue(errorResponse);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ApiResponse<PageResponse<Product>>> call, Throwable t) {
+                        ApiResponse<PageResponse<Product>> errorResponse = new ApiResponse<>();
+                        errorResponse.setSuccess(false);
+                        errorResponse.setMessage(t.getMessage());
+                        result.setValue(errorResponse);
+                    }
+                });
+
+        return result;
+    }
 }
