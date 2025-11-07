@@ -92,7 +92,8 @@ public class AuthRepository {
             @Override
             public void onFailure(Call<ApiResponse<AuthResponse>> call, Throwable t) {
                 android.util.Log.e("AuthRepository", "Register network error: " + t.getMessage(), t);
-                ApiResponse<AuthResponse> errorResponse = new ApiResponse<>(false, "Lỗi kết nối: " + t.getMessage(), null);
+                ApiResponse<AuthResponse> errorResponse = new ApiResponse<>(false, "Lỗi kết nối: " + t.getMessage(),
+                        null);
                 result.postValue(errorResponse);
             }
         });

@@ -16,13 +16,13 @@ import retrofit2.http.*;
 import java.util.List;
 
 public interface ApiService {
-    @POST("api/auth/register")
+    @POST("api/v1/auth/register")
     Call<ApiResponse<AuthResponse>> register(@Body RegisterRequest request);
 
-    @POST("api/auth/login")
+    @POST("api/v1/auth/login")
     Call<ApiResponse<AuthResponse>> login(@Body LoginRequest request);
 
-    @GET("api/users/profile")
+    @GET("api/v1/auth/profile")
     Call<ApiResponse<AuthResponse>> getProfile();
 
     @GET("api/products")
