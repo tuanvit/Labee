@@ -127,7 +127,7 @@ public class AddressRepository {
     public LiveData<ApiResponse<Void>> deleteAddress(String addressId) {
         MutableLiveData<ApiResponse<Void>> result = new MutableLiveData<>();
 
-        apiService.deleteAddress(addressId).enqueue(new Callback<ApiResponse<Void>>() {
+        apiService.deleteAddress(Long.parseLong(addressId)).enqueue(new Callback<ApiResponse<Void>>() {
             @Override
             public void onResponse(Call<ApiResponse<Void>> call, Response<ApiResponse<Void>> response) {
                 if (response.isSuccessful() && response.body() != null) {
