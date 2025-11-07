@@ -26,6 +26,10 @@ public class AuthViewModel extends AndroidViewModel {
         return authRepository.register(username, email, password, fullName, phoneNumber);
     }
     
+    public LiveData<ApiResponse<AuthResponse>> getProfile() {
+        return authRepository.getProfile();
+    }
+    
     public boolean isLoggedIn() {
         return authRepository.isLoggedIn();
     }
