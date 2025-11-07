@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
@@ -28,6 +29,7 @@ public class HomeActivity extends AppCompatActivity {
     private ProgressBar progressBar;
     private ChipGroup chipGroupCategories;
     private ImageView btnSearch;
+    private LinearLayout btnHome, btnCart, btnOrders, btnProfile;
     private ProductViewModel productViewModel;
 
     private List<Product> productList = new ArrayList<>();
@@ -74,6 +76,12 @@ public class HomeActivity extends AppCompatActivity {
         progressBar = findViewById(R.id.progressBar);
         chipGroupCategories = findViewById(R.id.chipGroupCategories);
         btnSearch = findViewById(R.id.btnSearch);
+        
+        // Bottom navigation
+        btnHome = findViewById(R.id.btnHome);
+        btnCart = findViewById(R.id.btnCart);
+        btnOrders = findViewById(R.id.btnOrders);
+        btnProfile = findViewById(R.id.btnProfile);
     }
 
     private void initViewModel() {

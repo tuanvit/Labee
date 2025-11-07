@@ -34,7 +34,7 @@ public class ProductDetailActivity extends AppCompatActivity {
     private ProductViewModel productViewModel;
     private CartViewModel cartViewModel;
 
-    private Long productId;
+    private String productId;
     private Product currentProduct;
     private String selectedSize = "M";
     private String selectedColor = "Blue";
@@ -47,8 +47,8 @@ public class ProductDetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_product_detail);
 
         // Get product ID from intent
-        productId = getIntent().getLongExtra("product_id", -1);
-        if (productId == -1) {
+        productId = getIntent().getStringExtra("product_id");
+        if (productId == null || productId.isEmpty()) {
             Toast.makeText(this, "Không tìm thấy sản phẩm", Toast.LENGTH_SHORT).show();
             finish();
             return;

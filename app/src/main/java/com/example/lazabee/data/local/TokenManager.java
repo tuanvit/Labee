@@ -33,13 +33,12 @@ public class TokenManager {
         return sharedPreferences.getString(KEY_TOKEN, null);
     }
 
-    public void saveUserId(Long userId) {
-        sharedPreferences.edit().putLong(KEY_USER_ID, userId).apply();
+    public void saveUserId(String userId) {
+        sharedPreferences.edit().putString(KEY_USER_ID, userId).apply();
     }
 
-    public Long getUserId() {
-        long userId = sharedPreferences.getLong(KEY_USER_ID, -1);
-        return userId != -1 ? userId : null;
+    public String getUserId() {
+        return sharedPreferences.getString(KEY_USER_ID, null);
     }
 
     public void saveEmail(String email) {
