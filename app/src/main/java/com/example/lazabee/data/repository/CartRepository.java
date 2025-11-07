@@ -49,7 +49,7 @@ public class CartRepository {
         return result;
     }
 
-    public LiveData<ApiResponse<CartItem>> addToCart(Long productId, int quantity) {
+    public LiveData<ApiResponse<CartItem>> addToCart(String productId, int quantity) {
         MutableLiveData<ApiResponse<CartItem>> result = new MutableLiveData<>();
 
         apiService.addToCart(productId, quantity).enqueue(new Callback<ApiResponse<CartItem>>() {

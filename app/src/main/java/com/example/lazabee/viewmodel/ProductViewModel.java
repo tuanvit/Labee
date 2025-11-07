@@ -22,7 +22,7 @@ public class ProductViewModel extends AndroidViewModel {
         return productRepository.getAllProducts(page, size);
     }
 
-    public LiveData<ApiResponse<Product>> getProductById(Long productId) {
+    public LiveData<ApiResponse<Product>> getProductById(String productId) {
         return productRepository.getProductById(productId);
     }
 
@@ -37,7 +37,7 @@ public class ProductViewModel extends AndroidViewModel {
         return productDetailLiveData;
     }
 
-    public void loadProductDetail(Long productId) {
+    public void loadProductDetail(String productId) {
         productDetailLiveData = productRepository.getProductById(productId);
     }
 }

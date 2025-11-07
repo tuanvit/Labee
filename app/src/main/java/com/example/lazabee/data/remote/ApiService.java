@@ -29,7 +29,7 @@ public interface ApiService {
     Call<ApiResponse<PageResponse<Product>>> getAllProducts(@Query("page") int page, @Query("size") int size);
 
     @GET("api/v1/products/{id}")
-    Call<ApiResponse<Product>> getProductById(@Path("id") Long productId);
+    Call<ApiResponse<Product>> getProductById(@Path("id") String productId);
 
     @GET("api/v1/products/search")
     Call<ApiResponse<PageResponse<Product>>> searchProducts(
@@ -41,7 +41,7 @@ public interface ApiService {
     Call<ApiResponse<List<CartItem>>> getCart();
 
     @POST("api/v1/cart")
-    Call<ApiResponse<CartItem>> addToCart(@Query("productId") Long productId, @Query("quantity") int quantity);
+    Call<ApiResponse<CartItem>> addToCart(@Query("productId") String productId, @Query("quantity") int quantity);
 
     @PUT("api/v1/cart/{cartItemId}")
     Call<ApiResponse<Void>> updateCartItem(@Path("cartItemId") Long cartItemId, @Query("quantity") int quantity);

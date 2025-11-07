@@ -49,7 +49,7 @@ public class ProductRepository {
         return result;
     }
 
-    public LiveData<ApiResponse<Product>> getProductById(Long productId) {
+    public LiveData<ApiResponse<Product>> getProductById(String productId) {
         MutableLiveData<ApiResponse<Product>> result = new MutableLiveData<>();
 
         apiService.getProductById(productId).enqueue(new Callback<ApiResponse<Product>>() {

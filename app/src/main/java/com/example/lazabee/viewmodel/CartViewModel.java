@@ -39,7 +39,7 @@ public class CartViewModel extends AndroidViewModel {
         return addToCartResultLiveData;
     }
 
-    public void addProductToCart(Long productId, int quantity) {
+    public void addProductToCart(String productId, int quantity) {
         addToCartResultLiveData = cartRepository.addToCart(productId, quantity);
     }
 
