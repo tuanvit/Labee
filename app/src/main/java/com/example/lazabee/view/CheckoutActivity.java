@@ -93,7 +93,7 @@ public class CheckoutActivity extends AppCompatActivity {
     private void loadCartItems() {
         progressBar.setVisibility(View.VISIBLE);
 
-        cartViewModel.getCart().observe(this, response -> {
+        cartViewModel.getCartItems().observe(this, response -> {
             progressBar.setVisibility(View.GONE);
 
             if (response != null && response.isSuccess() && response.getData() != null) {

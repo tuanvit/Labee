@@ -1,91 +1,101 @@
 package com.example.lazabee.data.repository;
 
 import android.content.Context;
-
-import com.example.lazabee.data.local.AppDatabase;
-import com.example.lazabee.data.local.UserDao;
-import com.example.lazabee.data.model.LoginRequest;
-import com.example.lazabee.data.model.LoginResponse;
-import com.example.lazabee.data.model.User;
-import com.example.lazabee.data.remote.ApiClient;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+import com.example.lazabee.data.local.TokenManager;
+import com.example.lazabee.data.model.ApiResponse;
+import com.example.lazabee.data.model.auth.AuthResponse;
+import com.example.lazabee.data.model.auth.LoginRequest;
+import com.example.lazabee.data.model.auth.RegisterRequest;
 import com.example.lazabee.data.remote.ApiService;
-import com.example.lazabee.utils.SharedPreferencesManager;
-
-import io.reactivex.rxjava3.core.Completable;
-import io.reactivex.rxjava3.core.Single;
+import com.example.lazabee.data.remote.RetrofitClient;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class AuthRepository {
-    
+
     private ApiService apiService;
-    private UserDao userDao;
-    private SharedPreferencesManager prefsManager;
-    
+    private TokenManager tokenManager;
+
     public AuthRepository(Context context) {
-        this.apiService = ApiClient.getApiService();
-        this.userDao = AppDatabase.getInstance(context).userDao();
-        this.prefsManager = new SharedPreferencesManager(context);
+        this.apiService = RetrofitClient.getInstance(context).getApiService();
+        this.tokenManager = TokenManager.getInstance(context);
     }
-    
-    public Single<LoginResponse> login(String email, String password) {
+
+    public LiveData<ApiResponse<AuthResponse>> login(String email, String password) {
+        MutableLiveData<ApiResponse<AuthResponse>> result = new MutableLiveData<>();
+
         LoginRequest request = new LoginRequest(email, password);
-        return apiService.login(request)
-                .doOnSuccess(response -> {
-                    if (response.isSuccess()) {
-                        // Lưu token và user info
-                        prefsManager.saveToken(response.getToken());
-                        prefsManager.saveUser(response.getUser());
-                        
-                        // Cache user vào local database
-                        userDao.insertUser(response.getUser()).subscribe();
+        apiService.login(request).enqueue(new Callback<ApiResponse<AuthResponse>>() {
+            @Override
+            public void onResponse(Call<ApiResponse<AuthResponse>> call, Response<ApiResponse<AuthResponse>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    ApiResponse<AuthResponse> apiResponse = response.body();
+                    if (apiResponse.isSuccess() && apiResponse.getData() != null) {
+                        AuthResponse authData = apiResponse.getData();
+                        tokenManager.saveToken(authData.getToken());
+                        tokenManager.saveUserId(authData.getUserId());
+                        tokenManager.saveEmail(authData.getEmail());
                     }
-                });
+                    result.postValue(apiResponse);
+                } else {
+                    ApiResponse<AuthResponse> errorResponse = new ApiResponse<>(false, "Login failed", null);
+                    result.postValue(errorResponse);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ApiResponse<AuthResponse>> call, Throwable t) {
+                ApiResponse<AuthResponse> errorResponse = new ApiResponse<>(false, t.getMessage(), null);
+                result.postValue(errorResponse);
+            }
+        });
+
+        return result;
     }
-    
-    public Single<LoginResponse> register(User user) {
-        return apiService.register(user)
-                .doOnSuccess(response -> {
-                    if (response.isSuccess()) {
-                        prefsManager.saveToken(response.getToken());
-                        prefsManager.saveUser(response.getUser());
-                        userDao.insertUser(response.getUser()).subscribe();
+
+    public LiveData<ApiResponse<AuthResponse>> register(String username, String email, String password, String fullName,
+            String phoneNumber) {
+        MutableLiveData<ApiResponse<AuthResponse>> result = new MutableLiveData<>();
+
+        RegisterRequest request = new RegisterRequest(username, email, password, fullName, phoneNumber);
+        apiService.register(request).enqueue(new Callback<ApiResponse<AuthResponse>>() {
+            @Override
+            public void onResponse(Call<ApiResponse<AuthResponse>> call, Response<ApiResponse<AuthResponse>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    ApiResponse<AuthResponse> apiResponse = response.body();
+                    if (apiResponse.isSuccess() && apiResponse.getData() != null) {
+                        AuthResponse authData = apiResponse.getData();
+                        tokenManager.saveToken(authData.getToken());
+                        tokenManager.saveUserId(authData.getUserId());
+                        tokenManager.saveEmail(authData.getEmail());
                     }
-                });
+                    result.postValue(apiResponse);
+                } else {
+                    ApiResponse<AuthResponse> errorResponse = new ApiResponse<>(false, "Registration failed", null);
+                    result.postValue(errorResponse);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ApiResponse<AuthResponse>> call, Throwable t) {
+                ApiResponse<AuthResponse> errorResponse = new ApiResponse<>(false, t.getMessage(), null);
+                result.postValue(errorResponse);
+            }
+        });
+
+        return result;
     }
-    
-    public Single<LoginResponse> forgotPassword(String email) {
-        return apiService.forgotPassword(email);
-    }
-    
-    public Single<LoginResponse> verifyCode(String code) {
-        return apiService.verifyCode(code);
-    }
-    
-    public Single<LoginResponse> resetPassword(String newPassword) {
-        return apiService.resetPassword(newPassword);
-    }
-    
-    public Completable logout() {
-        String token = prefsManager.getToken();
-        if (token != null) {
-            return apiService.logout("Bearer " + token)
-                    .doOnSuccess(response -> clearUserData())
-                    .ignoreElement();
-        } else {
-            clearUserData();
-            return Completable.complete();
-        }
-    }
-    
+
     public boolean isLoggedIn() {
-        return prefsManager.getToken() != null;
+        return tokenManager.isLoggedIn();
     }
-    
-    public User getCurrentUser() {
-        return prefsManager.getUser();
+
+    public void logout() {
+        tokenManager.logout();
     }
-    
-    private void clearUserData() {
-        prefsManager.clearAll();
-        userDao.deleteAllUsers().subscribe();
-    }
+
+}
 }
