@@ -3,552 +3,158 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F8F9FA">
+    android:background="#F5F5F5">
 
-    <ScrollView
-        android:id="@+id/scrollView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@+id/bottomCheckoutBar">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <!-- Header -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:padding="16dp"
-                android:background="@android:color/white">
-
-                <ImageView
-                    android:id="@+id/btnBack"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@drawable/ic_arrow_back"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:padding="4dp"
-                    android:contentDescription="Back" />
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Cart"
-                    android:textSize="24sp"
-                    android:textStyle="bold"
-                    android:textColor="#333333"
-                    android:layout_marginStart="16dp" />
-
-                <TextView
-                    android:id="@+id/tvCartCount"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:text="2"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    android:textColor="@android:color/white"
-                    android:background="@drawable/cart_count_background"
-                    android:gravity="center" />
-
-            </LinearLayout>
-
-            <!-- Shipping Address -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:background="@android:color/white"
-                android:padding="16dp"
-                android:layout_marginTop="8dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Shipping Address"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    android:textColor="#333333" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:layout_marginTop="12dp">
-
-                    <TextView
-                        android:id="@+id/tvShippingAddress"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="26, Duong So 2, Thao Dien Ward, An Phu, District 2,\nHo Chi Minh city"
-                        android:textSize="14sp"
-                        android:textColor="#666666"
-                        android:lineSpacingExtra="2dp" />
-
-                    <ImageView
-                        android:id="@+id/btnEditAddress"
-                        android:layout_width="32dp"
-                        android:layout_height="32dp"
-                        android:src="@drawable/ic_edit"
-                        android:background="@drawable/edit_button_background"
-                        android:padding="8dp"
-                        android:layout_marginStart="12dp"
-                        android:contentDescription="Edit Address" />
-
-                </LinearLayout>
-
-            </LinearLayout>
-
-            <!-- Cart Items -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:background="@android:color/white"
-                android:padding="16dp"
-                android:layout_marginTop="8dp">
-
-                <!-- Cart Item 1 -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:layout_marginBottom="16dp">
-
-                    <FrameLayout
-                        android:layout_width="80dp"
-                        android:layout_height="80dp">
-
-                        <ImageView
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:src="@drawable/img_shoes"
-                            android:scaleType="centerCrop"
-                            android:background="@drawable/cart_item_image_background" />
-
-                        <ImageView
-                            android:id="@+id/btnDeleteItem1"
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:layout_gravity="top|start"
-                            android:layout_margin="4dp"
-                            android:src="@drawable/ic_delete"
-                            android:background="@drawable/delete_button_background"
-                            android:padding="4dp"
-                            android:contentDescription="Delete Item" />
-
-                    </FrameLayout>
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical"
-                        android:layout_marginStart="12dp">
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="Giày thể thao Nike Air Max"
-                            android:textSize="14sp"
-                            android:textColor="#333333"
-                            android:maxLines="2"
-                            android:ellipsize="end" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Pink, Size M"
-                            android:textSize="12sp"
-                            android:textColor="#666666"
-                            android:layout_marginTop="4dp" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="$17.00"
-                            android:textSize="16sp"
-                            android:textStyle="bold"
-                            android:textColor="#FF6B35"
-                            android:layout_marginTop="8dp" />
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical">
-
-                        <ImageView
-                            android:id="@+id/btnDecreaseItem1"
-                            android:layout_width="32dp"
-                            android:layout_height="32dp"
-                            android:src="@drawable/ic_remove"
-                            android:background="@drawable/quantity_button_background"
-                            android:padding="8dp"
-                            android:contentDescription="Decrease Quantity" />
-
-                        <TextView
-                            android:id="@+id/tvQuantityItem1"
-                            android:layout_width="40dp"
-                            android:layout_height="wrap_content"
-                            android:text="1"
-                            android:textSize="16sp"
-                            android:textStyle="bold"
-                            android:textColor="#333333"
-                            android:gravity="center"
-                            android:layout_marginHorizontal="8dp" />
-
-                        <ImageView
-                            android:id="@+id/btnIncreaseItem1"
-                            android:layout_width="32dp"
-                            android:layout_height="32dp"
-                            android:src="@drawable/ic_add"
-                            android:background="@drawable/quantity_button_background"
-                            android:padding="8dp"
-                            android:contentDescription="Increase Quantity" />
-
-                    </LinearLayout>
-
-                </LinearLayout>
-
-                <!-- Cart Item 2 -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical">
-
-                    <FrameLayout
-                        android:layout_width="80dp"
-                        android:layout_height="80dp">
-
-                        <ImageView
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:src="@drawable/img_shoes"
-                            android:scaleType="centerCrop"
-                            android:background="@drawable/cart_item_image_background" />
-
-                        <ImageView
-                            android:id="@+id/btnDeleteItem2"
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:layout_gravity="top|start"
-                            android:layout_margin="4dp"
-                            android:src="@drawable/ic_delete"
-                            android:background="@drawable/delete_button_background"
-                            android:padding="4dp"
-                            android:contentDescription="Delete Item" />
-
-                    </FrameLayout>
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical"
-                        android:layout_marginStart="12dp">
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="Áo thun nam cao cấp"
-                            android:textSize="14sp"
-                            android:textColor="#333333"
-                            android:maxLines="2"
-                            android:ellipsize="end" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Pink, Size M"
-                            android:textSize="12sp"
-                            android:textColor="#666666"
-                            android:layout_marginTop="4dp" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="$17.00"
-                            android:textSize="16sp"
-                            android:textStyle="bold"
-                            android:textColor="#FF6B35"
-                            android:layout_marginTop="8dp" />
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical">
-
-                        <ImageView
-                            android:id="@+id/btnDecreaseItem2"
-                            android:layout_width="32dp"
-                            android:layout_height="32dp"
-                            android:src="@drawable/ic_remove"
-                            android:background="@drawable/quantity_button_background"
-                            android:padding="8dp"
-                            android:contentDescription="Decrease Quantity" />
-
-                        <TextView
-                            android:id="@+id/tvQuantityItem2"
-                            android:layout_width="40dp"
-                            android:layout_height="wrap_content"
-                            android:text="1"
-                            android:textSize="16sp"
-                            android:textStyle="bold"
-                            android:textColor="#333333"
-                            android:gravity="center"
-                            android:layout_marginHorizontal="8dp" />
-
-                        <ImageView
-                            android:id="@+id/btnIncreaseItem2"
-                            android:layout_width="32dp"
-                            android:layout_height="32dp"
-                            android:src="@drawable/ic_add"
-                            android:background="@drawable/quantity_button_background"
-                            android:padding="8dp"
-                            android:contentDescription="Increase Quantity" />
-
-                    </LinearLayout>
-
-                </LinearLayout>
-
-            </LinearLayout>
-
-            <!-- From Your Wishlist -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:background="@android:color/white"
-                android:padding="16dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="100dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="From Your Wishlist"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:textColor="#333333"
-                    android:layout_marginBottom="16dp" />
-
-                <!-- Wishlist Item 1 -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:layout_marginBottom="16dp">
-
-                    <FrameLayout
-                        android:layout_width="80dp"
-                        android:layout_height="80dp">
-
-                        <ImageView
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:src="@drawable/img_shoes"
-                            android:scaleType="centerCrop"
-                            android:background="@drawable/cart_item_image_background" />
-
-                        <ImageView
-                            android:id="@+id/btnDeleteWishlist1"
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:layout_gravity="top|start"
-                            android:layout_margin="4dp"
-                            android:src="@drawable/ic_delete"
-                            android:background="@drawable/delete_button_background"
-                            android:padding="4dp"
-                            android:contentDescription="Remove from Wishlist" />
-
-                    </FrameLayout>
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical"
-                        android:layout_marginStart="12dp">
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="Túi xách nữ thời trang"
-                            android:textSize="14sp"
-                            android:textColor="#333333"
-                            android:maxLines="2"
-                            android:ellipsize="end" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="$17.00"
-                            android:textSize="16sp"
-                            android:textStyle="bold"
-                            android:textColor="#FF6B35"
-                            android:layout_marginTop="8dp" />
-
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:layout_marginTop="8dp">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Pink"
-                                android:textSize="12sp"
-                                android:textColor="@android:color/white"
-                                android:background="@drawable/wishlist_option_background"
-                                android:padding="6dp"
-                                android:layout_marginEnd="8dp" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="M"
-                                android:textSize="12sp"
-                                android:textColor="@android:color/white"
-                                android:background="@drawable/wishlist_option_background"
-                                android:padding="6dp" />
-
-                        </LinearLayout>
-
-                    </LinearLayout>
-
-                    <ImageView
-                        android:id="@+id/btnAddToCartFromWishlist1"
-                        android:layout_width="32dp"
-                        android:layout_height="32dp"
-                        android:src="@drawable/ic_add_to_cart"
-                        android:background="@drawable/add_to_cart_button_background"
-                        android:padding="6dp"
-                        android:contentDescription="Add to Cart" />
-
-                </LinearLayout>
-
-                <!-- Wishlist Item 2 -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical">
-
-                    <ImageView
-                        android:layout_width="80dp"
-                        android:layout_height="80dp"
-                        android:src="@drawable/img_shoes"
-                        android:scaleType="centerCrop"
-                        android:background="@drawable/cart_item_image_background" />
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical"
-                        android:layout_marginStart="12dp">
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="Đầm dự tiệc sang trọng"
-                            android:textSize="14sp"
-                            android:textColor="#333333"
-                            android:maxLines="2"
-                            android:ellipsize="end" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="$17.00"
-                            android:textSize="16sp"
-                            android:textStyle="bold"
-                            android:textColor="#FF6B35"
-                            android:layout_marginTop="8dp" />
-
-                    </LinearLayout>
-
-                    <ImageView
-                        android:id="@+id/btnAddToCartFromWishlist2"
-                        android:layout_width="32dp"
-                        android:layout_height="32dp"
-                        android:src="@drawable/ic_add_to_cart"
-                        android:background="@drawable/add_to_cart_button_background"
-                        android:padding="6dp"
-                        android:contentDescription="Add to Cart" />
-
-                </LinearLayout>
-
-            </LinearLayout>
-
-        </LinearLayout>
-
-    </ScrollView>
-
-    <!-- Bottom Checkout Bar -->
+    <!-- Header -->
     <LinearLayout
-        android:id="@+id/bottomCheckoutBar"
+        android:id="@+id/header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
         android:orientation="horizontal"
-        android:background="@android:color/white"
-        android:elevation="8dp"
+        android:gravity="center_vertical"
         android:padding="16dp"
-        android:gravity="center_vertical">
+        android:background="@android:color/white"
+        android:elevation="4dp">
 
-        <LinearLayout
+        <ImageView
+            android:id="@+id/btnBack"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_arrow_back"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:padding="4dp"
+            android:contentDescription="Back" />
+
+        <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:orientation="vertical">
+            android:text="Giỏ hàng"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="#333333"
+            android:layout_marginStart="16dp" />
+
+        <TextView
+            android:id="@+id/tvCartCount"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:text="0"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/white"
+            android:background="@drawable/cart_count_background"
+            android:gravity="center" />
+
+    </LinearLayout>
+
+    <!-- Cart Items RecyclerView -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvCartItems"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/header"
+        android:layout_above="@id/bottomBar"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:clipToPadding="false" />
+
+    <!-- Empty Cart Layout -->
+    <LinearLayout
+        android:id="@+id/layoutEmptyCart"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/header"
+        android:layout_above="@id/bottomBar"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:src="@drawable/ic_cart"
+            android:alpha="0.3"
+            android:contentDescription="Empty cart" />
+
+        <TextView
+            android:id="@+id/tvEmptyCart"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Giỏ hàng trống"
+            android:textSize="18sp"
+            android:textColor="#999999"
+            android:layout_marginTop="16dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Thêm sản phẩm vào giỏ hàng để tiếp tục mua sắm"
+            android:textSize="14sp"
+            android:textColor="#CCCCCC"
+            android:layout_marginTop="8dp"
+            android:gravity="center" />
+
+    </LinearLayout>
+
+    <!-- Loading Indicator -->
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:visibility="gone" />
+
+    <!-- Bottom Bar -->
+    <LinearLayout
+        android:id="@+id/bottomBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical"
+        android:background="@android:color/white"
+        android:padding="16dp"
+        android:elevation="8dp">
+
+        <!-- Total Price -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="12dp">
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="Total"
-                android:textSize="14sp"
-                android:textColor="#666666" />
+                android:layout_weight="1"
+                android:text="Tổng cộng:"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="#333333" />
 
             <TextView
                 android:id="@+id/tvTotalPrice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="$34.00"
+                android:text="0đ"
                 android:textSize="20sp"
                 android:textStyle="bold"
-                android:textColor="#333333"
-                android:layout_marginTop="2dp" />
+                android:textColor="#FF6B00" />
 
         </LinearLayout>
 
+        <!-- Checkout Button -->
         <Button
             android:id="@+id/btnCheckout"
-            android:layout_width="wrap_content"
-            android:layout_height="48dp"
-            android:text="Checkout"
-            android:textColor="@android:color/white"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:text="Thanh toán"
             android:textSize="16sp"
             android:textStyle="bold"
-            android:background="@drawable/checkout_button_background"
-            android:paddingHorizontal="32dp"
-            android:layout_marginStart="16dp" />
+            android:textColor="@android:color/white"
+            android:background="@drawable/button"
+            android:enabled="true" />
 
     </LinearLayout>
 

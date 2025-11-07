@@ -53,7 +53,7 @@ public class HomeActivity extends AppCompatActivity {
         productAdapter = new ProductAdapter(this, productList, product -> {
             // Navigate to ProductDetailActivity
             Intent intent = new Intent(HomeActivity.this, ProductDetailActivity.class);
-            intent.putExtra("productId", product.getProductId());
+            intent.putExtra("product_id", product.getProductId());
             startActivity(intent);
         });
 
