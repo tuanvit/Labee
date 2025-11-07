@@ -74,14 +74,25 @@ public class AuthRepository {
                     }
                     result.postValue(apiResponse);
                 } else {
-                    ApiResponse<AuthResponse> errorResponse = new ApiResponse<>(false, "Registration failed", null);
+                    // Log error details
+                    String errorMsg = "Registration failed - HTTP " + response.code();
+                    try {
+                        if (response.errorBody() != null) {
+                            errorMsg = response.errorBody().string();
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    android.util.Log.e("AuthRepository", "Register error: " + errorMsg);
+                    ApiResponse<AuthResponse> errorResponse = new ApiResponse<>(false, errorMsg, null);
                     result.postValue(errorResponse);
                 }
             }
 
             @Override
             public void onFailure(Call<ApiResponse<AuthResponse>> call, Throwable t) {
-                ApiResponse<AuthResponse> errorResponse = new ApiResponse<>(false, t.getMessage(), null);
+                android.util.Log.e("AuthRepository", "Register network error: " + t.getMessage(), t);
+                ApiResponse<AuthResponse> errorResponse = new ApiResponse<>(false, "Lỗi kết nối: " + t.getMessage(), null);
                 result.postValue(errorResponse);
             }
         });
