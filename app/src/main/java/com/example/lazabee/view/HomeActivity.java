@@ -76,7 +76,7 @@ public class HomeActivity extends AppCompatActivity {
         progressBar = findViewById(R.id.progressBar);
         chipGroupCategories = findViewById(R.id.chipGroupCategories);
         btnSearch = findViewById(R.id.btnSearch);
-        
+
         // Bottom navigation
         btnHome = findViewById(R.id.btnHome);
         btnCart = findViewById(R.id.btnCart);
@@ -91,6 +91,27 @@ public class HomeActivity extends AppCompatActivity {
     private void setupClickListeners() {
         btnSearch.setOnClickListener(v -> {
             Intent intent = new Intent(this, SearchActivity.class);
+            startActivity(intent);
+        });
+        
+        // Bottom navigation
+        btnHome.setOnClickListener(v -> {
+            // Already on home, do nothing or scroll to top
+            rvProducts.smoothScrollToPosition(0);
+        });
+        
+        btnCart.setOnClickListener(v -> {
+            Intent intent = new Intent(this, CartActivity.class);
+            startActivity(intent);
+        });
+        
+        btnOrders.setOnClickListener(v -> {
+            Intent intent = new Intent(this, OrderHistoryActivity.class);
+            startActivity(intent);
+        });
+        
+        btnProfile.setOnClickListener(v -> {
+            Intent intent = new Intent(this, UserProfileActivity.class);
             startActivity(intent);
         });
     }
