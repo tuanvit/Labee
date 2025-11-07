@@ -150,7 +150,7 @@ public class ProductDetailActivity extends AppCompatActivity {
 
     private void loadProductDetails() {
         progressBar.setVisibility(View.VISIBLE);
-        productViewModel.getProductById(productId);
+        productViewModel.loadProductDetail(productId);
     }
 
     private void displayProductDetails(Product product) {

@@ -31,14 +31,14 @@ public class CartViewModel extends AndroidViewModel {
     public LiveData<ApiResponse<CartItem>> addToCart(Long productId, int quantity) {
         return cartRepository.addToCart(productId, quantity);
     }
-    
+
     // Wrapper to expose add to cart result
     private LiveData<ApiResponse<CartItem>> addToCartResultLiveData;
-    
+
     public LiveData<ApiResponse<CartItem>> getAddToCartResult() {
         return addToCartResultLiveData;
     }
-    
+
     public void addProductToCart(Long productId, int quantity) {
         addToCartResultLiveData = cartRepository.addToCart(productId, quantity);
     }
@@ -46,14 +46,14 @@ public class CartViewModel extends AndroidViewModel {
     public LiveData<ApiResponse<Void>> updateCartItem(Long cartItemId, int quantity) {
         return cartRepository.updateCartItem(cartItemId, quantity);
     }
-    
+
     // Wrapper to expose update result
     private LiveData<ApiResponse<Void>> updateCartResultLiveData;
-    
+
     public LiveData<ApiResponse<Void>> getUpdateCartResult() {
         return updateCartResultLiveData;
     }
-    
+
     public void updateCart(Long cartItemId, int quantity) {
         updateCartResultLiveData = cartRepository.updateCartItem(cartItemId, quantity);
     }
@@ -61,14 +61,14 @@ public class CartViewModel extends AndroidViewModel {
     public LiveData<ApiResponse<Void>> deleteCartItem(Long cartItemId) {
         return cartRepository.deleteCartItem(cartItemId);
     }
-    
+
     // Wrapper to expose delete result
     private LiveData<ApiResponse<Void>> deleteCartItemResultLiveData;
-    
+
     public LiveData<ApiResponse<Void>> getDeleteCartItemResult() {
         return deleteCartItemResultLiveData;
     }
-    
+
     public void deleteItem(Long cartItemId) {
         deleteCartItemResultLiveData = cartRepository.deleteCartItem(cartItemId);
     }

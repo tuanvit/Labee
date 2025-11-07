@@ -25,14 +25,14 @@ public class ProductViewModel extends AndroidViewModel {
     public LiveData<ApiResponse<Product>> getProductById(Long productId) {
         return productRepository.getProductById(productId);
     }
-    
+
     // Wrapper to expose product detail as separate LiveData
     private LiveData<ApiResponse<Product>> productDetailLiveData;
-    
+
     public LiveData<ApiResponse<Product>> getProductDetail() {
         return productDetailLiveData;
     }
-    
+
     public void loadProductDetail(Long productId) {
         productDetailLiveData = productRepository.getProductById(productId);
     }
