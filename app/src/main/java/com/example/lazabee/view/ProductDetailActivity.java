@@ -44,23 +44,43 @@ public class ProductDetailActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_product_detail);
+        android.util.Log.d("ProductDetail", "onCreate started");
 
-        // Get product ID from intent
-        productId = getIntent().getStringExtra("product_id");
-        if (productId == null || productId.isEmpty()) {
-            Toast.makeText(this, "Không tìm thấy sản phẩm", Toast.LENGTH_SHORT).show();
+        try {
+            setContentView(R.layout.activity_product_detail);
+            android.util.Log.d("ProductDetail", "setContentView done");
+
+            // Get product ID from intent
+            productId = getIntent().getStringExtra("product_id");
+            android.util.Log.d("ProductDetail", "productId: " + productId);
+
+            if (productId == null || productId.isEmpty()) {
+                Toast.makeText(this, "Không tìm thấy sản phẩm", Toast.LENGTH_SHORT).show();
+                finish();
+                return;
+            }
+
+            initViews();
+            android.util.Log.d("ProductDetail", "initViews done");
+
+            initViewModels();
+            android.util.Log.d("ProductDetail", "initViewModels done");
+
+            setupClickListeners();
+            android.util.Log.d("ProductDetail", "setupClickListeners done");
+
+            // Load product details FIRST to initialize LiveData
+            loadProductDetails();
+            android.util.Log.d("ProductDetail", "loadProductDetails done");
+
+            // Then setup observers
+            setupObservers();
+            android.util.Log.d("ProductDetail", "setupObservers done");
+        } catch (Exception e) {
+            android.util.Log.e("ProductDetail", "Error in onCreate", e);
+            Toast.makeText(this, "Lỗi: " + e.getMessage(), Toast.LENGTH_LONG).show();
             finish();
-            return;
         }
-
-        initViews();
-        initViewModels();
-        setupObservers();
-        setupClickListeners();
-
-        // Load product details
-        loadProductDetails();
     }
 
     private void initViews() {
@@ -82,6 +102,18 @@ public class ProductDetailActivity extends AppCompatActivity {
         btnAddToCart = findViewById(R.id.btnAddToCart);
         btnBuyNow = findViewById(R.id.btnBuyNow);
         progressBar = findViewById(R.id.progressBar);
+
+        // Log null views
+        if (btnBack == null)
+            android.util.Log.e("ProductDetail", "btnBack is NULL");
+        if (ivProductImage == null)
+            android.util.Log.e("ProductDetail", "ivProductImage is NULL");
+        if (tvProductName == null)
+            android.util.Log.e("ProductDetail", "tvProductName is NULL");
+        if (btnAddToCart == null)
+            android.util.Log.e("ProductDetail", "btnAddToCart is NULL");
+        if (progressBar == null)
+            android.util.Log.e("ProductDetail", "progressBar is NULL");
     }
 
     private void initViewModels() {
@@ -92,7 +124,9 @@ public class ProductDetailActivity extends AppCompatActivity {
     private void setupObservers() {
         // Observe product detail
         productViewModel.getProductDetail().observe(this, productResponse -> {
-            progressBar.setVisibility(View.GONE);
+            if (progressBar != null) {
+                progressBar.setVisibility(View.GONE);
+            }
 
             if (productResponse != null && productResponse.isSuccess() && productResponse.getData() != null) {
                 currentProduct = productResponse.getData();
@@ -108,7 +142,9 @@ public class ProductDetailActivity extends AppCompatActivity {
         // Observe add to cart result
         cartViewModel.getAddToCartResult().observe(this, response -> {
             btnAddToCart.setEnabled(true);
-            progressBar.setVisibility(View.GONE);
+            if (progressBar != null) {
+                progressBar.setVisibility(View.GONE);
+            }
 
             if (response != null) {
                 if (response.isSuccess()) {
@@ -147,7 +183,9 @@ public class ProductDetailActivity extends AppCompatActivity {
     }
 
     private void loadProductDetails() {
-        progressBar.setVisibility(View.VISIBLE);
+        if (progressBar != null) {
+            progressBar.setVisibility(View.VISIBLE);
+        }
         productViewModel.loadProductDetail(productId);
     }
 
@@ -255,7 +293,9 @@ public class ProductDetailActivity extends AppCompatActivity {
         }
 
         btnAddToCart.setEnabled(false);
-        progressBar.setVisibility(View.VISIBLE);
+        if (progressBar != null) {
+            progressBar.setVisibility(View.VISIBLE);
+        }
 
         // Add to cart via API
         cartViewModel.addProductToCart(productId, quantity);

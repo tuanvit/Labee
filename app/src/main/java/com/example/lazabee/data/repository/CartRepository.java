@@ -28,12 +28,12 @@ public class CartRepository {
             public void onResponse(Call<ApiResponse<List<CartItem>>> call,
                     Response<ApiResponse<List<CartItem>>> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    result.setValue(response.body());
+                    result.postValue(response.body());
                 } else {
                     ApiResponse<List<CartItem>> errorResponse = new ApiResponse<>();
                     errorResponse.setSuccess(false);
                     errorResponse.setMessage("Failed to load cart");
-                    result.setValue(errorResponse);
+                    result.postValue(errorResponse);
                 }
             }
 
@@ -42,7 +42,7 @@ public class CartRepository {
                 ApiResponse<List<CartItem>> errorResponse = new ApiResponse<>();
                 errorResponse.setSuccess(false);
                 errorResponse.setMessage(t.getMessage());
-                result.setValue(errorResponse);
+                result.postValue(errorResponse);
             }
         });
 
@@ -57,12 +57,12 @@ public class CartRepository {
             public void onResponse(Call<ApiResponse<CartItem>> call,
                     Response<ApiResponse<CartItem>> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    result.setValue(response.body());
+                    result.postValue(response.body());
                 } else {
                     ApiResponse<CartItem> errorResponse = new ApiResponse<>();
                     errorResponse.setSuccess(false);
                     errorResponse.setMessage("Failed to add to cart");
-                    result.setValue(errorResponse);
+                    result.postValue(errorResponse);
                 }
             }
 
@@ -71,7 +71,7 @@ public class CartRepository {
                 ApiResponse<CartItem> errorResponse = new ApiResponse<>();
                 errorResponse.setSuccess(false);
                 errorResponse.setMessage(t.getMessage());
-                result.setValue(errorResponse);
+                result.postValue(errorResponse);
             }
         });
 
@@ -86,12 +86,12 @@ public class CartRepository {
             public void onResponse(Call<ApiResponse<Void>> call,
                     Response<ApiResponse<Void>> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    result.setValue(response.body());
+                    result.postValue(response.body());
                 } else {
                     ApiResponse<Void> errorResponse = new ApiResponse<>();
                     errorResponse.setSuccess(false);
                     errorResponse.setMessage("Failed to update cart item");
-                    result.setValue(errorResponse);
+                    result.postValue(errorResponse);
                 }
             }
 
@@ -100,7 +100,7 @@ public class CartRepository {
                 ApiResponse<Void> errorResponse = new ApiResponse<>();
                 errorResponse.setSuccess(false);
                 errorResponse.setMessage(t.getMessage());
-                result.setValue(errorResponse);
+                result.postValue(errorResponse);
             }
         });
 
@@ -115,12 +115,12 @@ public class CartRepository {
             public void onResponse(Call<ApiResponse<Void>> call,
                     Response<ApiResponse<Void>> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    result.setValue(response.body());
+                    result.postValue(response.body());
                 } else {
                     ApiResponse<Void> errorResponse = new ApiResponse<>();
                     errorResponse.setSuccess(false);
                     errorResponse.setMessage("Failed to delete cart item");
-                    result.setValue(errorResponse);
+                    result.postValue(errorResponse);
                 }
             }
 
@@ -129,7 +129,7 @@ public class CartRepository {
                 ApiResponse<Void> errorResponse = new ApiResponse<>();
                 errorResponse.setSuccess(false);
                 errorResponse.setMessage(t.getMessage());
-                result.setValue(errorResponse);
+                result.postValue(errorResponse);
             }
         });
 
@@ -144,12 +144,12 @@ public class CartRepository {
             public void onResponse(Call<ApiResponse<Void>> call,
                     Response<ApiResponse<Void>> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    result.setValue(response.body());
+                    result.postValue(response.body());
                 } else {
                     ApiResponse<Void> errorResponse = new ApiResponse<>();
                     errorResponse.setSuccess(false);
                     errorResponse.setMessage("Failed to clear cart");
-                    result.setValue(errorResponse);
+                    result.postValue(errorResponse);
                 }
             }
 
@@ -158,7 +158,7 @@ public class CartRepository {
                 ApiResponse<Void> errorResponse = new ApiResponse<>();
                 errorResponse.setSuccess(false);
                 errorResponse.setMessage(t.getMessage());
-                result.setValue(errorResponse);
+                result.postValue(errorResponse);
             }
         });
 
