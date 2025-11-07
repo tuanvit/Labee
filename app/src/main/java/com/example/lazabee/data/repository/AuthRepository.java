@@ -93,6 +93,30 @@ public class AuthRepository {
         return tokenManager.isLoggedIn();
     }
 
+    public LiveData<ApiResponse<AuthResponse>> getProfile() {
+        MutableLiveData<ApiResponse<AuthResponse>> result = new MutableLiveData<>();
+
+        apiService.getProfile().enqueue(new Callback<ApiResponse<AuthResponse>>() {
+            @Override
+            public void onResponse(Call<ApiResponse<AuthResponse>> call, Response<ApiResponse<AuthResponse>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    result.postValue(response.body());
+                } else {
+                    ApiResponse<AuthResponse> errorResponse = new ApiResponse<>(false, "Failed to load profile", null);
+                    result.postValue(errorResponse);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ApiResponse<AuthResponse>> call, Throwable t) {
+                ApiResponse<AuthResponse> errorResponse = new ApiResponse<>(false, t.getMessage(), null);
+                result.postValue(errorResponse);
+            }
+        });
+
+        return result;
+    }
+
     public void logout() {
         tokenManager.logout();
     }

@@ -75,7 +75,7 @@ public class AddressManagementActivity extends AppCompatActivity implements Addr
     private void loadAddresses() {
         showLoading();
 
-        addressViewModel.getAllAddresses().observe(this, response -> {
+        addressViewModel.getAddresses().observe(this, response -> {
             hideLoading();
 
             if (response != null && response.isSuccess() && response.getData() != null) {

@@ -45,26 +45,24 @@ public class AddressAdapter extends RecyclerView.Adapter<AddressAdapter.AddressV
     public void onBindViewHolder(@NonNull AddressViewHolder holder, int position) {
         AddressResponse address = addressList.get(position);
 
-        holder.tvRecipientName.setText(address.getRecipientName());
+        holder.tvRecipientName.setText(address.getFullName());
         holder.tvPhone.setText(address.getPhoneNumber());
-
+        
         // Build full address
-        String fullAddress = address.getStreetAddress() + ", " +
-                address.getWard() + ", " +
-                address.getDistrict() + ", " +
-                address.getProvince();
+        String fullAddress = address.getStreetAddress() + ", " + 
+                           address.getWard() + ", " + 
+                           address.getDistrict() + ", " + 
+                           address.getProvince();
         holder.tvAddress.setText(fullAddress);
 
         // Show/hide default badge
-        if (address.isDefaultAddress()) {
+        if (address.isDefault()) {
             holder.tvDefaultBadge.setVisibility(View.VISIBLE);
             holder.btnSetDefault.setVisibility(View.GONE);
         } else {
             holder.tvDefaultBadge.setVisibility(View.GONE);
             holder.btnSetDefault.setVisibility(View.VISIBLE);
-        }
-
-        // Action buttons
+        }        // Action buttons
         holder.btnSetDefault.setOnClickListener(v -> {
             if (listener != null)
                 listener.onSetDefault(address);
