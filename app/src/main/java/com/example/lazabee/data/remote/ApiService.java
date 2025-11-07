@@ -25,60 +25,60 @@ public interface ApiService {
     @GET("api/v1/auth/profile")
     Call<ApiResponse<AuthResponse>> getProfile();
 
-    @GET("api/products")
+    @GET("api/v1/products")
     Call<ApiResponse<PageResponse<Product>>> getAllProducts(@Query("page") int page, @Query("size") int size);
 
-    @GET("api/products/{id}")
+    @GET("api/v1/products/{id}")
     Call<ApiResponse<Product>> getProductById(@Path("id") Long productId);
 
-    @GET("api/products/search")
+    @GET("api/v1/products/search")
     Call<ApiResponse<PageResponse<Product>>> searchProducts(
             @Query("keyword") String keyword,
             @Query("page") int page,
             @Query("size") int size);
 
-    @GET("api/cart")
+    @GET("api/v1/cart")
     Call<ApiResponse<List<CartItem>>> getCart();
 
-    @POST("api/cart")
+    @POST("api/v1/cart")
     Call<ApiResponse<CartItem>> addToCart(@Query("productId") Long productId, @Query("quantity") int quantity);
 
-    @PUT("api/cart/{cartItemId}")
+    @PUT("api/v1/cart/{cartItemId}")
     Call<ApiResponse<Void>> updateCartItem(@Path("cartItemId") Long cartItemId, @Query("quantity") int quantity);
 
-    @DELETE("api/cart/{cartItemId}")
+    @DELETE("api/v1/cart/{cartItemId}")
     Call<ApiResponse<Void>> deleteCartItem(@Path("cartItemId") Long cartItemId);
 
-    @DELETE("api/cart/clear")
+    @DELETE("api/v1/cart/clear")
     Call<ApiResponse<Void>> clearCart();
 
-    @POST("api/orders")
+    @POST("api/v1/orders")
     Call<ApiResponse<OrderResponse>> placeOrder(@Body PlaceOrderRequest request);
 
-    @GET("api/orders")
+    @GET("api/v1/orders")
     Call<ApiResponse<PageResponse<OrderResponse>>> getOrders(@Query("page") int page, @Query("size") int size);
 
-    @GET("api/orders/{orderId}")
+    @GET("api/v1/orders/{orderId}")
     Call<ApiResponse<OrderResponse>> getOrderById(@Path("orderId") Long orderId);
 
-    @PUT("api/orders/{orderId}/cancel")
+    @PUT("api/v1/orders/{orderId}/cancel")
     Call<ApiResponse<Void>> cancelOrder(@Path("orderId") Long orderId);
 
-    @GET("api/addresses")
+    @GET("api/v1/addresses")
     Call<ApiResponse<List<AddressResponse>>> getAddresses();
 
-    @GET("api/addresses/{addressId}")
+    @GET("api/v1/addresses/{addressId}")
     Call<ApiResponse<AddressResponse>> getAddressById(@Path("addressId") Long addressId);
 
-    @POST("api/addresses")
+    @POST("api/v1/addresses")
     Call<ApiResponse<AddressResponse>> createAddress(@Body AddressRequest request);
 
-    @PUT("api/addresses/{addressId}")
+    @PUT("api/v1/addresses/{addressId}")
     Call<ApiResponse<AddressResponse>> updateAddress(@Path("addressId") Long addressId, @Body AddressRequest request);
 
-    @DELETE("api/addresses/{addressId}")
+    @DELETE("api/v1/addresses/{addressId}")
     Call<ApiResponse<Void>> deleteAddress(@Path("addressId") Long addressId);
 
-    @PUT("api/addresses/{addressId}/default")
+    @PUT("api/v1/addresses/{addressId}/default")
     Call<ApiResponse<AddressResponse>> setDefaultAddress(@Path("addressId") Long addressId);
 }
