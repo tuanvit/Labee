@@ -75,13 +75,10 @@ public class ProductDetailActivity extends AppCompatActivity {
         tvProductName = findViewById(R.id.tvProductName);
         tvDescription = findViewById(R.id.tvDescription);
         tvRating = findViewById(R.id.tvRating);
-        tvReviewCount = findViewById(R.id.tvReviewCount);
-
+        
         btnSizeS = findViewById(R.id.btnSizeS);
         btnSizeM = findViewById(R.id.btnSizeM);
-        btnSizeL = findViewById(R.id.btnSizeL);
-
-        btnAddToCart = findViewById(R.id.btnAddToCart);
+        btnSizeL = findViewById(R.id.btnSizeL);        btnAddToCart = findViewById(R.id.btnAddToCart);
         btnBuyNow = findViewById(R.id.btnBuyNow);
         progressBar = findViewById(R.id.progressBar);
     }
@@ -255,18 +252,18 @@ public class ProductDetailActivity extends AppCompatActivity {
             Toast.makeText(this, "Vui lòng chờ tải thông tin sản phẩm", Toast.LENGTH_SHORT).show();
             return;
         }
-
+        
         btnAddToCart.setEnabled(false);
         progressBar.setVisibility(View.VISIBLE);
-
+        
         // Add to cart via API
-        cartViewModel.addToCart(productId, quantity);
-
-        String message = String.format("Đang thêm vào giỏ hàng\nSize: %s\nMàu: %s",
+        cartViewModel.addProductToCart(productId, quantity);
+        
+        String message = String.format("Đang thêm vào giỏ hàng\nSize: %s\nMàu: %s", 
                 selectedSize, selectedColor);
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
-
+    
     private void buyNow() {
         if (currentProduct == null) {
             Toast.makeText(this, "Vui lòng chờ tải thông tin sản phẩm", Toast.LENGTH_SHORT).show();
@@ -274,7 +271,7 @@ public class ProductDetailActivity extends AppCompatActivity {
         }
 
         // First add to cart, then navigate to checkout
-        cartViewModel.addToCart(productId, quantity);
+        cartViewModel.addProductToCart(productId, quantity);
 
         // Navigate to checkout screen
         Intent intent = new Intent(this, CheckoutActivity.class);

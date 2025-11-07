@@ -159,12 +159,12 @@ public class CartActivity extends AppCompatActivity implements CartItemAdapter.O
         tvTotalPrice.setText(formatter.format(totalPrice) + "đ");
     }
 
-    @Override
+        @Override
     public void onQuantityChanged(CartItem cartItem, int newQuantity) {
         // Update cart item quantity via API
-        cartViewModel.updateCartItem(cartItem.getId(), newQuantity);
+        cartViewModel.updateCart(cartItem.getId(), newQuantity);
     }
-
+    
     @Override
     public void onDeleteItem(CartItem cartItem) {
         // Show confirmation dialog
@@ -173,7 +173,7 @@ public class CartActivity extends AppCompatActivity implements CartItemAdapter.O
                 .setMessage("Bạn có chắc muốn xóa sản phẩm này khỏi giỏ hàng?")
                 .setPositiveButton("Xóa", (dialog, which) -> {
                     // Delete cart item via API
-                    cartViewModel.deleteCartItem(cartItem.getId());
+                    cartViewModel.deleteItem(cartItem.getId());
                 })
                 .setNegativeButton("Hủy", null)
                 .show();
