@@ -26,7 +26,7 @@ public class CartRepository {
         apiService.getCart().enqueue(new Callback<ApiResponse<List<CartItem>>>() {
             @Override
             public void onResponse(Call<ApiResponse<List<CartItem>>> call,
-                                 Response<ApiResponse<List<CartItem>>> response) {
+                    Response<ApiResponse<List<CartItem>>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     result.setValue(response.body());
                 } else {
@@ -55,7 +55,7 @@ public class CartRepository {
         apiService.addToCart(productId, quantity).enqueue(new Callback<ApiResponse<CartItem>>() {
             @Override
             public void onResponse(Call<ApiResponse<CartItem>> call,
-                                 Response<ApiResponse<CartItem>> response) {
+                    Response<ApiResponse<CartItem>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     result.setValue(response.body());
                 } else {
@@ -84,7 +84,7 @@ public class CartRepository {
         apiService.updateCartItem(cartItemId, quantity).enqueue(new Callback<ApiResponse<Void>>() {
             @Override
             public void onResponse(Call<ApiResponse<Void>> call,
-                                 Response<ApiResponse<Void>> response) {
+                    Response<ApiResponse<Void>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     result.setValue(response.body());
                 } else {
@@ -113,7 +113,7 @@ public class CartRepository {
         apiService.deleteCartItem(cartItemId).enqueue(new Callback<ApiResponse<Void>>() {
             @Override
             public void onResponse(Call<ApiResponse<Void>> call,
-                                 Response<ApiResponse<Void>> response) {
+                    Response<ApiResponse<Void>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     result.setValue(response.body());
                 } else {
@@ -142,7 +142,7 @@ public class CartRepository {
         apiService.clearCart().enqueue(new Callback<ApiResponse<Void>>() {
             @Override
             public void onResponse(Call<ApiResponse<Void>> call,
-                                 Response<ApiResponse<Void>> response) {
+                    Response<ApiResponse<Void>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     result.setValue(response.body());
                 } else {

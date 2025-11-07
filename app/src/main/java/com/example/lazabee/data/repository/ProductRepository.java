@@ -23,29 +23,28 @@ public class ProductRepository {
         MutableLiveData<ApiResponse<PageResponse<Product>>> result = new MutableLiveData<>();
 
         apiService.getAllProducts(page, size).enqueue(
-            new Callback<ApiResponse<PageResponse<Product>>>() {
-                @Override
-                public void onResponse(Call<ApiResponse<PageResponse<Product>>> call,
-                                     Response<ApiResponse<PageResponse<Product>>> response) {
-                    if (response.isSuccessful() && response.body() != null) {
-                        result.setValue(response.body());
-                    } else {
+                new Callback<ApiResponse<PageResponse<Product>>>() {
+                    @Override
+                    public void onResponse(Call<ApiResponse<PageResponse<Product>>> call,
+                            Response<ApiResponse<PageResponse<Product>>> response) {
+                        if (response.isSuccessful() && response.body() != null) {
+                            result.setValue(response.body());
+                        } else {
+                            ApiResponse<PageResponse<Product>> errorResponse = new ApiResponse<>();
+                            errorResponse.setSuccess(false);
+                            errorResponse.setMessage("Failed to load products");
+                            result.setValue(errorResponse);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ApiResponse<PageResponse<Product>>> call, Throwable t) {
                         ApiResponse<PageResponse<Product>> errorResponse = new ApiResponse<>();
                         errorResponse.setSuccess(false);
-                        errorResponse.setMessage("Failed to load products");
+                        errorResponse.setMessage(t.getMessage());
                         result.setValue(errorResponse);
                     }
-                }
-
-                @Override
-                public void onFailure(Call<ApiResponse<PageResponse<Product>>> call, Throwable t) {
-                    ApiResponse<PageResponse<Product>> errorResponse = new ApiResponse<>();
-                    errorResponse.setSuccess(false);
-                    errorResponse.setMessage(t.getMessage());
-                    result.setValue(errorResponse);
-                }
-            }
-        );
+                });
 
         return result;
     }
@@ -56,7 +55,7 @@ public class ProductRepository {
         apiService.getProductById(productId).enqueue(new Callback<ApiResponse<Product>>() {
             @Override
             public void onResponse(Call<ApiResponse<Product>> call,
-                                 Response<ApiResponse<Product>> response) {
+                    Response<ApiResponse<Product>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     result.setValue(response.body());
                 } else {

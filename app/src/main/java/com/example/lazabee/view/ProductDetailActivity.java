@@ -75,10 +75,11 @@ public class ProductDetailActivity extends AppCompatActivity {
         tvProductName = findViewById(R.id.tvProductName);
         tvDescription = findViewById(R.id.tvDescription);
         tvRating = findViewById(R.id.tvRating);
-        
+
         btnSizeS = findViewById(R.id.btnSizeS);
         btnSizeM = findViewById(R.id.btnSizeM);
-        btnSizeL = findViewById(R.id.btnSizeL);        btnAddToCart = findViewById(R.id.btnAddToCart);
+        btnSizeL = findViewById(R.id.btnSizeL);
+        btnAddToCart = findViewById(R.id.btnAddToCart);
         btnBuyNow = findViewById(R.id.btnBuyNow);
         progressBar = findViewById(R.id.progressBar);
     }
@@ -252,18 +253,18 @@ public class ProductDetailActivity extends AppCompatActivity {
             Toast.makeText(this, "Vui lòng chờ tải thông tin sản phẩm", Toast.LENGTH_SHORT).show();
             return;
         }
-        
+
         btnAddToCart.setEnabled(false);
         progressBar.setVisibility(View.VISIBLE);
-        
+
         // Add to cart via API
         cartViewModel.addProductToCart(productId, quantity);
-        
-        String message = String.format("Đang thêm vào giỏ hàng\nSize: %s\nMàu: %s", 
+
+        String message = String.format("Đang thêm vào giỏ hàng\nSize: %s\nMàu: %s",
                 selectedSize, selectedColor);
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
-    
+
     private void buyNow() {
         if (currentProduct == null) {
             Toast.makeText(this, "Vui lòng chờ tải thông tin sản phẩm", Toast.LENGTH_SHORT).show();

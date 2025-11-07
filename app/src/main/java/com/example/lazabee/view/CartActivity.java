@@ -159,12 +159,12 @@ public class CartActivity extends AppCompatActivity implements CartItemAdapter.O
         tvTotalPrice.setText(formatter.format(totalPrice) + "đ");
     }
 
-        @Override
+    @Override
     public void onQuantityChanged(CartItem cartItem, int newQuantity) {
         // Update cart item quantity via API
         cartViewModel.updateCart(cartItem.getId(), newQuantity);
     }
-    
+
     @Override
     public void onDeleteItem(CartItem cartItem) {
         // Show confirmation dialog

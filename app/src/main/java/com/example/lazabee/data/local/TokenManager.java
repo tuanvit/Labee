@@ -9,7 +9,7 @@ public class TokenManager {
     private static final String KEY_USER_ID = "user_id";
     private static final String KEY_EMAIL = "email";
     private static final String KEY_USERNAME = "username";
-    
+
     private static TokenManager instance;
     private SharedPreferences sharedPreferences;
 
