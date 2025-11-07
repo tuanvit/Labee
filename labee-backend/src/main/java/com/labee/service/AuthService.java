@@ -30,9 +30,8 @@ public class AuthService {
             throw new BadRequestException("Email already exists");
         }
 
-        // Create new user
+        // Create new user (userId will be auto-generated)
         User user = User.builder()
-                .userId(UUID.randomUUID().toString())
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .fullName(request.getFullName())
@@ -41,7 +40,7 @@ public class AuthService {
                 .isActive(true)
                 .build();
 
-        userRepository.save(user);
+        user = userRepository.save(user);
 
         // Generate JWT token
         String token = jwtUtil.generateToken(user.getEmail(), user.getUserId(), user.getRole());

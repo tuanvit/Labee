@@ -38,13 +38,13 @@ public class FavoriteService {
             throw new BadRequestException("Product already in favorites");
         }
 
+        // Create favorite (favoriteId will be auto-generated)
         Favorite favorite = Favorite.builder()
-                .favoriteId(UUID.randomUUID().toString())
                 .user(user)
                 .product(product)
                 .build();
 
-        favoriteRepository.save(favorite);
+        favorite = favoriteRepository.save(favorite);
 
         return mapToFavoriteResponse(favorite);
     }

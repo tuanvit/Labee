@@ -15,8 +15,8 @@ public class AddressRequest {
     @NotBlank(message = "Phone number is required")
     private String phoneNumber;
     
-    @NotBlank(message = "Address line is required")
-    private String addressLine;
+    @NotBlank(message = "Detail address is required")
+    private String detailAddress;
     
     @NotBlank(message = "Ward is required")
     private String ward;
@@ -24,8 +24,8 @@ public class AddressRequest {
     @NotBlank(message = "District is required")
     private String district;
     
-    @NotBlank(message = "City is required")
-    private String city;
+    @NotBlank(message = "Province is required")
+    private String province;
     
     private Boolean isDefault = false;
 }

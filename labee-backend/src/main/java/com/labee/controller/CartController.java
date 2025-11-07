@@ -1,6 +1,7 @@
 package com.labee.controller;
 
 import com.labee.dto.request.AddToCartRequest;
+import com.labee.dto.request.UpdateCartItemRequest;
 import com.labee.dto.response.ApiResponse;
 import com.labee.dto.response.CartItemResponse;
 import com.labee.service.CartService;
@@ -38,10 +39,10 @@ public class CartController {
     @PutMapping("/{cartItemId}")
     public ResponseEntity<ApiResponse<CartItemResponse>> updateCartItem(
             @PathVariable String cartItemId,
-            @RequestParam int quantity,
+            @Valid @RequestBody UpdateCartItemRequest request,
             HttpServletRequest httpRequest) {
         String userId = (String) httpRequest.getAttribute("userId");
-        CartItemResponse response = cartService.updateCartItemQuantity(userId, cartItemId, quantity);
+        CartItemResponse response = cartService.updateCartItemQuantity(userId, cartItemId, request.getQuantity());
         return ResponseEntity.ok(ApiResponse.success("Cart item updated successfully", response));
     }
 

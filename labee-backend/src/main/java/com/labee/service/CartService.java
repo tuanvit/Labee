@@ -16,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -57,13 +56,12 @@ public class CartService {
                     return existingItem;
                 })
                 .orElseGet(() -> CartItem.builder()
-                        .cartItemId(UUID.randomUUID().toString())
                         .user(user)
                         .product(product)
                         .quantity(request.getQuantity())
                         .build());
 
-        cartItemRepository.save(cartItem);
+        cartItem = cartItemRepository.save(cartItem);
 
         return mapToCartItemResponse(cartItem);
     }

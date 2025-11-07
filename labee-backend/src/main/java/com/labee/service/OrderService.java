@@ -54,9 +54,8 @@ public class OrderService {
             throw new BadRequestException("Cart is empty");
         }
 
-        // Create order
+        // Create order (orderId will be auto-generated)
         Order order = Order.builder()
-                .orderId(UUID.randomUUID().toString())
                 .orderNumber(generateOrderNumber())
                 .user(user)
                 .status(OrderStatus.PENDING)
@@ -69,6 +68,9 @@ public class OrderService {
                 .shippingName(address.getRecipientName())
                 .shippingPhone(address.getPhoneNumber())
                 .build();
+
+        // Save order first to get generated ID
+        Order savedOrder = orderRepository.save(order);
 
         // Create order items and calculate total
         BigDecimal totalAmount = BigDecimal.ZERO;
@@ -86,10 +88,9 @@ public class OrderService {
                     product.setStockQuantity(product.getStockQuantity() - cartItem.getQuantity());
                     productRepository.save(product);
 
-                    // Create order item with price snapshot
+                    // Create order item with price snapshot (orderItemId will be auto-generated)
                     OrderItem orderItem = OrderItem.builder()
-                            .orderItemId(UUID.randomUUID().toString())
-                            .order(order)
+                            .order(savedOrder)
                             .product(product)
                             .productName(product.getName())
                             .productImageUrl(product.getImageUrl())
@@ -106,17 +107,17 @@ public class OrderService {
                 .map(item -> item.getPriceAtOrder().multiply(BigDecimal.valueOf(item.getQuantity())))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-        order.setTotalAmount(totalAmount);
-        order.setFinalAmount(totalAmount.add(order.getShippingFee()));
+        savedOrder.setTotalAmount(totalAmount);
+        savedOrder.setFinalAmount(totalAmount.add(savedOrder.getShippingFee()));
 
-        // Save order and order items
-        orderRepository.save(order);
+        // Update order with calculated amounts
+        Order finalOrder = orderRepository.save(savedOrder);
         orderItemRepository.saveAll(orderItems);
 
         // Clear cart
         cartItemRepository.deleteByUser(user);
 
-        return mapToOrderResponse(order, orderItems);
+        return mapToOrderResponse(finalOrder, orderItems);
     }
 
     @Transactional(readOnly = true)
@@ -155,10 +156,10 @@ public class OrderService {
 
     private String formatAddress(Address address) {
         return String.format("%s, %s, %s, %s",
-                address.getAddressLine(),
+                address.getDetailAddress(),
                 address.getWard(),
                 address.getDistrict(),
-                address.getCity());
+                address.getProvince());
     }
 
     private OrderResponse mapToOrderResponse(Order order, List<OrderItem> orderItems) {

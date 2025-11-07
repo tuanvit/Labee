@@ -22,8 +22,8 @@ public class Address {
     @Column(nullable = false, length = 15)
     private String phoneNumber;
 
-    @Column(nullable = false, length = 300)
-    private String addressLine;
+    @Column(name = "address_line", nullable = false, length = 300)
+    private String detailAddress; // Số nhà, tên đường
 
     @Column(length = 100)
     private String ward; // Phường/Xã
@@ -31,8 +31,8 @@ public class Address {
     @Column(length = 100)
     private String district; // Quận/Huyện
 
-    @Column(nullable = false, length = 100)
-    private String city; // Thành phố/Tỉnh
+    @Column(name = "city", nullable = false, length = 100)
+    private String province; // Thành phố/Tỉnh
 
     @Column(nullable = false)
     @Builder.Default

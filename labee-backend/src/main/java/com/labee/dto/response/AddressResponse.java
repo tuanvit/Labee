@@ -13,9 +13,9 @@ public class AddressResponse {
     private String addressId;
     private String recipientName;
     private String phoneNumber;
-    private String addressLine;
+    private String detailAddress;
     private String ward;
     private String district;
-    private String city;
+    private String province;
     private Boolean isDefault;
 }

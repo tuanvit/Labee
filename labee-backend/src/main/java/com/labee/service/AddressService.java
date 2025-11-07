@@ -38,19 +38,19 @@ public class AddressService {
                     });
         }
 
+        // Create address (addressId will be auto-generated)
         Address address = Address.builder()
-                .addressId(UUID.randomUUID().toString())
                 .user(user)
                 .recipientName(request.getRecipientName())
                 .phoneNumber(request.getPhoneNumber())
-                .addressLine(request.getAddressLine())
+                .detailAddress(request.getDetailAddress())
                 .ward(request.getWard())
                 .district(request.getDistrict())
-                .city(request.getCity())
+                .province(request.getProvince())
                 .isDefault(request.getIsDefault())
                 .build();
 
-        addressRepository.save(address);
+        address = addressRepository.save(address);
 
         return mapToAddressResponse(address);
     }
@@ -89,10 +89,10 @@ public class AddressService {
 
         address.setRecipientName(request.getRecipientName());
         address.setPhoneNumber(request.getPhoneNumber());
-        address.setAddressLine(request.getAddressLine());
+        address.setDetailAddress(request.getDetailAddress());
         address.setWard(request.getWard());
         address.setDistrict(request.getDistrict());
-        address.setCity(request.getCity());
+        address.setProvince(request.getProvince());
         address.setIsDefault(request.getIsDefault());
 
         addressRepository.save(address);
@@ -142,10 +142,10 @@ public class AddressService {
                 .addressId(address.getAddressId())
                 .recipientName(address.getRecipientName())
                 .phoneNumber(address.getPhoneNumber())
-                .addressLine(address.getAddressLine())
+                .detailAddress(address.getDetailAddress())
                 .ward(address.getWard())
                 .district(address.getDistrict())
-                .city(address.getCity())
+                .province(address.getProvince())
                 .isDefault(address.getIsDefault())
                 .build();
     }
