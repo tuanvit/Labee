@@ -151,7 +151,7 @@ public class AddressRepository {
     public LiveData<ApiResponse<AddressResponse>> setDefaultAddress(String addressId) {
         MutableLiveData<ApiResponse<AddressResponse>> result = new MutableLiveData<>();
 
-        apiService.setDefaultAddress(addressId).enqueue(new Callback<ApiResponse<AddressResponse>>() {
+        apiService.setDefaultAddress(Long.parseLong(addressId)).enqueue(new Callback<ApiResponse<AddressResponse>>() {
             @Override
             public void onResponse(Call<ApiResponse<AddressResponse>> call,
                     Response<ApiResponse<AddressResponse>> response) {

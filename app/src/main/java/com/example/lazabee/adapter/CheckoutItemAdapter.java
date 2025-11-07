@@ -10,16 +10,16 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.lazabee.R;
-import com.example.lazabee.data.model.cart.CartItemResponse;
+import com.example.lazabee.data.model.CartItem;
 import java.text.DecimalFormat;
 import java.util.List;
 
 public class CheckoutItemAdapter extends RecyclerView.Adapter<CheckoutItemAdapter.ViewHolder> {
 
     private Context context;
-    private List<CartItemResponse> items;
+    private List<CartItem> items;
 
-    public CheckoutItemAdapter(Context context, List<CartItemResponse> items) {
+    public CheckoutItemAdapter(Context context, List<CartItem> items) {
         this.context = context;
         this.items = items;
     }
@@ -33,17 +33,17 @@ public class CheckoutItemAdapter extends RecyclerView.Adapter<CheckoutItemAdapte
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        CartItemResponse item = items.get(position);
+        CartItem item = items.get(position);
 
-        holder.tvProductName.setText(item.getProduct().getName());
+        holder.tvProductName.setText(item.getProductName());
         holder.tvQuantity.setText("x" + item.getQuantity());
 
         DecimalFormat formatter = new DecimalFormat("#,###");
         holder.tvPrice.setText(formatter.format(item.getPrice() * item.getQuantity()) + "đ");
 
-        if (item.getProduct().getImageUrl() != null) {
+        if (item.getProductImageUrl() != null) {
             Glide.with(context)
-                    .load(item.getProduct().getImageUrl())
+                    .load(item.getProductImageUrl())
                     .placeholder(R.drawable.img_shoes)
                     .into(holder.ivProductImage);
         }

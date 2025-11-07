@@ -29,7 +29,7 @@ public class OrderViewModel extends AndroidViewModel {
         return orderRepository.placeOrder(addressId, paymentMethod, note);
     }
 
-    public LiveData<ApiResponse<OrderResponse>> cancelOrder(String orderId) {
+    public LiveData<ApiResponse<Void>> cancelOrder(String orderId) {
         return orderRepository.cancelOrder(orderId);
     }
 }

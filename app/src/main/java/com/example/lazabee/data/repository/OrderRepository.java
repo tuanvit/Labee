@@ -48,7 +48,7 @@ public class OrderRepository {
     public LiveData<ApiResponse<OrderResponse>> getOrderById(String orderId) {
         MutableLiveData<ApiResponse<OrderResponse>> result = new MutableLiveData<>();
 
-        apiService.getOrderById(orderId).enqueue(new Callback<ApiResponse<OrderResponse>>() {
+        apiService.getOrderById(Long.parseLong(orderId)).enqueue(new Callback<ApiResponse<OrderResponse>>() {
             @Override
             public void onResponse(Call<ApiResponse<OrderResponse>> call,
                     Response<ApiResponse<OrderResponse>> response) {
@@ -96,24 +96,24 @@ public class OrderRepository {
         return result;
     }
 
-    public LiveData<ApiResponse<OrderResponse>> cancelOrder(String orderId) {
-        MutableLiveData<ApiResponse<OrderResponse>> result = new MutableLiveData<>();
+    public LiveData<ApiResponse<Void>> cancelOrder(String orderId) {
+        MutableLiveData<ApiResponse<Void>> result = new MutableLiveData<>();
 
-        apiService.cancelOrder(orderId).enqueue(new Callback<ApiResponse<OrderResponse>>() {
+        apiService.cancelOrder(Long.parseLong(orderId)).enqueue(new Callback<ApiResponse<Void>>() {
             @Override
-            public void onResponse(Call<ApiResponse<OrderResponse>> call,
-                    Response<ApiResponse<OrderResponse>> response) {
+            public void onResponse(Call<ApiResponse<Void>> call,
+                    Response<ApiResponse<Void>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     result.postValue(response.body());
                 } else {
-                    ApiResponse<OrderResponse> errorResponse = new ApiResponse<>(false, "Failed to cancel order", null);
+                    ApiResponse<Void> errorResponse = new ApiResponse<>(false, "Failed to cancel order", null);
                     result.postValue(errorResponse);
                 }
             }
 
             @Override
-            public void onFailure(Call<ApiResponse<OrderResponse>> call, Throwable t) {
-                ApiResponse<OrderResponse> errorResponse = new ApiResponse<>(false, t.getMessage(), null);
+            public void onFailure(Call<ApiResponse<Void>> call, Throwable t) {
+                ApiResponse<Void> errorResponse = new ApiResponse<>(false, t.getMessage(), null);
                 result.postValue(errorResponse);
             }
         });

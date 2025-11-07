@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.lazabee.R;
 import com.example.lazabee.adapter.CheckoutItemAdapter;
 import com.example.lazabee.data.model.address.AddressResponse;
-import com.example.lazabee.data.model.cart.CartItemResponse;
+import com.example.lazabee.data.model.CartItem;
 import com.example.lazabee.utils.Constants;
 import com.example.lazabee.viewmodel.AddressViewModel;
 import com.example.lazabee.viewmodel.CartViewModel;
@@ -37,7 +37,7 @@ public class CheckoutActivity extends AppCompatActivity {
     private OrderViewModel orderViewModel;
 
     private CheckoutItemAdapter checkoutAdapter;
-    private List<CartItemResponse> cartItems = new ArrayList<>();
+    private List<CartItem> cartItems = new ArrayList<>();
     private AddressResponse selectedAddress;
 
     private double subtotal = 0;
@@ -145,7 +145,7 @@ public class CheckoutActivity extends AppCompatActivity {
 
     private void calculateTotal() {
         subtotal = 0;
-        for (CartItemResponse item : cartItems) {
+        for (CartItem item : cartItems) {
             subtotal += item.getPrice() * item.getQuantity();
         }
 
