@@ -47,12 +47,12 @@ public class AddressAdapter extends RecyclerView.Adapter<AddressAdapter.AddressV
 
         holder.tvRecipientName.setText(address.getFullName());
         holder.tvPhone.setText(address.getPhoneNumber());
-        
+
         // Build full address
-        String fullAddress = address.getStreetAddress() + ", " + 
-                           address.getWard() + ", " + 
-                           address.getDistrict() + ", " + 
-                           address.getProvince();
+        String fullAddress = address.getStreetAddress() + ", " +
+                address.getWard() + ", " +
+                address.getDistrict() + ", " +
+                address.getProvince();
         holder.tvAddress.setText(fullAddress);
 
         // Show/hide default badge
@@ -62,7 +62,7 @@ public class AddressAdapter extends RecyclerView.Adapter<AddressAdapter.AddressV
         } else {
             holder.tvDefaultBadge.setVisibility(View.GONE);
             holder.btnSetDefault.setVisibility(View.VISIBLE);
-        }        // Action buttons
+        } // Action buttons
         holder.btnSetDefault.setOnClickListener(v -> {
             if (listener != null)
                 listener.onSetDefault(address);
