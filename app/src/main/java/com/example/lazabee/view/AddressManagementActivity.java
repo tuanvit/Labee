@@ -12,7 +12,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recycler view.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.lazabee.R;
 import com.example.lazabee.adapter.AddressAdapter;
