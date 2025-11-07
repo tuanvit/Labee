@@ -75,6 +75,32 @@
             android:name=".view.CartActivity"
             android:exported="false"
             android:theme="@style/Theme.Lazabee.NoActionBar" />
+
+        <!-- Phase 1 - Shopping Flow Activities -->
+        <activity
+            android:name=".view.HomeActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Lazabee" />
+            
+        <activity
+            android:name=".view.CheckoutActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Lazabee.NoActionBar" />
+            
+        <activity
+            android:name=".view.OrderSuccessActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Lazabee.NoActionBar" />
+            
+        <activity
+            android:name=".view.OrderHistoryActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Lazabee.NoActionBar" />
+            
+        <activity
+            android:name=".view.OrderDetailActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Lazabee.NoActionBar" />
     </application>
 
 </manifest>
