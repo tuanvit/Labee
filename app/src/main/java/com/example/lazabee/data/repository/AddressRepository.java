@@ -48,7 +48,7 @@ public class AddressRepository {
     public LiveData<ApiResponse<AddressResponse>> getAddressById(String addressId) {
         MutableLiveData<ApiResponse<AddressResponse>> result = new MutableLiveData<>();
 
-        apiService.getAddressById(addressId).enqueue(new Callback<ApiResponse<AddressResponse>>() {
+        apiService.getAddressById(Long.parseLong(addressId)).enqueue(new Callback<ApiResponse<AddressResponse>>() {
             @Override
             public void onResponse(Call<ApiResponse<AddressResponse>> call,
                     Response<ApiResponse<AddressResponse>> response) {
@@ -99,7 +99,7 @@ public class AddressRepository {
     public LiveData<ApiResponse<AddressResponse>> updateAddress(String addressId, AddressRequest request) {
         MutableLiveData<ApiResponse<AddressResponse>> result = new MutableLiveData<>();
 
-        apiService.updateAddress(addressId, request).enqueue(new Callback<ApiResponse<AddressResponse>>() {
+        apiService.updateAddress(Long.parseLong(addressId), request).enqueue(new Callback<ApiResponse<AddressResponse>>() {
             @Override
             public void onResponse(Call<ApiResponse<AddressResponse>> call,
                     Response<ApiResponse<AddressResponse>> response) {

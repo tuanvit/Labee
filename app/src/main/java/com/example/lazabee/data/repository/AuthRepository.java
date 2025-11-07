@@ -35,8 +35,8 @@ public class AuthRepository {
                     ApiResponse<AuthResponse> apiResponse = response.body();
                     if (apiResponse.isSuccess() && apiResponse.getData() != null) {
                         AuthResponse authData = apiResponse.getData();
-                        tokenManager.saveToken(authData.getToken());
-                        tokenManager.saveUserId(authData.getUserId());
+                        tokenManager.saveToken(authData.getAccessToken());
+                        tokenManager.saveUserId(Long.parseLong(authData.getUserId()));
                         tokenManager.saveEmail(authData.getEmail());
                     }
                     result.postValue(apiResponse);
@@ -68,8 +68,8 @@ public class AuthRepository {
                     ApiResponse<AuthResponse> apiResponse = response.body();
                     if (apiResponse.isSuccess() && apiResponse.getData() != null) {
                         AuthResponse authData = apiResponse.getData();
-                        tokenManager.saveToken(authData.getToken());
-                        tokenManager.saveUserId(authData.getUserId());
+                        tokenManager.saveToken(authData.getAccessToken());
+                        tokenManager.saveUserId(Long.parseLong(authData.getUserId()));
                         tokenManager.saveEmail(authData.getEmail());
                     }
                     result.postValue(apiResponse);
@@ -97,5 +97,4 @@ public class AuthRepository {
         tokenManager.logout();
     }
 
-}
 }
