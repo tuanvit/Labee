@@ -99,25 +99,27 @@ public class AddressRepository {
     public LiveData<ApiResponse<AddressResponse>> updateAddress(String addressId, AddressRequest request) {
         MutableLiveData<ApiResponse<AddressResponse>> result = new MutableLiveData<>();
 
-        apiService.updateAddress(Long.parseLong(addressId), request).enqueue(new Callback<ApiResponse<AddressResponse>>() {
-            @Override
-            public void onResponse(Call<ApiResponse<AddressResponse>> call,
-                    Response<ApiResponse<AddressResponse>> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    result.postValue(response.body());
-                } else {
-                    ApiResponse<AddressResponse> errorResponse = new ApiResponse<>(false, "Failed to update address",
-                            null);
-                    result.postValue(errorResponse);
-                }
-            }
+        apiService.updateAddress(Long.parseLong(addressId), request)
+                .enqueue(new Callback<ApiResponse<AddressResponse>>() {
+                    @Override
+                    public void onResponse(Call<ApiResponse<AddressResponse>> call,
+                            Response<ApiResponse<AddressResponse>> response) {
+                        if (response.isSuccessful() && response.body() != null) {
+                            result.postValue(response.body());
+                        } else {
+                            ApiResponse<AddressResponse> errorResponse = new ApiResponse<>(false,
+                                    "Failed to update address",
+                                    null);
+                            result.postValue(errorResponse);
+                        }
+                    }
 
-            @Override
-            public void onFailure(Call<ApiResponse<AddressResponse>> call, Throwable t) {
-                ApiResponse<AddressResponse> errorResponse = new ApiResponse<>(false, t.getMessage(), null);
-                result.postValue(errorResponse);
-            }
-        });
+                    @Override
+                    public void onFailure(Call<ApiResponse<AddressResponse>> call, Throwable t) {
+                        ApiResponse<AddressResponse> errorResponse = new ApiResponse<>(false, t.getMessage(), null);
+                        result.postValue(errorResponse);
+                    }
+                });
 
         return result;
     }
