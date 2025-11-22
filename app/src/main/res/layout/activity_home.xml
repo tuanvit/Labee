@@ -10,7 +10,7 @@
         android:id="@+id/header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/white"
+        android:background="@drawable/bg_gradient"
         android:elevation="4dp"
         android:orientation="horizontal"
         android:padding="16dp"
@@ -26,7 +26,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Labee"
-                android:textColor="@color/colorPrimary"
+                android:textColor="@android:color/white"
                 android:textSize="24sp"
                 android:textStyle="bold" />
 
@@ -35,108 +35,24 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
                 android:text="Khám phá sản phẩm"
-                android:textColor="@android:color/darker_gray"
+                android:textColor="#E0E0E0"
                 android:textSize="14sp" />
 
         </LinearLayout>
 
         <ImageView
             android:id="@+id/btnSearch"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:src="@drawable/ic_search"
-            android:padding="4dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
+            android:padding="8dp"
+            android:background="@drawable/circle_image_background"
+            android:backgroundTint="@android:color/white"
             android:contentDescription="Search"
-            android:tint="@color/colorPrimary"
             android:clickable="true"
             android:focusable="true"/>
 
     </LinearLayout>
-
-    <!-- Category Filter -->
-    <HorizontalScrollView
-        android:id="@+id/categoryScrollView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/header"
-        android:background="@android:color/white"
-        android:elevation="2dp"
-        android:paddingVertical="8dp"
-        android:scrollbars="none">
-
-        <com.google.android.material.chip.ChipGroup
-            android:id="@+id/chipGroupCategories"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingHorizontal="16dp"
-            app:singleSelection="true"
-            app:selectionRequired="true">
-
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chipAll"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Tất cả"
-                android:checked="true"
-                style="@style/Widget.MaterialComponents.Chip.Choice"/>
-
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chipElectronics"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Điện tử"
-                style="@style/Widget.MaterialComponents.Chip.Choice"/>
-
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chipFashion"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Thời trang"
-                style="@style/Widget.MaterialComponents.Chip.Choice"/>
-
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chipHome"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Nhà cửa"
-                style="@style/Widget.MaterialComponents.Chip.Choice"/>
-
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chipSports"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Thể thao"
-                style="@style/Widget.MaterialComponents.Chip.Choice"/>
-
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chipBeauty"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Làm đẹp"
-                style="@style/Widget.MaterialComponents.Chip.Choice"/>
-
-        </com.google.android.material.chip.ChipGroup>
-
-    </HorizontalScrollView>
-
-    <!-- Products RecyclerView -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvProducts"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@id/bottomNav"
-        android:layout_below="@id/categoryScrollView"
-        android:clipToPadding="false"
-        android:padding="8dp" />
-
-    <!-- Loading -->
-    <ProgressBar
-        android:id="@+id/progressBar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:visibility="gone" />
 
     <!-- Bottom Navigation -->
     <LinearLayout
@@ -145,7 +61,7 @@
         android:layout_height="60dp"
         android:layout_alignParentBottom="true"
         android:background="@android:color/white"
-        android:elevation="8dp"
+        android:elevation="16dp"
         android:orientation="horizontal"
         android:weightSum="4">
 
@@ -161,7 +77,7 @@
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:src="@drawable/ic_home"
-                android:tint="@color/colorPrimary" />
+                app:tint="@color/colorPrimary" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -236,5 +152,185 @@
         </LinearLayout>
 
     </LinearLayout>
+
+    <!-- Main Content -->
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/header"
+        android:layout_above="@id/bottomNav"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="16dp">
+
+            <!-- Banner Section -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="4dp">
+
+                <androidx.viewpager2.widget.ViewPager2
+                    android:id="@+id/viewPagerBanner"
+                    android:layout_width="match_parent"
+                    android:layout_height="180dp" />
+
+            </androidx.cardview.widget.CardView>
+
+            <!-- Voucher / Promo Section -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingHorizontal="16dp"
+                android:paddingBottom="8dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Khuyến mãi &amp; Voucher"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/black"
+                    android:layout_marginBottom="8dp"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="10">
+
+                    <EditText
+                        android:id="@+id/etVoucherCode"
+                        android:layout_width="0dp"
+                        android:layout_height="48dp"
+                        android:layout_weight="7"
+                        android:background="@drawable/bg_edittext"
+                        android:hint="Nhập mã giảm giá"
+                        android:paddingHorizontal="12dp"
+                        android:textSize="14sp"
+                        android:layout_marginEnd="8dp"/>
+
+                    <Button
+                        android:id="@+id/btnApplyVoucher"
+                        android:layout_width="0dp"
+                        android:layout_height="48dp"
+                        android:layout_weight="3"
+                        android:text="Áp dụng"
+                        android:textSize="12sp"
+                        android:backgroundTint="@color/colorPrimary"
+                        android:textColor="@android:color/white"/>
+                </LinearLayout>
+                
+                <!-- Fake Sale Banner/Text -->
+                 <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="🔥 Flash Sale: Giảm 50% cho đơn hàng đầu tiên!"
+                    android:textColor="#FF5722"
+                    android:textStyle="italic"
+                    android:layout_marginTop="8dp"
+                    android:background="#FFF3E0"
+                    android:padding="8dp"/>
+
+            </LinearLayout>
+
+            <!-- Category Filter -->
+            <HorizontalScrollView
+                android:id="@+id/categoryScrollView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scrollbars="none"
+                android:paddingVertical="8dp">
+
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/chipGroupCategories"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingHorizontal="16dp"
+                    app:singleSelection="true"
+                    app:selectionRequired="true">
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipAll"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Tất cả"
+                        android:checked="true"
+                        style="@style/Widget.MaterialComponents.Chip.Choice"/>
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipElectronics"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Điện tử"
+                        style="@style/Widget.MaterialComponents.Chip.Choice"/>
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipFashion"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Thời trang"
+                        style="@style/Widget.MaterialComponents.Chip.Choice"/>
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipHome"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Nhà cửa"
+                        style="@style/Widget.MaterialComponents.Chip.Choice"/>
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipSports"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Thể thao"
+                        style="@style/Widget.MaterialComponents.Chip.Choice"/>
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipBeauty"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Làm đẹp"
+                        style="@style/Widget.MaterialComponents.Chip.Choice"/>
+
+                </com.google.android.material.chip.ChipGroup>
+
+            </HorizontalScrollView>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Gợi ý hôm nay"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"/>
+
+            <!-- Products RecyclerView -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvProducts"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="false"
+                android:clipToPadding="false"
+                android:padding="8dp" />
+
+            <!-- Loading -->
+            <ProgressBar
+                android:id="@+id/progressBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:visibility="gone" />
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
 
 </RelativeLayout>
