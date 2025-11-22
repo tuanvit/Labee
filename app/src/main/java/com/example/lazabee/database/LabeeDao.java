@@ -140,4 +140,14 @@ public interface LabeeDao {
 
         @Query("UPDATE products SET stock = stock - :quantity WHERE id = :productId")
         void decreaseStock(int productId, int quantity);
+
+        // Statistics
+        @Query("SELECT SUM(totalPrice) FROM orders WHERE status = 'Completed'")
+        Long getTotalRevenue();
+
+        @Query("SELECT COUNT(*) FROM orders")
+        int getTotalOrders();
+
+        @Query("SELECT COUNT(*) FROM orders WHERE status = :status")
+        int getOrderCountByStatus(String status);
 }
