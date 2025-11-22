@@ -116,11 +116,14 @@ public class LoginActivity extends AppCompatActivity {
             // Ensure admin has role if exists (migration fix)
             User admin = db.labeeDao().checkUserExist("admin@gmail.com");
             if (admin.role == null) {
-                // We can't easily update just one field with current DAO, 
-                // but since we don't have update user method, we might need to rely on manual fix or re-register
-                // For MVP, let's assume fresh install or just ignore if already exists without role (it will be null)
+                // We can't easily update just one field with current DAO,
+                // but since we don't have update user method, we might need to rely on manual
+                // fix or re-register
+                // For MVP, let's assume fresh install or just ignore if already exists without
+                // role (it will be null)
                 // Actually, let's try to update it if we can, but we lack updateUser method.
-                // Let's just leave it, user might need to clear data or I can delete and recreate if password matches default.
+                // Let's just leave it, user might need to clear data or I can delete and
+                // recreate if password matches default.
             }
         }
     }
