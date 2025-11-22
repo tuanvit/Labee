@@ -45,7 +45,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:text="200,000đ"
-        android:textColor="#FF6B00"
+        android:textColor="@color/colorPrimary"
         android:textSize="14sp"
         android:textStyle="bold" />
 
