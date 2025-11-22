@@ -1,5 +1,6 @@
 package com.example.lazabee.view;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
@@ -12,13 +13,13 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.lazabee.R;
 import com.example.lazabee.adapter.ProductAdapter;
-import com.example.lazabee.viewmodel.ProductViewModel;
+import com.example.lazabee.database.AppDatabase;
+import com.example.lazabee.model.Product;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 
@@ -42,7 +43,6 @@ public class SearchActivity extends AppCompatActivity {
     private LinearLayout layoutSearchHistory, layoutEmptyState;
     private View divider;
 
-    private ProductViewModel productViewModel;
     private ProductAdapter productAdapter;
     private List<String> searchHistory;
     private SharedPreferences prefs;
@@ -55,7 +55,6 @@ public class SearchActivity extends AppCompatActivity {
         setContentView(R.layout.activity_search);
 
         initViews();
-        initViewModel();
         loadSearchHistory();
         setupRecyclerView();
         setupSearchView();
@@ -78,14 +77,11 @@ public class SearchActivity extends AppCompatActivity {
         prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
     }
 
-    private void initViewModel() {
-        productViewModel = new ViewModelProvider(this).get(ProductViewModel.class);
-    }
-
     private void setupRecyclerView() {
         productAdapter = new ProductAdapter(this, new ArrayList<>(), product -> {
-            // TODO: Navigate to ProductDetailActivity
-            Toast.makeText(this, "Product: " + product.getName(), Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(SearchActivity.this, ProductDetailActivity.class);
+            intent.putExtra("product_id", product.id);
+            startActivity(intent);
         });
 
         rvSearchResults.setLayoutManager(new GridLayoutManager(this, 2));
@@ -192,29 +188,20 @@ public class SearchActivity extends AppCompatActivity {
         hideSearchHistory();
         showLoading();
 
-        productViewModel.searchProducts(keyword, 0, 20).observe(this, response -> {
-            hideLoading();
+        // Direct Database Call (MVC)
+        List<Product> products = AppDatabase.getInstance(this).labeeDao().searchProducts(keyword);
+        
+        hideLoading();
 
-            if (response != null && response.isSuccess() && response.getData() != null) {
-                List products = response.getData().getContent();
-
-                if (products.isEmpty()) {
-                    showEmptyState();
-                } else {
-                    hideEmptyState();
-                    productAdapter.updateProducts(products);
-                    tvResultsCount.setVisibility(View.VISIBLE);
-                    tvResultsCount.setText(products.size() + " kết quả");
-                    rvSearchResults.setVisibility(View.VISIBLE);
-                }
-            } else {
-                showEmptyState();
-                String errorMsg = (response != null && response.getMessage() != null)
-                        ? response.getMessage()
-                        : "Lỗi tìm kiếm";
-                Toast.makeText(this, errorMsg, Toast.LENGTH_SHORT).show();
-            }
-        });
+        if (products != null && !products.isEmpty()) {
+            hideEmptyState();
+            productAdapter.updateProducts(products);
+            tvResultsCount.setVisibility(View.VISIBLE);
+            tvResultsCount.setText(products.size() + " kết quả");
+            rvSearchResults.setVisibility(View.VISIBLE);
+        } else {
+            showEmptyState();
+        }
     }
 
     private void showSearchHistory() {

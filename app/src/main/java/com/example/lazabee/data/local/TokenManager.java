@@ -26,15 +26,20 @@ public class TokenManager {
     }
 
     public void saveToken(String token) {
-        sharedPreferences.edit().putString(KEY_TOKEN, token).apply();
+        sharedPreferences.edit().putString(KEY_TOKEN, token).commit(); // Use commit() for synchronous write
+        android.util.Log.d("TokenManager",
+                "Token saved: " + (token != null ? "EXISTS (length=" + token.length() + ")" : "NULL"));
     }
 
     public String getToken() {
-        return sharedPreferences.getString(KEY_TOKEN, null);
+        String token = sharedPreferences.getString(KEY_TOKEN, null);
+        android.util.Log.d("TokenManager",
+                "Token retrieved: " + (token != null ? "EXISTS (length=" + token.length() + ")" : "NULL"));
+        return token;
     }
 
     public void saveUserId(String userId) {
-        sharedPreferences.edit().putString(KEY_USER_ID, userId).apply();
+        sharedPreferences.edit().putString(KEY_USER_ID, userId).commit(); // Use commit() for synchronous write
     }
 
     public String getUserId() {
@@ -42,7 +47,7 @@ public class TokenManager {
     }
 
     public void saveEmail(String email) {
-        sharedPreferences.edit().putString(KEY_EMAIL, email).apply();
+        sharedPreferences.edit().putString(KEY_EMAIL, email).commit(); // Use commit() for synchronous write
     }
 
     public String getEmail() {
@@ -50,7 +55,7 @@ public class TokenManager {
     }
 
     public void saveUsername(String username) {
-        sharedPreferences.edit().putString(KEY_USERNAME, username).apply();
+        sharedPreferences.edit().putString(KEY_USERNAME, username).commit(); // Use commit() for synchronous write
     }
 
     public String getUsername() {

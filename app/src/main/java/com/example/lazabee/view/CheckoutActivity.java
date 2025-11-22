@@ -1,24 +1,24 @@
 package com.example.lazabee.view;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.*;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.lazabee.R;
 import com.example.lazabee.adapter.CheckoutItemAdapter;
-import com.example.lazabee.data.model.address.AddressResponse;
-import com.example.lazabee.data.model.CartItem;
-import com.example.lazabee.utils.Constants;
-import com.example.lazabee.viewmodel.AddressViewModel;
-import com.example.lazabee.viewmodel.CartViewModel;
-import com.example.lazabee.viewmodel.OrderViewModel;
+import com.example.lazabee.database.AppDatabase;
+import com.example.lazabee.model.CartItemDetail;
+import com.example.lazabee.model.Order;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class CheckoutActivity extends AppCompatActivity {
 
@@ -32,13 +32,8 @@ public class CheckoutActivity extends AppCompatActivity {
     private Button btnPlaceOrder;
     private ProgressBar progressBar;
 
-    private CartViewModel cartViewModel;
-    private AddressViewModel addressViewModel;
-    private OrderViewModel orderViewModel;
-
     private CheckoutItemAdapter checkoutAdapter;
-    private List<CartItem> cartItems = new ArrayList<>();
-    private AddressResponse selectedAddress;
+    private List<CartItemDetail> cartItems = new ArrayList<>();
 
     private double subtotal = 0;
     private double shippingFee = 30000; // Fixed 30k
@@ -49,7 +44,6 @@ public class CheckoutActivity extends AppCompatActivity {
         setContentView(R.layout.activity_checkout);
 
         initViews();
-        initViewModels();
         setupRecyclerView();
         loadCartItems();
         loadDefaultAddress();
@@ -78,12 +72,6 @@ public class CheckoutActivity extends AppCompatActivity {
         rbCOD.setChecked(true);
     }
 
-    private void initViewModels() {
-        cartViewModel = new ViewModelProvider(this).get(CartViewModel.class);
-        addressViewModel = new ViewModelProvider(this).get(AddressViewModel.class);
-        orderViewModel = new ViewModelProvider(this).get(OrderViewModel.class);
-    }
-
     private void setupRecyclerView() {
         checkoutAdapter = new CheckoutItemAdapter(this, cartItems);
         rvCheckoutItems.setLayoutManager(new LinearLayoutManager(this));
@@ -93,60 +81,37 @@ public class CheckoutActivity extends AppCompatActivity {
     private void loadCartItems() {
         progressBar.setVisibility(View.VISIBLE);
 
-        cartViewModel.getCartItems().observe(this, response -> {
-            progressBar.setVisibility(View.GONE);
+        int userId = getUserId();
+        if (userId == -1) {
+            finish();
+            return;
+        }
 
-            if (response != null && response.isSuccess() && response.getData() != null) {
-                cartItems.clear();
-                cartItems.addAll(response.getData());
-                checkoutAdapter.notifyDataSetChanged();
+        // Direct Database Call (MVC)
+        List<CartItemDetail> items = AppDatabase.getInstance(this).labeeDao().getCartItemDetails(userId);
 
-                // Calculate subtotal
-                calculateTotal();
-            } else {
-                Toast.makeText(this, "Failed to load cart items", Toast.LENGTH_SHORT).show();
-            }
-        });
+        progressBar.setVisibility(View.GONE);
+
+        if (items != null) {
+            cartItems.clear();
+            cartItems.addAll(items);
+            checkoutAdapter.notifyDataSetChanged();
+            calculateTotal();
+        }
     }
 
     private void loadDefaultAddress() {
-        addressViewModel.getAddresses().observe(this, response -> {
-            if (response != null && response.isSuccess() && response.getData() != null) {
-                List<AddressResponse> addresses = response.getData();
-
-                // Find default address
-                for (AddressResponse address : addresses) {
-                    if (address.isDefault()) {
-                        selectedAddress = address;
-                        displayAddress(address);
-                        return;
-                    }
-                }
-
-                // If no default, use first address
-                if (!addresses.isEmpty()) {
-                    selectedAddress = addresses.get(0);
-                    displayAddress(selectedAddress);
-                } else {
-                    tvAddressDetails.setText("No address found. Please add an address.");
-                    btnPlaceOrder.setEnabled(false);
-                }
-            }
-        });
-    }
-
-    private void displayAddress(AddressResponse address) {
-        if (address != null) {
-            tvShippingAddress.setText(address.getFullName());
-            tvAddressDetails.setText(address.getFullAddress() + "\n" + address.getPhoneNumber());
-            btnPlaceOrder.setEnabled(true);
-        }
+        // For now, just show a dummy address or user's info
+        // In a real app, we would query the Address table
+        tvShippingAddress.setText("Địa chỉ mặc định");
+        tvAddressDetails.setText("123 Đường ABC, Quận 1, TP.HCM\n0901234567");
+        btnPlaceOrder.setEnabled(true);
     }
 
     private void calculateTotal() {
         subtotal = 0;
-        for (CartItem item : cartItems) {
-            subtotal += item.getPrice() * item.getQuantity();
+        for (CartItemDetail item : cartItems) {
+            subtotal += item.price * item.quantity;
         }
 
         double total = subtotal + shippingFee;
@@ -161,59 +126,52 @@ public class CheckoutActivity extends AppCompatActivity {
         btnBack.setOnClickListener(v -> finish());
 
         tvChangeAddress.setOnClickListener(v -> {
-            // TODO: Open address selection dialog
-            Toast.makeText(this, "Address selection - Coming soon", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Tính năng đang phát triển", Toast.LENGTH_SHORT).show();
         });
 
         btnPlaceOrder.setOnClickListener(v -> placeOrder());
     }
 
     private void placeOrder() {
-        if (selectedAddress == null) {
-            Toast.makeText(this, "Please select a shipping address", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
         if (cartItems.isEmpty()) {
-            Toast.makeText(this, "Your cart is empty", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Giỏ hàng trống", Toast.LENGTH_SHORT).show();
             return;
         }
-
-        // Get selected payment method
-        String paymentMethod = Constants.PAYMENT_COD;
-        int selectedId = rgPaymentMethod.getCheckedRadioButtonId();
-        if (selectedId == R.id.rbBankTransfer) {
-            paymentMethod = Constants.PAYMENT_BANK_TRANSFER;
-        } else if (selectedId == R.id.rbCreditCard) {
-            paymentMethod = Constants.PAYMENT_CREDIT_CARD;
-        } else if (selectedId == R.id.rbEWallet) {
-            paymentMethod = Constants.PAYMENT_E_WALLET;
-        }
-
-        String note = etOrderNote.getText().toString().trim();
 
         progressBar.setVisibility(View.VISIBLE);
         btnPlaceOrder.setEnabled(false);
 
-        orderViewModel.placeOrder(selectedAddress.getAddressId(), paymentMethod, note)
-                .observe(this, response -> {
-                    progressBar.setVisibility(View.GONE);
-                    btnPlaceOrder.setEnabled(true);
+        int userId = getUserId();
 
-                    if (response != null && response.isSuccess() && response.getData() != null) {
-                        // Clear cart after successful order
-                        cartViewModel.clearCart();
+        // Create Order
+        Order order = new Order();
+        order.userId = userId;
+        order.totalPrice = (int) (subtotal + shippingFee);
+        order.date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(new Date());
+        order.status = "Pending";
 
-                        // Navigate to OrderSuccessActivity
-                        Intent intent = new Intent(CheckoutActivity.this, OrderSuccessActivity.class);
-                        intent.putExtra("orderId", response.getData().getOrderId());
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        startActivity(intent);
-                        finish();
-                    } else {
-                        String errorMessage = response != null ? response.getMessage() : "Failed to place order";
-                        Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show();
-                    }
-                });
+        AppDatabase db = AppDatabase.getInstance(this);
+        db.labeeDao().insertOrder(order);
+
+        // Clear Cart
+        db.labeeDao().clearCart(userId);
+
+        progressBar.setVisibility(View.GONE);
+        btnPlaceOrder.setEnabled(true);
+
+        Toast.makeText(this, "Đặt hàng thành công!", Toast.LENGTH_SHORT).show();
+
+        // Navigate to OrderSuccessActivity
+        Intent intent = new Intent(CheckoutActivity.this, OrderSuccessActivity.class);
+        // intent.putExtra("orderId", ...); // Need to get inserted ID, but for now just
+        // navigate
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        finish();
+    }
+
+    private int getUserId() {
+        SharedPreferences prefs = getSharedPreferences("LabeePrefs", MODE_PRIVATE);
+        return prefs.getInt("userId", -1);
     }
 }

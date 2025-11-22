@@ -1,19 +1,19 @@
 package com.example.lazabee.view;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.lazabee.R;
 import com.example.lazabee.adapter.OrderAdapter;
-import com.example.lazabee.data.model.order.OrderResponse;
-import com.example.lazabee.viewmodel.OrderViewModel;
+import com.example.lazabee.database.AppDatabase;
+import com.example.lazabee.model.Order;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,14 +22,9 @@ public class OrderHistoryActivity extends AppCompatActivity {
     private ImageView btnBack;
     private RecyclerView rvOrders;
     private ProgressBar progressBar;
-    private OrderViewModel orderViewModel;
     private OrderAdapter orderAdapter;
 
-    private List<OrderResponse> orderList = new ArrayList<>();
-    private int currentPage = 0;
-    private int pageSize = 10;
-    private boolean isLoading = false;
-    private boolean isLastPage = false;
+    private List<Order> orderList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +32,6 @@ public class OrderHistoryActivity extends AppCompatActivity {
         setContentView(R.layout.activity_order_history);
 
         initViews();
-        initViewModel();
         setupRecyclerView();
         loadOrders();
     }
@@ -50,63 +44,44 @@ public class OrderHistoryActivity extends AppCompatActivity {
         btnBack.setOnClickListener(v -> finish());
     }
 
-    private void initViewModel() {
-        orderViewModel = new ViewModelProvider(this).get(OrderViewModel.class);
-    }
-
     private void setupRecyclerView() {
         orderAdapter = new OrderAdapter(this, orderList, order -> {
-            Intent intent = new Intent(OrderHistoryActivity.this, OrderDetailActivity.class);
-            intent.putExtra("orderId", order.getOrderId());
-            startActivity(intent);
+            // Intent intent = new Intent(OrderHistoryActivity.this, OrderDetailActivity.class);
+            // intent.putExtra("orderId", order.id);
+            // startActivity(intent);
+            Toast.makeText(this, "Chi tiết đơn hàng: " + order.id, Toast.LENGTH_SHORT).show();
         });
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         rvOrders.setLayoutManager(layoutManager);
         rvOrders.setAdapter(orderAdapter);
-
-        // Pagination
-        rvOrders.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-
-                if (!isLoading && !isLastPage) {
-                    if (layoutManager.findLastVisibleItemPosition() == orderList.size() - 1) {
-                        loadOrders();
-                    }
-                }
-            }
-        });
     }
 
     private void loadOrders() {
-        if (isLoading || isLastPage)
-            return;
-
-        isLoading = true;
         progressBar.setVisibility(View.VISIBLE);
+        
+        int userId = getUserId();
+        if (userId == -1) {
+            finish();
+            return;
+        }
 
-        orderViewModel.getOrders(currentPage, pageSize).observe(this, response -> {
-            progressBar.setVisibility(View.GONE);
-            isLoading = false;
+        // Direct Database Call (MVC)
+        List<Order> orders = AppDatabase.getInstance(this).labeeDao().getOrders(userId);
+        
+        progressBar.setVisibility(View.GONE);
 
-            if (response != null && response.isSuccess() && response.getData() != null) {
-                List<OrderResponse> newOrders = response.getData().getContent();
-
-                if (newOrders != null && !newOrders.isEmpty()) {
-                    orderList.addAll(newOrders);
-                    orderAdapter.notifyDataSetChanged();
-                    currentPage++;
-
-                    isLastPage = response.getData().isLast();
-                } else {
-                    isLastPage = true;
-                }
-            } else {
-                String errorMessage = response != null ? response.getMessage() : "Failed to load orders";
-                Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show();
-            }
-        });
+        if (orders != null && !orders.isEmpty()) {
+            orderList.clear();
+            orderList.addAll(orders);
+            orderAdapter.notifyDataSetChanged();
+        } else {
+            Toast.makeText(this, "Bạn chưa có đơn hàng nào", Toast.LENGTH_SHORT).show();
+        }
+    }
+    
+    private int getUserId() {
+        SharedPreferences prefs = getSharedPreferences("LabeePrefs", MODE_PRIVATE);
+        return prefs.getInt("userId", -1);
     }
 }

@@ -1,5 +1,7 @@
 package com.example.lazabee.data.model.auth;
 
+import com.google.gson.annotations.SerializedName;
+
 public class AuthResponse {
     private String userId;
     private String username;
@@ -7,8 +9,12 @@ public class AuthResponse {
     private String fullName;
     private String phoneNumber;
     private String avatarUrl;
-    private String accessToken;
+
+    @SerializedName("token")  // Backend trả về field "token"
+    private String accessToken;  // Frontend sử dụng accessToken
+
     private String tokenType;
+    private String role;
 
     public AuthResponse() {
     }
@@ -76,5 +82,13 @@ public class AuthResponse {
 
     public void setTokenType(String tokenType) {
         this.tokenType = tokenType;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 }

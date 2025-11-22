@@ -1,6 +1,7 @@
 package com.example.lazabee.view;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -8,15 +9,13 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.lazabee.R;
 import com.example.lazabee.adapter.ProductAdapter;
-import com.example.lazabee.data.model.Product;
-import com.example.lazabee.viewmodel.ProductViewModel;
-import com.google.android.material.chip.Chip;
+import com.example.lazabee.database.AppDatabase;
+import com.example.lazabee.model.Product;
 import com.google.android.material.chip.ChipGroup;
 
 import java.util.ArrayList;
@@ -30,45 +29,35 @@ public class HomeActivity extends AppCompatActivity {
     private ChipGroup chipGroupCategories;
     private ImageView btnSearch;
     private LinearLayout btnHome, btnCart, btnOrders, btnProfile;
-    private ProductViewModel productViewModel;
 
     private List<Product> productList = new ArrayList<>();
-    private int currentPage = 0;
-    private int pageSize = 20;
-    private boolean isLoading = false;
-    private boolean isLastPage = false;
     private String selectedCategory = null; // null = all categories
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        android.util.Log.d("HomeActivity", "onCreate started");
 
-        try {
-            setContentView(R.layout.activity_home);
-            android.util.Log.d("HomeActivity", "setContentView done");
-
-            initViews();
-            android.util.Log.d("HomeActivity", "initViews done");
-
-            initViewModel();
-            android.util.Log.d("HomeActivity", "initViewModel done");
-
-            setupRecyclerView();
-            android.util.Log.d("HomeActivity", "setupRecyclerView done");
-
-            setupCategoryFilter();
-            android.util.Log.d("HomeActivity", "setupCategoryFilter done");
-
-            setupClickListeners();
-            android.util.Log.d("HomeActivity", "setupClickListeners done");
-
-            loadProducts();
-            android.util.Log.d("HomeActivity", "loadProducts called");
-        } catch (Exception e) {
-            android.util.Log.e("HomeActivity", "Error in onCreate", e);
-            Toast.makeText(this, "Error: " + e.getMessage(), Toast.LENGTH_LONG).show();
+        // Check if user is logged in
+        if (!isLoggedIn()) {
+            Intent intent = new Intent(this, LoginActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+            finish();
+            return;
         }
+
+        setContentView(R.layout.activity_home);
+
+        initViews();
+        setupRecyclerView();
+        setupCategoryFilter();
+        setupClickListeners();
+        loadProducts();
+    }
+
+    private boolean isLoggedIn() {
+        SharedPreferences prefs = getSharedPreferences("LabeePrefs", MODE_PRIVATE);
+        return prefs.getBoolean("isLoggedIn", false);
     }
 
     private void initViews() {
@@ -84,10 +73,6 @@ public class HomeActivity extends AppCompatActivity {
         btnProfile = findViewById(R.id.btnProfile);
     }
 
-    private void initViewModel() {
-        productViewModel = new ViewModelProvider(this).get(ProductViewModel.class);
-    }
-
     private void setupClickListeners() {
         btnSearch.setOnClickListener(v -> {
             Intent intent = new Intent(this, SearchActivity.class);
@@ -96,7 +81,6 @@ public class HomeActivity extends AppCompatActivity {
 
         // Bottom navigation
         btnHome.setOnClickListener(v -> {
-            // Already on home, do nothing or scroll to top
             rvProducts.smoothScrollToPosition(0);
         });
 
@@ -137,10 +121,6 @@ public class HomeActivity extends AppCompatActivity {
                 selectedCategory = "beauty";
             }
 
-            // Reset and reload with new category
-            currentPage = 0;
-            productList.clear();
-            isLastPage = false;
             loadProducts();
         });
     }
@@ -149,79 +129,36 @@ public class HomeActivity extends AppCompatActivity {
         productAdapter = new ProductAdapter(this, productList, product -> {
             // Navigate to ProductDetailActivity
             Intent intent = new Intent(HomeActivity.this, ProductDetailActivity.class);
-            intent.putExtra("product_id", product.getProductId());
+            intent.putExtra("product_id", product.id);
             startActivity(intent);
         });
 
         GridLayoutManager layoutManager = new GridLayoutManager(this, 2);
         rvProducts.setLayoutManager(layoutManager);
         rvProducts.setAdapter(productAdapter);
-
-        // Pagination
-        rvProducts.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-
-                if (!isLoading && !isLastPage) {
-                    if (layoutManager.findLastVisibleItemPosition() == productList.size() - 1) {
-                        loadProducts();
-                    }
-                }
-            }
-        });
     }
 
     private void loadProducts() {
-        android.util.Log.d("HomeActivity", "loadProducts: isLoading=" + isLoading + ", isLastPage=" + isLastPage);
-
-        if (isLoading || isLastPage)
-            return;
-
-        isLoading = true;
         progressBar.setVisibility(View.VISIBLE);
 
-        android.util.Log.d("HomeActivity",
-                "Calling productViewModel.getProducts(page=" + currentPage + ", size=" + pageSize + ")");
+        // Direct Database Call (MVC)
+        List<Product> allProducts = AppDatabase.getInstance(this).labeeDao().getAllProducts();
 
-        productViewModel.getProducts(currentPage, pageSize).observe(this, response -> {
-            android.util.Log.d("HomeActivity",
-                    "Response received: " + (response != null ? response.isSuccess() : "null"));
-
-            progressBar.setVisibility(View.GONE);
-            isLoading = false;
-
-            if (response != null && response.isSuccess() && response.getData() != null) {
-                List<Product> newProducts = response.getData().getContent();
-                android.util.Log.d("HomeActivity",
-                        "Products loaded: " + (newProducts != null ? newProducts.size() : "null"));
-
-                if (newProducts != null && !newProducts.isEmpty()) {
-                    // Filter by category if selected
-                    if (selectedCategory != null) {
-                        List<Product> filtered = new ArrayList<>();
-                        for (Product p : newProducts) {
-                            if (p.getCategoryId() != null && p.getCategoryId().equalsIgnoreCase(selectedCategory)) {
-                                filtered.add(p);
-                            }
-                        }
-                        newProducts = filtered;
-                    }
-
-                    productList.addAll(newProducts);
-                    productAdapter.notifyDataSetChanged();
-                    currentPage++;
-
-                    // Check if last page
-                    isLastPage = response.getData().isLast();
-                } else {
-                    isLastPage = true;
+        List<Product> filteredProducts = new ArrayList<>();
+        if (selectedCategory == null) {
+            filteredProducts.addAll(allProducts);
+        } else {
+            for (Product p : allProducts) {
+                if (p.category != null && p.category.equalsIgnoreCase(selectedCategory)) {
+                    filteredProducts.add(p);
                 }
-            } else {
-                String errorMessage = response != null ? response.getMessage() : "Failed to load products";
-                android.util.Log.e("HomeActivity", "Error loading products: " + errorMessage);
-                Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show();
             }
-        });
+        }
+
+        productList.clear();
+        productList.addAll(filteredProducts);
+        productAdapter.notifyDataSetChanged();
+
+        progressBar.setVisibility(View.GONE);
     }
 }

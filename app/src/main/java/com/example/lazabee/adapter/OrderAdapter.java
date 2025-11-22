@@ -8,21 +8,21 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.lazabee.R;
-import com.example.lazabee.data.model.order.OrderResponse;
+import com.example.lazabee.model.Order;
 import java.text.DecimalFormat;
 import java.util.List;
 
 public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> {
 
     private Context context;
-    private List<OrderResponse> orders;
+    private List<Order> orders;
     private OnOrderClickListener listener;
 
     public interface OnOrderClickListener {
-        void onOrderClick(OrderResponse order);
+        void onOrderClick(Order order);
     }
 
-    public OrderAdapter(Context context, List<OrderResponse> orders, OnOrderClickListener listener) {
+    public OrderAdapter(Context context, List<Order> orders, OnOrderClickListener listener) {
         this.context = context;
         this.orders = orders;
         this.listener = listener;
@@ -37,29 +37,24 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        OrderResponse order = orders.get(position);
+        Order order = orders.get(position);
 
-        holder.tvOrderId.setText("Order #" + order.getOrderId());
-        holder.tvOrderDate.setText(order.getCreatedAt());
-        holder.tvOrderStatus.setText(order.getStatus());
+        holder.tvOrderId.setText("Order #" + order.id);
+        holder.tvOrderDate.setText(order.date);
+        holder.tvOrderStatus.setText(order.status);
 
         // Status color
-        if ("PENDING".equals(order.getStatus())) {
+        if ("Pending".equals(order.status)) {
             holder.tvOrderStatus.setTextColor(context.getResources().getColor(android.R.color.holo_orange_dark));
-        } else if ("CONFIRMED".equals(order.getStatus())) {
-            holder.tvOrderStatus.setTextColor(context.getResources().getColor(android.R.color.holo_blue_dark));
-        } else if ("SHIPPING".equals(order.getStatus())) {
-            holder.tvOrderStatus.setTextColor(context.getResources().getColor(android.R.color.holo_blue_light));
-        } else if ("DELIVERED".equals(order.getStatus())) {
+        } else if ("Completed".equals(order.status)) {
             holder.tvOrderStatus.setTextColor(context.getResources().getColor(android.R.color.holo_green_dark));
-        } else if ("CANCELLED".equals(order.getStatus())) {
-            holder.tvOrderStatus.setTextColor(context.getResources().getColor(android.R.color.holo_red_dark));
         }
 
         DecimalFormat formatter = new DecimalFormat("#,###");
-        holder.tvTotalAmount.setText(formatter.format(order.getTotalAmount()) + "đ");
+        holder.tvTotalAmount.setText(formatter.format(order.totalPrice) + "đ");
 
-        holder.tvItemCount.setText(order.getItems() != null ? order.getItems().size() + " items" : "0 items");
+        // holder.tvItemCount.setText(order.getItems() != null ? order.getItems().size() + " items" : "0 items");
+        holder.tvItemCount.setVisibility(View.GONE); // Hide item count for now as we don't join tables here
 
         holder.itemView.setOnClickListener(v -> {
             if (listener != null) {

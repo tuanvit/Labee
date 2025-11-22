@@ -80,21 +80,21 @@ public class UserProfileActivity extends AppCompatActivity {
     private void loadUserProfile() {
         authViewModel.getProfile().observe(this, response -> {
             if (response != null && response.isSuccess() && response.getData() != null) {
-                AuthResponse user = response.getData();
+                com.example.lazabee.data.model.user.UserProfileResponse user = response.getData();
 
                 // Display user info
                 tvFullName.setText(user.getFullName() != null ? user.getFullName() : "Người dùng");
-                tvUsername.setText("@" + (user.getUsername() != null ? user.getUsername() : "username"));
+                tvUsername.setText("@" + (user.getEmail() != null ? user.getEmail().split("@")[0] : "username"));
                 tvEmail.setText(user.getEmail() != null ? user.getEmail() : "N/A");
                 tvPhone.setText(user.getPhoneNumber() != null ? user.getPhoneNumber() : "Chưa cập nhật");
 
-                // TODO: Load avatar with Glide if user.getAvatar() is available
-                // Glide.with(this).load(user.getAvatar()).placeholder(R.drawable.ic_user_avatar).into(ivAvatar);
+                android.util.Log.d("UserProfileActivity", "Profile loaded - Email: " + user.getEmail());
 
             } else {
                 String errorMsg = (response != null && response.getMessage() != null)
                         ? response.getMessage()
                         : "Không thể tải thông tin người dùng";
+                android.util.Log.e("UserProfileActivity", "Load profile failed: " + errorMsg);
                 Toast.makeText(this, errorMsg, Toast.LENGTH_SHORT).show();
             }
         });

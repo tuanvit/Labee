@@ -1,6 +1,7 @@
 package com.example.lazabee.view;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -10,11 +11,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.ViewModelProvider;
 
-import com.example.lazabee.MainActivity;
 import com.example.lazabee.R;
-import com.example.lazabee.viewmodel.AuthViewModel;
+import com.example.lazabee.database.AppDatabase;
+import com.example.lazabee.model.User;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -23,16 +23,12 @@ public class RegisterActivity extends AppCompatActivity {
     private TextView tvLogin;
     private ProgressBar progressBar;
 
-    private AuthViewModel authViewModel;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
         initViews();
-        initViewModel();
-        setupObservers();
         setupClickListeners();
     }
 
@@ -46,14 +42,6 @@ public class RegisterActivity extends AppCompatActivity {
         btnRegister = findViewById(R.id.btnRegister);
         tvLogin = findViewById(R.id.tvLogin);
         progressBar = findViewById(R.id.progressBar);
-    }
-
-    private void initViewModel() {
-        authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
-    }
-
-    private void setupObservers() {
-        // No need for separate observers now, we observe in the register click listener
     }
 
     private void setupClickListeners() {
@@ -80,80 +68,73 @@ public class RegisterActivity extends AppCompatActivity {
         progressBar.setVisibility(View.VISIBLE);
         btnRegister.setEnabled(false);
 
-        authViewModel.register(username, email, password, fullName, phone).observe(this, response -> {
+        AppDatabase db = AppDatabase.getInstance(this);
+
+        // Check if user exists
+        if (db.labeeDao().checkUserExist(email) != null) {
             progressBar.setVisibility(View.GONE);
             btnRegister.setEnabled(true);
+            Toast.makeText(this, "Email đã tồn tại!", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
-            if (response != null && response.isSuccess()) {
-                Toast.makeText(this, "Đăng ký thành công!", Toast.LENGTH_SHORT).show();
-                navigateToMain();
-            } else {
-                String errorMsg = (response != null && response.getMessage() != null)
-                        ? response.getMessage()
-                        : "Đăng ký thất bại";
-                Toast.makeText(this, errorMsg, Toast.LENGTH_SHORT).show();
-            }
-        });
+        // Create new user
+        User newUser = new User();
+        newUser.email = email;
+        newUser.password = password;
+        newUser.fullName = fullName;
+        newUser.phone = phone;
+        // newUser.username = username; // If we add username to User entity, but for
+        // now email is key
+
+        db.labeeDao().register(newUser);
+
+        progressBar.setVisibility(View.GONE);
+        btnRegister.setEnabled(true);
+
+        Toast.makeText(this, "Đăng ký thành công!", Toast.LENGTH_SHORT).show();
+
+        // Auto login
+        User user = db.labeeDao().login(email, password);
+        if (user != null) {
+            saveLoginState(user);
+            navigateToMain();
+        } else {
+            startActivity(new Intent(this, LoginActivity.class));
+            finish();
+        }
+    }
+
+    private void saveLoginState(User user) {
+        SharedPreferences prefs = getSharedPreferences("LabeePrefs", MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putBoolean("isLoggedIn", true);
+        editor.putInt("userId", user.id);
+        editor.putString("userEmail", user.email);
+        editor.putString("userName", user.fullName);
+        editor.apply();
     }
 
     private boolean validateInput(String username, String email, String password,
             String confirmPassword, String fullName, String phone) {
 
-        if (username.isEmpty()) {
-            etUsername.setError("Tên đăng nhập không được để trống");
-            return false;
-        }
-
-        if (username.length() < 3) {
-            etUsername.setError("Tên đăng nhập phải có ít nhất 3 ký tự");
-            return false;
-        }
-
         if (email.isEmpty()) {
             etEmail.setError("Email không được để trống");
             return false;
         }
-
-        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            etEmail.setError("Email không hợp lệ");
-            return false;
-        }
-
         if (password.isEmpty()) {
             etPassword.setError("Mật khẩu không được để trống");
             return false;
         }
-
-        if (password.length() < 6) {
-            etPassword.setError("Mật khẩu phải có ít nhất 6 ký tự");
-            return false;
-        }
-
         if (!password.equals(confirmPassword)) {
             etConfirmPassword.setError("Mật khẩu xác nhận không khớp");
             return false;
         }
-
-        if (fullName.isEmpty()) {
-            etFullName.setError("Họ tên không được để trống");
-            return false;
-        }
-
-        if (phone.isEmpty()) {
-            etPhone.setError("Số điện thoại không được để trống");
-            return false;
-        }
-
-        if (!android.util.Patterns.PHONE.matcher(phone).matches()) {
-            etPhone.setError("Số điện thoại không hợp lệ");
-            return false;
-        }
-
         return true;
     }
 
     private void navigateToMain() {
-        Intent intent = new Intent(this, MainActivity.class);
+        Intent intent = new Intent(this, HomeActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
         finish();

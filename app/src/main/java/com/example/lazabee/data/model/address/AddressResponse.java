@@ -1,21 +1,25 @@
 package com.example.lazabee.data.model.address;
 
+import com.google.gson.annotations.SerializedName;
+
 public class AddressResponse {
     private String addressId;
-    private String userId;
+
+    @SerializedName("recipientName")  // Backend trả về recipientName
     private String fullName;
+
     private String phoneNumber;
     private String province;
     private String district;
     private String ward;
+
+    @SerializedName("detailAddress")  // Backend trả về detailAddress
     private String streetAddress;
-    private boolean isDefault;
-    
+
+    private Boolean isDefault;
+
     public String getAddressId() { return addressId; }
     public void setAddressId(String addressId) { this.addressId = addressId; }
-    
-    public String getUserId() { return userId; }
-    public void setUserId(String userId) { this.userId = userId; }
     
     public String getFullName() { return fullName; }
     public void setFullName(String fullName) { this.fullName = fullName; }
@@ -35,9 +39,9 @@ public class AddressResponse {
     public String getStreetAddress() { return streetAddress; }
     public void setStreetAddress(String streetAddress) { this.streetAddress = streetAddress; }
     
-    public boolean isDefault() { return isDefault; }
-    public void setDefault(boolean aDefault) { isDefault = aDefault; }
-    
+    public Boolean isDefault() { return isDefault; }
+    public void setDefault(Boolean aDefault) { isDefault = aDefault; }
+
     public String getFullAddress() {
         return streetAddress + ", " + ward + ", " + district + ", " + province;
     }

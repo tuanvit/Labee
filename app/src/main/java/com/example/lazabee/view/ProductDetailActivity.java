@@ -1,6 +1,7 @@
 package com.example.lazabee.view;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -11,13 +12,11 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
-import androidx.lifecycle.ViewModelProvider;
 
-import com.bumptech.glide.Glide;
 import com.example.lazabee.R;
-import com.example.lazabee.data.model.Product;
-import com.example.lazabee.viewmodel.CartViewModel;
-import com.example.lazabee.viewmodel.ProductViewModel;
+import com.example.lazabee.database.AppDatabase;
+import com.example.lazabee.model.CartItem;
+import com.example.lazabee.model.Product;
 
 import java.text.DecimalFormat;
 
@@ -26,15 +25,12 @@ public class ProductDetailActivity extends AppCompatActivity {
     private ImageView btnBack, btnShare, btnFavorite, btnAddToWishlist;
     private ImageView ivProductImage;
     private TextView tvPrice, tvOriginalPrice, tvProductName, tvDescription;
-    private TextView tvRating, tvReviewCount;
+    private TextView tvRating;
     private TextView btnSizeS, btnSizeM, btnSizeL;
     private Button btnAddToCart, btnBuyNow;
     private ProgressBar progressBar;
 
-    private ProductViewModel productViewModel;
-    private CartViewModel cartViewModel;
-
-    private String productId;
+    private int productId;
     private Product currentProduct;
     private String selectedSize = "M";
     private String selectedColor = "Blue";
@@ -44,43 +40,20 @@ public class ProductDetailActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        android.util.Log.d("ProductDetail", "onCreate started");
+        setContentView(R.layout.activity_product_detail);
 
-        try {
-            setContentView(R.layout.activity_product_detail);
-            android.util.Log.d("ProductDetail", "setContentView done");
+        // Get product ID from intent
+        productId = getIntent().getIntExtra("product_id", -1);
 
-            // Get product ID from intent
-            productId = getIntent().getStringExtra("product_id");
-            android.util.Log.d("ProductDetail", "productId: " + productId);
-
-            if (productId == null || productId.isEmpty()) {
-                Toast.makeText(this, "Không tìm thấy sản phẩm", Toast.LENGTH_SHORT).show();
-                finish();
-                return;
-            }
-
-            initViews();
-            android.util.Log.d("ProductDetail", "initViews done");
-
-            initViewModels();
-            android.util.Log.d("ProductDetail", "initViewModels done");
-
-            setupClickListeners();
-            android.util.Log.d("ProductDetail", "setupClickListeners done");
-
-            // Load product details FIRST to initialize LiveData
-            loadProductDetails();
-            android.util.Log.d("ProductDetail", "loadProductDetails done");
-
-            // Then setup observers
-            setupObservers();
-            android.util.Log.d("ProductDetail", "setupObservers done");
-        } catch (Exception e) {
-            android.util.Log.e("ProductDetail", "Error in onCreate", e);
-            Toast.makeText(this, "Lỗi: " + e.getMessage(), Toast.LENGTH_LONG).show();
+        if (productId == -1) {
+            Toast.makeText(this, "Không tìm thấy sản phẩm", Toast.LENGTH_SHORT).show();
             finish();
+            return;
         }
+
+        initViews();
+        setupClickListeners();
+        loadProductDetails();
     }
 
     private void initViews() {
@@ -102,66 +75,12 @@ public class ProductDetailActivity extends AppCompatActivity {
         btnAddToCart = findViewById(R.id.btnAddToCart);
         btnBuyNow = findViewById(R.id.btnBuyNow);
         progressBar = findViewById(R.id.progressBar);
-
-        // Log null views
-        if (btnBack == null)
-            android.util.Log.e("ProductDetail", "btnBack is NULL");
-        if (ivProductImage == null)
-            android.util.Log.e("ProductDetail", "ivProductImage is NULL");
-        if (tvProductName == null)
-            android.util.Log.e("ProductDetail", "tvProductName is NULL");
-        if (btnAddToCart == null)
-            android.util.Log.e("ProductDetail", "btnAddToCart is NULL");
-        if (progressBar == null)
-            android.util.Log.e("ProductDetail", "progressBar is NULL");
-    }
-
-    private void initViewModels() {
-        productViewModel = new ViewModelProvider(this).get(ProductViewModel.class);
-        cartViewModel = new ViewModelProvider(this).get(CartViewModel.class);
-    }
-
-    private void setupObservers() {
-        // Observe product detail
-        productViewModel.getProductDetail().observe(this, productResponse -> {
-            if (progressBar != null) {
-                progressBar.setVisibility(View.GONE);
-            }
-
-            if (productResponse != null && productResponse.isSuccess() && productResponse.getData() != null) {
-                currentProduct = productResponse.getData();
-                displayProductDetails(currentProduct);
-            } else {
-                String errorMsg = productResponse != null ? productResponse.getMessage()
-                        : "Không thể tải thông tin sản phẩm";
-                Toast.makeText(this, errorMsg, Toast.LENGTH_SHORT).show();
-                finish();
-            }
-        });
-
-        // Observe add to cart result
-        cartViewModel.getAddToCartResult().observe(this, response -> {
-            btnAddToCart.setEnabled(true);
-            if (progressBar != null) {
-                progressBar.setVisibility(View.GONE);
-            }
-
-            if (response != null) {
-                if (response.isSuccess()) {
-                    Toast.makeText(this, "Đã thêm vào giỏ hàng", Toast.LENGTH_SHORT).show();
-                    // Optionally update cart badge or navigate to cart
-                } else {
-                    Toast.makeText(this, response.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
     }
 
     private void setupClickListeners() {
         btnBack.setOnClickListener(v -> finish());
 
         btnShare.setOnClickListener(v -> {
-            // TODO: Implement share functionality
             Toast.makeText(this, "Chia sẻ sản phẩm", Toast.LENGTH_SHORT).show();
         });
 
@@ -183,58 +102,52 @@ public class ProductDetailActivity extends AppCompatActivity {
     }
 
     private void loadProductDetails() {
-        if (progressBar != null) {
-            progressBar.setVisibility(View.VISIBLE);
+        progressBar.setVisibility(View.VISIBLE);
+
+        // Direct Database Call (MVC)
+        currentProduct = AppDatabase.getInstance(this).labeeDao().getProductById(productId);
+
+        progressBar.setVisibility(View.GONE);
+
+        if (currentProduct != null) {
+            displayProductDetails(currentProduct);
+        } else {
+            Toast.makeText(this, "Không thể tải thông tin sản phẩm", Toast.LENGTH_SHORT).show();
+            finish();
         }
-        productViewModel.loadProductDetail(productId);
     }
 
     private void displayProductDetails(Product product) {
-        // Set product name
-        tvProductName.setText(product.getName());
+        tvProductName.setText(product.name);
 
-        // Set product price
         DecimalFormat formatter = new DecimalFormat("#,###");
-        tvPrice.setText(formatter.format(product.getPrice()) + "đ");
+        tvPrice.setText(formatter.format(product.price) + "đ");
 
-        // Set original price if different
-        if (product.getOriginalPrice() != null && !product.getOriginalPrice().equals(product.getPrice())) {
-            tvOriginalPrice.setVisibility(View.VISIBLE);
-            tvOriginalPrice.setText(formatter.format(product.getOriginalPrice()) + "đ");
-        } else {
+        // Hide original price and rating for simplicity
+        if (tvOriginalPrice != null)
             tvOriginalPrice.setVisibility(View.GONE);
+        if (tvRating != null)
+            tvRating.setVisibility(View.GONE);
+
+        tvDescription.setText(product.description != null ? product.description : "Không có mô tả");
+
+        // Load image from Drawable
+        int resId = 0;
+        if (product.imageResName != null) {
+            resId = getResources().getIdentifier(product.imageResName, "drawable", getPackageName());
         }
 
-        // Set description
-        tvDescription.setText(product.getDescription() != null ? product.getDescription() : "Không có mô tả");
-
-        // Set rating if available
-        if (tvRating != null && product.getRating() != null) {
-            tvRating.setText(String.valueOf(product.getRating()));
-        }
-
-        // Load product image
-        if (product.getImageUrl() != null && !product.getImageUrl().isEmpty()) {
-            String imageUrl = product.getImageUrl();
-            if (!imageUrl.startsWith("http")) {
-                imageUrl = "http://localhost:8080" + imageUrl;
-            }
-
-            Glide.with(this)
-                    .load(imageUrl)
-                    .placeholder(R.drawable.placeholder_image)
-                    .error(R.drawable.error_image)
-                    .into(ivProductImage);
+        if (resId != 0) {
+            ivProductImage.setImageResource(resId);
+        } else {
+            ivProductImage.setImageResource(R.drawable.ic_launcher_foreground);
         }
     }
 
     private void selectSize(String size) {
         selectedSize = size;
-
-        // Reset all size buttons
         resetSizeButtons();
 
-        // Highlight selected size
         switch (size) {
             case "S":
                 btnSizeS.setBackgroundResource(R.drawable.size_option_selected);
@@ -249,8 +162,6 @@ public class ProductDetailActivity extends AppCompatActivity {
                 btnSizeL.setTextColor(ContextCompat.getColor(this, android.R.color.white));
                 break;
         }
-
-        Toast.makeText(this, "Đã chọn size: " + size, Toast.LENGTH_SHORT).show();
     }
 
     private void resetSizeButtons() {
@@ -267,14 +178,10 @@ public class ProductDetailActivity extends AppCompatActivity {
     private void selectColor(String color) {
         selectedColor = color;
         Toast.makeText(this, "Đã chọn màu: " + color, Toast.LENGTH_SHORT).show();
-
-        // TODO: Update color selection UI
-        // Reset all color options and highlight selected one
     }
 
     private void toggleFavorite() {
         isFavorite = !isFavorite;
-
         if (isFavorite) {
             btnFavorite.setImageResource(R.drawable.ic_favorite);
             btnAddToWishlist.setImageResource(R.drawable.ic_favorite);
@@ -287,39 +194,42 @@ public class ProductDetailActivity extends AppCompatActivity {
     }
 
     private void addToCart() {
-        if (currentProduct == null) {
-            Toast.makeText(this, "Vui lòng chờ tải thông tin sản phẩm", Toast.LENGTH_SHORT).show();
+        if (currentProduct == null)
+            return;
+
+        int userId = getUserId();
+        if (userId == -1) {
+            Toast.makeText(this, "Vui lòng đăng nhập lại", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        btnAddToCart.setEnabled(false);
-        if (progressBar != null) {
-            progressBar.setVisibility(View.VISIBLE);
+        AppDatabase db = AppDatabase.getInstance(this);
+
+        // Check if item already in cart
+        CartItem existingItem = db.labeeDao().getCartItem(userId, productId);
+
+        if (existingItem != null) {
+            existingItem.quantity += quantity;
+            db.labeeDao().updateCartItem(existingItem);
+        } else {
+            CartItem newItem = new CartItem();
+            newItem.userId = userId;
+            newItem.productId = productId;
+            newItem.quantity = quantity;
+            db.labeeDao().addToCart(newItem);
         }
 
-        // Add to cart via API
-        cartViewModel.addProductToCart(productId, quantity);
-
-        String message = String.format("Đang thêm vào giỏ hàng\nSize: %s\nMàu: %s",
-                selectedSize, selectedColor);
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Đã thêm vào giỏ hàng", Toast.LENGTH_SHORT).show();
     }
 
     private void buyNow() {
-        if (currentProduct == null) {
-            Toast.makeText(this, "Vui lòng chờ tải thông tin sản phẩm", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        // First add to cart, then navigate to checkout
-        cartViewModel.addProductToCart(productId, quantity);
-
-        // Navigate to checkout screen
-        Intent intent = new Intent(this, CheckoutActivity.class);
+        addToCart();
+        Intent intent = new Intent(this, CartActivity.class); // Or CheckoutActivity
         startActivity(intent);
+    }
 
-        String message = String.format("Mua ngay\nSản phẩm: %s\nSize: %s\nMàu: %s",
-                tvProductName.getText().toString(), selectedSize, selectedColor);
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    private int getUserId() {
+        SharedPreferences prefs = getSharedPreferences("LabeePrefs", MODE_PRIVATE);
+        return prefs.getInt("userId", -1);
     }
 }

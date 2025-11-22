@@ -1,6 +1,7 @@
 package com.example.lazabee.view;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -10,10 +11,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.ViewModelProvider;
 
 import com.example.lazabee.R;
-import com.example.lazabee.viewmodel.AuthViewModel;
+import com.example.lazabee.database.AppDatabase;
+import com.example.lazabee.model.Product;
+import com.example.lazabee.model.User;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -22,21 +24,45 @@ public class LoginActivity extends AppCompatActivity {
     private TextView tvRegister, tvForgotPassword;
     private ProgressBar progressBar;
 
-    private AuthViewModel authViewModel;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        // Seed data if needed
+        seedData();
+
         initViews();
-        initViewModel();
-        setupObservers();
         setupClickListeners();
 
         // Check if user is already logged in
-        if (authViewModel.isLoggedIn()) {
+        if (isLoggedIn()) {
             navigateToMain();
+        }
+    }
+
+    private void seedData() {
+        AppDatabase db = AppDatabase.getInstance(this);
+        if (db.labeeDao().getAllProducts().isEmpty()) {
+            // Add sample products
+            for (int i = 1; i <= 10; i++) {
+                Product p = new Product();
+                p.name = "Sản phẩm mẫu " + i;
+                p.price = 100000 * i;
+                p.description = "Mô tả cho sản phẩm mẫu " + i;
+                p.imageResName = "ic_launcher_foreground"; // Placeholder
+                p.category = "Áo thun";
+                db.labeeDao().insertProduct(p);
+            }
+
+            // Add sample user
+            if (db.labeeDao().checkUserExist("admin@gmail.com") == null) {
+                User u = new User();
+                u.email = "admin@gmail.com";
+                u.password = "123456";
+                u.fullName = "Admin User";
+                db.labeeDao().register(u);
+            }
         }
     }
 
@@ -47,14 +73,6 @@ public class LoginActivity extends AppCompatActivity {
         tvRegister = findViewById(R.id.tvRegister);
         tvForgotPassword = findViewById(R.id.tvForgotPassword);
         progressBar = findViewById(R.id.progressBar);
-    }
-
-    private void initViewModel() {
-        authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
-    }
-
-    private void setupObservers() {
-        // No need for separate observers now, we observe in the login click listener
     }
 
     private void setupClickListeners() {
@@ -72,7 +90,8 @@ public class LoginActivity extends AppCompatActivity {
         });
 
         tvForgotPassword.setOnClickListener(v -> {
-            startActivity(new Intent(this, ForgotPasswordActivity.class));
+            // startActivity(new Intent(this, ForgotPasswordActivity.class));
+            Toast.makeText(this, "Tính năng đang phát triển", Toast.LENGTH_SHORT).show();
         });
     }
 
@@ -80,20 +99,34 @@ public class LoginActivity extends AppCompatActivity {
         progressBar.setVisibility(View.VISIBLE);
         btnLogin.setEnabled(false);
 
-        authViewModel.login(email, password).observe(this, response -> {
-            progressBar.setVisibility(View.GONE);
-            btnLogin.setEnabled(true);
+        // Direct Database Call (MVC)
+        User user = AppDatabase.getInstance(this).labeeDao().login(email, password);
 
-            if (response != null && response.isSuccess()) {
-                Toast.makeText(this, "Đăng nhập thành công!", Toast.LENGTH_SHORT).show();
-                navigateToMain();
-            } else {
-                String errorMsg = (response != null && response.getMessage() != null)
-                        ? response.getMessage()
-                        : "Đăng nhập thất bại";
-                Toast.makeText(this, errorMsg, Toast.LENGTH_SHORT).show();
-            }
-        });
+        progressBar.setVisibility(View.GONE);
+        btnLogin.setEnabled(true);
+
+        if (user != null) {
+            saveLoginState(user);
+            Toast.makeText(this, "Đăng nhập thành công!", Toast.LENGTH_SHORT).show();
+            navigateToMain();
+        } else {
+            Toast.makeText(this, "Email hoặc mật khẩu không đúng", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void saveLoginState(User user) {
+        SharedPreferences prefs = getSharedPreferences("LabeePrefs", MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putBoolean("isLoggedIn", true);
+        editor.putInt("userId", user.id);
+        editor.putString("userEmail", user.email);
+        editor.putString("userName", user.fullName);
+        editor.apply();
+    }
+
+    private boolean isLoggedIn() {
+        SharedPreferences prefs = getSharedPreferences("LabeePrefs", MODE_PRIVATE);
+        return prefs.getBoolean("isLoggedIn", false);
     }
 
     private boolean validateInput(String email, String password) {
@@ -101,22 +134,10 @@ public class LoginActivity extends AppCompatActivity {
             etEmail.setError("Email không được để trống");
             return false;
         }
-
-        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            etEmail.setError("Email không hợp lệ");
-            return false;
-        }
-
         if (password.isEmpty()) {
             etPassword.setError("Mật khẩu không được để trống");
             return false;
         }
-
-        if (password.length() < 6) {
-            etPassword.setError("Mật khẩu phải có ít nhất 6 ký tự");
-            return false;
-        }
-
         return true;
     }
 

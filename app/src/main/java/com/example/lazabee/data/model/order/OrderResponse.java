@@ -1,47 +1,56 @@
 package com.example.lazabee.data.model.order;
 
-import com.example.lazabee.data.model.address.AddressResponse;
+import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 public class OrderResponse {
     private String orderId;
-    private String userId;
-    private AddressResponse shippingAddress;
-    private List<OrderItemResponse> items;
-    private double totalAmount;
+    private String orderNumber;  // Backend trả về thêm field này
     private String status;
     private String paymentMethod;
-    private String note;
+    private String paymentStatus;  // Backend trả về thêm field này
+    private Double totalAmount;
+
+    // Backend trả về string thay vì object
+    private String shippingAddress;
+    private String recipientName;
+    private String recipientPhone;
+
+    @SerializedName("orderedAt")  // Backend trả về orderedAt
     private String createdAt;
-    private String updatedAt;
-    
+
+    private List<OrderItemResponse> items;
+
     public String getOrderId() { return orderId; }
     public void setOrderId(String orderId) { this.orderId = orderId; }
     
-    public String getUserId() { return userId; }
-    public void setUserId(String userId) { this.userId = userId; }
-    
-    public AddressResponse getShippingAddress() { return shippingAddress; }
-    public void setShippingAddress(AddressResponse shippingAddress) { this.shippingAddress = shippingAddress; }
-    
-    public List<OrderItemResponse> getItems() { return items; }
-    public void setItems(List<OrderItemResponse> items) { this.items = items; }
-    
-    public double getTotalAmount() { return totalAmount; }
-    public void setTotalAmount(double totalAmount) { this.totalAmount = totalAmount; }
-    
+    public String getOrderNumber() { return orderNumber; }
+    public void setOrderNumber(String orderNumber) { this.orderNumber = orderNumber; }
+
     public String getStatus() { return status; }
     public void setStatus(String status) { this.status = status; }
     
     public String getPaymentMethod() { return paymentMethod; }
     public void setPaymentMethod(String paymentMethod) { this.paymentMethod = paymentMethod; }
     
-    public String getNote() { return note; }
-    public void setNote(String note) { this.note = note; }
-    
+    public String getPaymentStatus() { return paymentStatus; }
+    public void setPaymentStatus(String paymentStatus) { this.paymentStatus = paymentStatus; }
+
+    public Double getTotalAmount() { return totalAmount; }
+    public void setTotalAmount(Double totalAmount) { this.totalAmount = totalAmount; }
+
+    public String getShippingAddress() { return shippingAddress; }
+    public void setShippingAddress(String shippingAddress) { this.shippingAddress = shippingAddress; }
+
+    public String getRecipientName() { return recipientName; }
+    public void setRecipientName(String recipientName) { this.recipientName = recipientName; }
+
+    public String getRecipientPhone() { return recipientPhone; }
+    public void setRecipientPhone(String recipientPhone) { this.recipientPhone = recipientPhone; }
+
     public String getCreatedAt() { return createdAt; }
     public void setCreatedAt(String createdAt) { this.createdAt = createdAt; }
     
-    public String getUpdatedAt() { return updatedAt; }
-    public void setUpdatedAt(String updatedAt) { this.updatedAt = updatedAt; }
+    public List<OrderItemResponse> getItems() { return items; }
+    public void setItems(List<OrderItemResponse> items) { this.items = items; }
 }

@@ -10,7 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.lazabee.R;
-import com.example.lazabee.data.model.Product;
+import com.example.lazabee.model.Product;
 import java.text.DecimalFormat;
 import java.util.List;
 
@@ -41,38 +41,27 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
     public void onBindViewHolder(@NonNull ProductViewHolder holder, int position) {
         Product product = productList.get(position);
 
-        holder.tvProductName.setText(product.getName());
+        holder.tvProductName.setText(product.name);
 
         // Format price
         DecimalFormat formatter = new DecimalFormat("#,###");
-        holder.tvPrice.setText(formatter.format(product.getPrice()) + "đ");
+        holder.tvPrice.setText(formatter.format(product.price) + "đ");
 
-        // Show original price if different
-        if (product.getOriginalPrice() > product.getPrice()) {
-            holder.tvOriginalPrice.setVisibility(View.VISIBLE);
-            holder.tvOriginalPrice.setText(formatter.format(product.getOriginalPrice()) + "đ");
-        } else {
-            holder.tvOriginalPrice.setVisibility(View.GONE);
+        // Hide original price and rating for simplicity as they are not in the new
+        // model
+        holder.tvOriginalPrice.setVisibility(View.GONE);
+        holder.tvRating.setVisibility(View.GONE);
+
+        // Load image from Drawable
+        int resId = 0;
+        if (product.imageResName != null) {
+            resId = context.getResources().getIdentifier(product.imageResName, "drawable", context.getPackageName());
         }
 
-        // Rating
-        if (product.getRating() > 0) {
-            holder.tvRating.setVisibility(View.VISIBLE);
-            holder.tvRating.setText(String.format("%.1f ⭐", product.getRating()));
+        if (resId != 0) {
+            holder.ivProductImage.setImageResource(resId);
         } else {
-            holder.tvRating.setVisibility(View.GONE);
-        }
-
-        // Load image with Glide
-        if (product.getImageUrl() != null && !product.getImageUrl().isEmpty()) {
-            Glide.with(context)
-                    .load(product.getImageUrl())
-                    .placeholder(R.drawable.img_shoes)
-                    .error(R.drawable.img_shoes)
-                    .centerCrop()
-                    .into(holder.ivProductImage);
-        } else {
-            holder.ivProductImage.setImageResource(R.drawable.img_shoes);
+            holder.ivProductImage.setImageResource(R.drawable.ic_launcher_foreground); // Fallback
         }
 
         // Click listener

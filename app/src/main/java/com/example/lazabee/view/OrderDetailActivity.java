@@ -92,10 +92,14 @@ public class OrderDetailActivity extends AppCompatActivity {
         tvOrderStatus.setText(order.getStatus());
         tvOrderDate.setText(order.getCreatedAt());
 
-        // Address
+        // Address - Backend trả về shippingAddress dạng String, không phải object
         if (order.getShippingAddress() != null) {
-            tvShippingAddress.setText(order.getShippingAddress().getFullAddress());
-            tvPhoneNumber.setText(order.getShippingAddress().getPhoneNumber());
+            tvShippingAddress.setText(order.getShippingAddress());
+        }
+
+        // Phone number - Backend trả về riêng field recipientPhone
+        if (order.getRecipientPhone() != null) {
+            tvPhoneNumber.setText(order.getRecipientPhone());
         }
 
         // Order items
@@ -106,12 +110,9 @@ public class OrderDetailActivity extends AppCompatActivity {
 
         // Payment
         tvPaymentMethod.setText(order.getPaymentMethod());
-        if (order.getNote() != null && !order.getNote().isEmpty()) {
-            tvOrderNote.setVisibility(View.VISIBLE);
-            tvOrderNote.setText("Note: " + order.getNote());
-        } else {
-            tvOrderNote.setVisibility(View.GONE);
-        }
+
+        // Note - OrderResponse mới không có field note
+        tvOrderNote.setVisibility(View.GONE);
 
         // Total
         DecimalFormat formatter = new DecimalFormat("#,###");

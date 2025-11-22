@@ -1,34 +1,27 @@
 package com.example.lazabee.data.model;
 
+import com.google.gson.annotations.SerializedName;
+
 public class CartItem {
-    private Long id;
-    private Long productId;
+    @SerializedName("cartItemId")
+    private String id;  // Backend trả về cartItemId dạng String
+
+    private String productId;  // Backend trả về String
     private String productName;
     private String productImageUrl;
     private Double price;
     private Integer quantity;
-    private Long userId;
+    private Double subtotal;  // Backend trả về thêm field này
 
     public CartItem() {
     }
 
-    public CartItem(Long id, Long productId, String productName, String productImageUrl,
-            Double price, Integer quantity, Long userId) {
-        this.id = id;
-        this.productId = productId;
-        this.productName = productName;
-        this.productImageUrl = productImageUrl;
-        this.price = price;
-        this.quantity = quantity;
-        this.userId = userId;
-    }
-
     // Getters
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public Long getProductId() {
+    public String getProductId() {
         return productId;
     }
 
@@ -48,16 +41,16 @@ public class CartItem {
         return quantity;
     }
 
-    public Long getUserId() {
-        return userId;
+    public Double getSubtotal() {
+        return subtotal;
     }
 
     // Setters
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public void setProductId(Long productId) {
+    public void setProductId(String productId) {
         this.productId = productId;
     }
 
@@ -77,7 +70,7 @@ public class CartItem {
         this.quantity = quantity;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setSubtotal(Double subtotal) {
+        this.subtotal = subtotal;
     }
 }
