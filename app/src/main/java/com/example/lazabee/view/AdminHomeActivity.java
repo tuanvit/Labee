@@ -3,7 +3,7 @@ package com.example.lazabee.view;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.widget.Button;
+import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -11,7 +11,7 @@ import com.example.lazabee.R;
 
 public class AdminHomeActivity extends AppCompatActivity {
 
-    private Button btnManageProducts, btnManageOrders, btnRevenueStats, btnLogout;
+    private View btnManageProducts, btnManageOrders, btnRevenueStats, btnLogout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
