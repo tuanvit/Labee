@@ -51,7 +51,7 @@
                 android:layout_height="wrap_content"
                 android:text="170,000đ"
                 android:textSize="14sp"
-                android:textColor="#FF6B00"
+                android:textColor="@color/colorPrimary"
                 android:layout_marginTop="4dp" />
             
             <!-- Quantity Controls -->

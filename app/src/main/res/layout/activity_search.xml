@@ -76,7 +76,7 @@
                 android:layout_height="wrap_content"
                 android:text="Xóa tất cả"
                 android:textSize="12sp"
-                android:textColor="#FF5722"
+                android:textColor="@color/colorPrimary"
                 android:padding="8dp" />
 
         </LinearLayout>

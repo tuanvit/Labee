@@ -26,7 +26,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Labee"
-                android:textColor="#FF6B00"
+                android:textColor="@color/colorPrimary"
                 android:textSize="24sp"
                 android:textStyle="bold" />
 
@@ -48,7 +48,9 @@
             android:padding="4dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="Search"
-            android:tint="#FF6B00"/>
+            android:tint="@color/colorPrimary"
+            android:clickable="true"
+            android:focusable="true"/>
 
     </LinearLayout>
 
@@ -159,14 +161,14 @@
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:src="@drawable/ic_home"
-                android:tint="#FF6B00" />
+                android:tint="@color/colorPrimary" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
                 android:text="Home"
-                android:textColor="#FF6B00"
+                android:textColor="@color/colorPrimary"
                 android:textSize="10sp" />
         </LinearLayout>
 

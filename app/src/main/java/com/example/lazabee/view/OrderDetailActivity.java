@@ -64,8 +64,8 @@ public class OrderDetailActivity extends AppCompatActivity {
         tvPaymentMethod = findViewById(R.id.tvPaymentMethod);
         tvOrderNote = findViewById(R.id.tvOrderNote);
         tvSubtotal = findViewById(R.id.tvSubtotal);
-        tvShipping = findViewById(R.id.tvShipping);
-        tvTotal = findViewById(R.id.tvTotal);
+        tvShipping = findViewById(R.id.tvShippingFee);
+        tvTotal = findViewById(R.id.tvTotalAmount);
         btnCancelOrder = findViewById(R.id.btnCancelOrder);
         progressBar = findViewById(R.id.progressBar);
 

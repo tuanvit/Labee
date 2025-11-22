@@ -43,27 +43,85 @@ public class LoginActivity extends AppCompatActivity {
 
     private void seedData() {
         AppDatabase db = AppDatabase.getInstance(this);
-        if (db.labeeDao().getAllProducts().isEmpty()) {
-            // Add sample products
-            for (int i = 1; i <= 10; i++) {
-                Product p = new Product();
-                p.name = "Sản phẩm mẫu " + i;
-                p.price = 100000 * i;
-                p.description = "Mô tả cho sản phẩm mẫu " + i;
-                p.imageResName = "ic_launcher_foreground"; // Placeholder
-                p.category = "Áo thun";
-                db.labeeDao().insertProduct(p);
-            }
 
-            // Add sample user
-            if (db.labeeDao().checkUserExist("admin@gmail.com") == null) {
-                User u = new User();
-                u.email = "admin@gmail.com";
-                u.password = "123456";
-                u.fullName = "Admin User";
-                db.labeeDao().register(u);
+        // Check if we need to re-seed (e.g., if only old sample data exists)
+        boolean needReseed = false;
+        if (db.labeeDao().getAllProducts().isEmpty()) {
+            needReseed = true;
+        } else {
+            // Check if the first product is the old "Sản phẩm mẫu" OR has placeholder image
+            Product p = db.labeeDao().getAllProducts().get(0);
+            if (p.name.startsWith("Sản phẩm mẫu") ||
+                    (p.name.equals("Laptop Gaming Dell") && p.imageResName.equals("ic_launcher_foreground"))) {
+                needReseed = true;
+                db.labeeDao().deleteAllProducts();
             }
         }
+
+        if (needReseed) {
+            // Electronics
+            db.labeeDao().insertProduct(createProduct("Laptop Gaming Dell", 25000000,
+                    "Laptop cấu hình khủng cho game thủ", "img_laptop", "electronics"));
+            db.labeeDao().insertProduct(createProduct("iPhone 15 Pro Max", 34000000,
+                    "Điện thoại thông minh cao cấp nhất từ Apple", "img_iphone", "electronics"));
+            db.labeeDao().insertProduct(createProduct("Tai nghe Sony WH-1000XM5", 8000000,
+                    "Tai nghe chống ồn chủ động hàng đầu", "img_headphone", "electronics"));
+            db.labeeDao().insertProduct(createProduct("Samsung Galaxy S24 Ultra", 30000000,
+                    "Siêu phẩm Android với bút S-Pen", "img_samsung", "electronics"));
+
+            // Fashion
+            db.labeeDao().insertProduct(createProduct("Áo thun nam Basic", 150000, "Áo thun cotton 100% thoáng mát",
+                    "img_tshirt", "fashion"));
+            db.labeeDao().insertProduct(
+                    createProduct("Quần Jean Slimfit", 450000, "Quần jean dáng ôm thời trang", "img_jeans", "fashion"));
+            db.labeeDao().insertProduct(createProduct("Giày Sneaker trắng", 800000,
+                    "Giày thể thao năng động, dễ phối đồ", "img_sneaker", "fashion"));
+            db.labeeDao().insertProduct(
+                    createProduct("Áo khoác Bomber", 600000, "Áo khoác phong cách đường phố", "img_jacket", "fashion"));
+
+            // Home
+            db.labeeDao().insertProduct(createProduct("Đèn bàn học LED", 250000, "Đèn chống cận thị, 3 chế độ sáng",
+                    "img_lamp", "home"));
+            db.labeeDao().insertProduct(createProduct("Bộ chăn ga gối Cotton", 1200000,
+                    "Chất liệu mềm mại, họa tiết hiện đại", "img_bedding", "home"));
+            db.labeeDao().insertProduct(createProduct("Máy xay sinh tố", 500000, "Công suất lớn, xay nhuyễn mọi thứ",
+                    "img_blender", "home"));
+
+            // Sports
+            db.labeeDao().insertProduct(createProduct("Giày chạy bộ Nike", 2000000, "Giày chạy bộ chuyên nghiệp, êm ái",
+                    "img_running_shoes", "sports"));
+            db.labeeDao().insertProduct(createProduct("Vợt cầu lông Yonex", 1500000, "Vợt nhẹ, trợ lực tốt",
+                    "img_racket", "sports"));
+            db.labeeDao().insertProduct(createProduct("Bóng đá size 5", 300000, "Bóng da tiêu chuẩn thi đấu",
+                    "img_soccer_ball", "sports"));
+
+            // Beauty
+            db.labeeDao().insertProduct(createProduct("Son môi MAC Ruby Woo", 600000, "Màu đỏ huyền thoại, lâu trôi",
+                    "img_lipstick", "beauty"));
+            db.labeeDao().insertProduct(createProduct("Kem dưỡng ẩm Laneige", 800000, "Cấp nước cho da căng mọng",
+                    "img_cream", "beauty"));
+            db.labeeDao().insertProduct(createProduct("Nước hoa Chanel No.5", 3500000,
+                    "Hương thơm sang trọng, quyến rũ", "img_perfume", "beauty"));
+        }
+
+        // Add sample user if not exists
+        if (db.labeeDao().checkUserExist("admin@gmail.com") == null) {
+            User u = new User();
+            u.email = "admin@gmail.com";
+            u.password = "123456";
+            u.fullName = "Admin User";
+            db.labeeDao().register(u);
+        }
+    }
+
+    private Product createProduct(String name, int price, String description, String imageRes, String category) {
+        Product p = new Product();
+        p.name = name;
+        p.price = price;
+        p.description = description;
+        p.imageResName = imageRes;
+        p.category = category;
+        return p;
     }
 
     private void initViews() {

@@ -19,106 +19,109 @@ import java.util.List;
 
 @Dao
 public interface LabeeDao {
-    // User
-    @Query("SELECT * FROM users WHERE id = :id")
-    User getUserById(int id);
+        // User
+        @Query("SELECT * FROM users WHERE id = :id")
+        User getUserById(int id);
 
-    @Query("SELECT * FROM users WHERE email = :email AND password = :password")
-    User login(String email, String password);
+        @Query("SELECT * FROM users WHERE email = :email AND password = :password")
+        User login(String email, String password);
 
-    @Insert
-    void register(User user);
+        @Insert
+        void register(User user);
 
-    @Query("SELECT * FROM users WHERE email = :email")
-    User checkUserExist(String email);
+        @Query("SELECT * FROM users WHERE email = :email")
+        User checkUserExist(String email);
 
-    // Product
-    @Query("SELECT * FROM products")
-    List<Product> getAllProducts();
+        // Product
+        @Query("SELECT * FROM products")
+        List<Product> getAllProducts();
 
-    @Query("SELECT * FROM products LIMIT :limit OFFSET :offset")
-    List<Product> getProducts(int limit, int offset);
+        @Query("SELECT * FROM products LIMIT :limit OFFSET :offset")
+        List<Product> getProducts(int limit, int offset);
 
-    @Query("SELECT * FROM products WHERE name LIKE '%' || :keyword || '%'")
-    List<Product> searchProducts(String keyword);
+        @Query("SELECT * FROM products WHERE name LIKE '%' || :keyword || '%'")
+        List<Product> searchProducts(String keyword);
 
-    @Query("SELECT * FROM products WHERE id = :id")
-    Product getProductById(int id);
+        @Query("SELECT * FROM products WHERE id = :id")
+        Product getProductById(int id);
 
-    @Insert
-    void insertProduct(Product product);
+        @Insert
+        void insertProduct(Product product);
 
-    @Insert
-    void insertProducts(List<Product> products);
+        @Insert
+        void insertProducts(List<Product> products);
 
-    // Cart
-    @Query("SELECT * FROM cart_items WHERE userId = :userId")
-    List<CartItem> getCartItems(int userId);
+        @Query("DELETE FROM products")
+        void deleteAllProducts();
 
-    @Query("SELECT c.id, c.quantity, c.productId, p.name as productName, p.price, p.imageResName " +
-            "FROM cart_items c INNER JOIN products p ON c.productId = p.id " +
-            "WHERE c.userId = :userId")
-    List<CartItemDetail> getCartItemDetails(int userId);
+        // Cart
+        @Query("SELECT * FROM cart_items WHERE userId = :userId")
+        List<CartItem> getCartItems(int userId);
 
-    @Query("SELECT * FROM cart_items WHERE userId = :userId AND productId = :productId")
-    CartItem getCartItem(int userId, int productId);
+        @Query("SELECT c.id, c.quantity, c.productId, p.name as productName, p.price, p.imageResName " +
+                        "FROM cart_items c INNER JOIN products p ON c.productId = p.id " +
+                        "WHERE c.userId = :userId")
+        List<CartItemDetail> getCartItemDetails(int userId);
 
-    @Query("SELECT * FROM cart_items WHERE id = :id")
-    CartItem getCartItemById(int id);
+        @Query("SELECT * FROM cart_items WHERE userId = :userId AND productId = :productId")
+        CartItem getCartItem(int userId, int productId);
 
-    @Insert
-    void addToCart(CartItem item);
+        @Query("SELECT * FROM cart_items WHERE id = :id")
+        CartItem getCartItemById(int id);
 
-    @Update
-    void updateCartItem(CartItem item);
+        @Insert
+        void addToCart(CartItem item);
 
-    @Delete
-    void deleteCartItem(CartItem item);
+        @Update
+        void updateCartItem(CartItem item);
 
-    @Query("DELETE FROM cart_items WHERE userId = :userId")
-    void clearCart(int userId);
+        @Delete
+        void deleteCartItem(CartItem item);
 
-    // Order
-    @Insert
-    long insertOrder(Order order);
+        @Query("DELETE FROM cart_items WHERE userId = :userId")
+        void clearCart(int userId);
 
-    @Insert
-    void insertOrderItems(List<OrderItem> items);
+        // Order
+        @Insert
+        long insertOrder(Order order);
 
-    @Query("SELECT * FROM orders WHERE userId = :userId ORDER BY id DESC")
-    List<Order> getOrders(int userId);
+        @Insert
+        void insertOrderItems(List<OrderItem> items);
 
-    @Query("SELECT * FROM orders WHERE id = :orderId")
-    Order getOrderById(int orderId);
+        @Query("SELECT * FROM orders WHERE userId = :userId ORDER BY id DESC")
+        List<Order> getOrders(int userId);
 
-    @Query("SELECT oi.id, oi.orderId, oi.productId, oi.quantity, oi.price, p.name as productName, p.imageResName as productImage "
-            +
-            "FROM order_items oi INNER JOIN products p ON oi.productId = p.id " +
-            "WHERE oi.orderId = :orderId")
-    List<OrderItemDetail> getOrderItems(int orderId);
+        @Query("SELECT * FROM orders WHERE id = :orderId")
+        Order getOrderById(int orderId);
 
-    @Query("UPDATE orders SET status = 'Cancelled' WHERE id = :orderId")
-    void cancelOrder(int orderId);
+        @Query("SELECT oi.id, oi.orderId, oi.productId, oi.quantity, oi.price, p.name as productName, p.imageResName as productImage "
+                        +
+                        "FROM order_items oi INNER JOIN products p ON oi.productId = p.id " +
+                        "WHERE oi.orderId = :orderId")
+        List<OrderItemDetail> getOrderItems(int orderId);
 
-    // Address
-    @Query("SELECT * FROM addresses WHERE userId = :userId")
-    List<Address> getAddresses(int userId);
+        @Query("UPDATE orders SET status = 'Cancelled' WHERE id = :orderId")
+        void cancelOrder(int orderId);
 
-    @Insert
-    void insertAddress(Address address);
+        // Address
+        @Query("SELECT * FROM addresses WHERE userId = :userId")
+        List<Address> getAddresses(int userId);
 
-    @Update
-    void updateAddress(Address address);
+        @Insert
+        void insertAddress(Address address);
 
-    @Delete
-    void deleteAddress(Address address);
+        @Update
+        void updateAddress(Address address);
 
-    @Query("SELECT * FROM addresses WHERE id = :id")
-    Address getAddressById(int id);
+        @Delete
+        void deleteAddress(Address address);
 
-    @Query("UPDATE addresses SET isDefault = 0 WHERE userId = :userId")
-    void clearDefaultAddress(int userId);
+        @Query("SELECT * FROM addresses WHERE id = :id")
+        Address getAddressById(int id);
 
-    @Query("UPDATE addresses SET isDefault = 1 WHERE id = :id")
-    void setDefaultAddress(int id);
+        @Query("UPDATE addresses SET isDefault = 0 WHERE userId = :userId")
+        void clearDefaultAddress(int userId);
+
+        @Query("UPDATE addresses SET isDefault = 1 WHERE id = :id")
+        void setDefaultAddress(int id);
 }

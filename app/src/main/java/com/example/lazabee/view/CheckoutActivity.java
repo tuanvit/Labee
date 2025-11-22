@@ -102,11 +102,32 @@ public class CheckoutActivity extends AppCompatActivity {
     }
 
     private void loadDefaultAddress() {
-        // For now, just show a dummy address or user's info
-        // In a real app, we would query the Address table
-        tvShippingAddress.setText("Địa chỉ mặc định");
-        tvAddressDetails.setText("123 Đường ABC, Quận 1, TP.HCM\n0901234567");
-        btnPlaceOrder.setEnabled(true);
+        int userId = getUserId();
+        List<com.example.lazabee.model.Address> addresses = AppDatabase.getInstance(this).labeeDao()
+                .getAddresses(userId);
+
+        if (addresses != null && !addresses.isEmpty()) {
+            com.example.lazabee.model.Address defaultAddress = null;
+            for (com.example.lazabee.model.Address addr : addresses) {
+                if (addr.isDefault) {
+                    defaultAddress = addr;
+                    break;
+                }
+            }
+
+            // If no default set, pick the first one
+            if (defaultAddress == null) {
+                defaultAddress = addresses.get(0);
+            }
+
+            tvShippingAddress.setText(defaultAddress.name + " (" + defaultAddress.phone + ")");
+            tvAddressDetails.setText(defaultAddress.address);
+            btnPlaceOrder.setEnabled(true);
+        } else {
+            tvShippingAddress.setText("Chưa có địa chỉ");
+            tvAddressDetails.setText("Vui lòng thêm địa chỉ giao hàng");
+            btnPlaceOrder.setEnabled(false);
+        }
     }
 
     private void calculateTotal() {
@@ -127,10 +148,17 @@ public class CheckoutActivity extends AppCompatActivity {
         btnBack.setOnClickListener(v -> finish());
 
         tvChangeAddress.setOnClickListener(v -> {
-            Toast.makeText(this, "Tính năng đang phát triển", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(this, AddressManagementActivity.class);
+            startActivity(intent);
         });
 
         btnPlaceOrder.setOnClickListener(v -> placeOrder());
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        loadDefaultAddress();
     }
 
     private void placeOrder() {

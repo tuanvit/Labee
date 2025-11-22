@@ -46,11 +46,9 @@ public class OrderHistoryActivity extends AppCompatActivity {
 
     private void setupRecyclerView() {
         orderAdapter = new OrderAdapter(this, orderList, order -> {
-            // Intent intent = new Intent(OrderHistoryActivity.this,
-            // OrderDetailActivity.class);
-            // intent.putExtra("orderId", order.id);
-            // startActivity(intent);
-            Toast.makeText(this, "Chi tiết đơn hàng: " + order.id, Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(OrderHistoryActivity.this, OrderDetailActivity.class);
+            intent.putExtra("orderId", order.id);
+            startActivity(intent);
         });
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);

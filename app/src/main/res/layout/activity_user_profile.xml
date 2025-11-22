@@ -14,7 +14,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#2196F3"
+            android:background="@color/colorPrimary"
             android:orientation="vertical"
             android:padding="20dp">
 
@@ -185,7 +185,7 @@
                         android:layout_width="24dp"
                         android:layout_height="24dp"
                         android:src="@drawable/ic_order"
-                        android:tint="#2196F3"/>
+                        android:tint="@color/colorPrimary"/>
 
                     <TextView
                         android:layout_width="0dp"
@@ -221,7 +221,7 @@
                         android:layout_width="24dp"
                         android:layout_height="24dp"
                         android:src="@drawable/ic_location"
-                        android:tint="#2196F3"/>
+                        android:tint="@color/colorPrimary"/>
 
                     <TextView
                         android:layout_width="0dp"
