@@ -3,7 +3,11 @@ package com.example.lazabee.view;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -11,7 +15,9 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager2.widget.ViewPager2;
 
+import com.example.lazabee.BannerAdapter;
 import com.example.lazabee.R;
 import com.example.lazabee.adapter.ProductAdapter;
 import com.example.lazabee.database.AppDatabase;
@@ -19,6 +25,7 @@ import com.example.lazabee.model.Product;
 import com.google.android.material.chip.ChipGroup;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class HomeActivity extends AppCompatActivity {
@@ -29,6 +36,26 @@ public class HomeActivity extends AppCompatActivity {
     private ChipGroup chipGroupCategories;
     private ImageView btnSearch;
     private LinearLayout btnHome, btnCart, btnOrders, btnProfile;
+    
+    private ViewPager2 viewPagerBanner;
+    private EditText etVoucherCode;
+    private Button btnApplyVoucher;
+    private Handler bannerHandler = new Handler(Looper.getMainLooper());
+    private Runnable bannerRunnable = new Runnable() {
+        @Override
+        public void run() {
+            if (viewPagerBanner.getAdapter() != null) {
+                int currentItem = viewPagerBanner.getCurrentItem();
+                int totalItems = viewPagerBanner.getAdapter().getItemCount();
+                if (currentItem < totalItems - 1) {
+                    viewPagerBanner.setCurrentItem(currentItem + 1);
+                } else {
+                    viewPagerBanner.setCurrentItem(0);
+                }
+                bannerHandler.postDelayed(this, 3000); // 3 seconds
+            }
+        }
+    };
 
     private List<Product> productList = new ArrayList<>();
     private String selectedCategory = null; // null = all categories
@@ -49,6 +76,8 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home);
 
         initViews();
+        setupBanner();
+        setupVoucher();
         setupRecyclerView();
         setupCategoryFilter();
         setupClickListeners();
@@ -65,12 +94,49 @@ public class HomeActivity extends AppCompatActivity {
         progressBar = findViewById(R.id.progressBar);
         chipGroupCategories = findViewById(R.id.chipGroupCategories);
         btnSearch = findViewById(R.id.btnSearch);
+        
+        viewPagerBanner = findViewById(R.id.viewPagerBanner);
+        etVoucherCode = findViewById(R.id.etVoucherCode);
+        btnApplyVoucher = findViewById(R.id.btnApplyVoucher);
 
         // Bottom navigation
         btnHome = findViewById(R.id.btnHome);
         btnCart = findViewById(R.id.btnCart);
         btnOrders = findViewById(R.id.btnOrders);
         btnProfile = findViewById(R.id.btnProfile);
+    }
+    
+    private void setupBanner() {
+        List<Integer> bannerImages = Arrays.asList(
+            R.drawable.banner_sale,
+            R.drawable.big_sale_background,
+            R.drawable.img_ps // Placeholder
+        );
+        
+        BannerAdapter bannerAdapter = new BannerAdapter(this, bannerImages);
+        viewPagerBanner.setAdapter(bannerAdapter);
+        
+        // Auto scroll
+        viewPagerBanner.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+            @Override
+            public void onPageSelected(int position) {
+                super.onPageSelected(position);
+                bannerHandler.removeCallbacks(bannerRunnable);
+                bannerHandler.postDelayed(bannerRunnable, 3000);
+            }
+        });
+    }
+    
+    private void setupVoucher() {
+        btnApplyVoucher.setOnClickListener(v -> {
+            String code = etVoucherCode.getText().toString().trim();
+            if (code.isEmpty()) {
+                Toast.makeText(this, "Vui lòng nhập mã giảm giá", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "Đã áp dụng mã: " + code, Toast.LENGTH_SHORT).show();
+                // Logic to apply voucher would go here
+            }
+        });
     }
 
     private void setupClickListeners() {
@@ -81,7 +147,8 @@ public class HomeActivity extends AppCompatActivity {
 
         // Bottom navigation
         btnHome.setOnClickListener(v -> {
-            rvProducts.smoothScrollToPosition(0);
+            // Scroll to top
+            if (rvProducts != null) rvProducts.smoothScrollToPosition(0);
         });
 
         btnCart.setOnClickListener(v -> {
@@ -160,5 +227,17 @@ public class HomeActivity extends AppCompatActivity {
         productAdapter.notifyDataSetChanged();
 
         progressBar.setVisibility(View.GONE);
+    }
+    
+    @Override
+    protected void onPause() {
+        super.onPause();
+        bannerHandler.removeCallbacks(bannerRunnable);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        bannerHandler.postDelayed(bannerRunnable, 3000);
     }
 }
