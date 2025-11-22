@@ -15,7 +15,7 @@ import com.google.android.material.textfield.TextInputEditText;
 
 public class AdminProductEditActivity extends AppCompatActivity {
 
-    private TextInputEditText etName, etPrice, etDescription, etImageRes, etCategory;
+    private TextInputEditText etName, etPrice, etStock, etDescription, etImageRes, etCategory;
     private Button btnSave, btnDelete;
     private TextView tvTitle;
     private int productId = -1;
@@ -42,6 +42,7 @@ public class AdminProductEditActivity extends AppCompatActivity {
     private void initViews() {
         etName = findViewById(R.id.etName);
         etPrice = findViewById(R.id.etPrice);
+        etStock = findViewById(R.id.etStock);
         etDescription = findViewById(R.id.etDescription);
         etImageRes = findViewById(R.id.etImageRes);
         etCategory = findViewById(R.id.etCategory);
@@ -55,6 +56,7 @@ public class AdminProductEditActivity extends AppCompatActivity {
         if (currentProduct != null) {
             etName.setText(currentProduct.name);
             etPrice.setText(String.valueOf(currentProduct.price));
+            etStock.setText(String.valueOf(currentProduct.stock));
             etDescription.setText(currentProduct.description);
             etImageRes.setText(currentProduct.imageResName);
             etCategory.setText(currentProduct.category);
@@ -64,6 +66,7 @@ public class AdminProductEditActivity extends AppCompatActivity {
     private void saveProduct() {
         String name = etName.getText().toString().trim();
         String priceStr = etPrice.getText().toString().trim();
+        String stockStr = etStock.getText().toString().trim();
         String description = etDescription.getText().toString().trim();
         String imageRes = etImageRes.getText().toString().trim();
         String category = etCategory.getText().toString().trim();
@@ -74,6 +77,7 @@ public class AdminProductEditActivity extends AppCompatActivity {
         }
 
         int price = Integer.parseInt(priceStr);
+        int stock = stockStr.isEmpty() ? 0 : Integer.parseInt(stockStr);
 
         if (currentProduct == null) {
             currentProduct = new Product();
@@ -81,6 +85,7 @@ public class AdminProductEditActivity extends AppCompatActivity {
 
         currentProduct.name = name;
         currentProduct.price = price;
+        currentProduct.stock = stock;
         currentProduct.description = description;
         currentProduct.imageResName = imageRes;
         currentProduct.category = category;

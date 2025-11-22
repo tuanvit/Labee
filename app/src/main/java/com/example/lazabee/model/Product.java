@@ -12,4 +12,5 @@ public class Product {
     public String description;
     public String imageResName; // e.g., "ic_shirt"
     public String category;
+    public int stock; // Inventory count
 }

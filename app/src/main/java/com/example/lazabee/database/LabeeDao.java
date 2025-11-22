@@ -137,4 +137,7 @@ public interface LabeeDao {
 
         @Delete
         void deleteProduct(Product product);
+
+        @Query("UPDATE products SET stock = stock - :quantity WHERE id = :productId")
+        void decreaseStock(int productId, int quantity);
 }
