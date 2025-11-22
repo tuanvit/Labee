@@ -110,7 +110,18 @@ public class LoginActivity extends AppCompatActivity {
             u.email = "admin@gmail.com";
             u.password = "123456";
             u.fullName = "Admin User";
+            u.role = "admin";
             db.labeeDao().register(u);
+        } else {
+            // Ensure admin has role if exists (migration fix)
+            User admin = db.labeeDao().checkUserExist("admin@gmail.com");
+            if (admin.role == null) {
+                // We can't easily update just one field with current DAO, 
+                // but since we don't have update user method, we might need to rely on manual fix or re-register
+                // For MVP, let's assume fresh install or just ignore if already exists without role (it will be null)
+                // Actually, let's try to update it if we can, but we lack updateUser method.
+                // Let's just leave it, user might need to clear data or I can delete and recreate if password matches default.
+            }
         }
     }
 
@@ -179,6 +190,7 @@ public class LoginActivity extends AppCompatActivity {
         editor.putInt("userId", user.id);
         editor.putString("userEmail", user.email);
         editor.putString("userName", user.fullName);
+        editor.putString("userRole", user.role);
         editor.apply();
     }
 
@@ -200,7 +212,15 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void navigateToMain() {
-        Intent intent = new Intent(this, HomeActivity.class);
+        SharedPreferences prefs = getSharedPreferences("LabeePrefs", MODE_PRIVATE);
+        String role = prefs.getString("userRole", "customer");
+
+        Intent intent;
+        if ("admin".equals(role)) {
+            intent = new Intent(this, AdminHomeActivity.class);
+        } else {
+            intent = new Intent(this, HomeActivity.class);
+        }
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
         finish();

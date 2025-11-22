@@ -84,6 +84,7 @@ public class RegisterActivity extends AppCompatActivity {
         newUser.password = password;
         newUser.fullName = fullName;
         newUser.phone = phone;
+        newUser.role = "customer";
         // newUser.username = username; // If we add username to User entity, but for
         // now email is key
 
@@ -112,6 +113,7 @@ public class RegisterActivity extends AppCompatActivity {
         editor.putInt("userId", user.id);
         editor.putString("userEmail", user.email);
         editor.putString("userName", user.fullName);
+        editor.putString("userRole", user.role);
         editor.apply();
     }
 
@@ -134,7 +136,15 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private void navigateToMain() {
-        Intent intent = new Intent(this, HomeActivity.class);
+        SharedPreferences prefs = getSharedPreferences("LabeePrefs", MODE_PRIVATE);
+        String role = prefs.getString("userRole", "customer");
+
+        Intent intent;
+        if ("admin".equals(role)) {
+            intent = new Intent(this, AdminHomeActivity.class);
+        } else {
+            intent = new Intent(this, HomeActivity.class);
+        }
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
         finish();
