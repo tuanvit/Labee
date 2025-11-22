@@ -195,7 +195,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:background="@drawable/bg_button_outline_red"
+                    android:background="@drawable/bg_button_outline_blue"
                     android:padding="12dp"
                     android:gravity="center_vertical"
                     android:clickable="true"
@@ -205,7 +205,7 @@
                         android:layout_width="24dp"
                         android:layout_height="24dp"
                         android:src="@drawable/ic_inventory"
-                        app:tint="#FF5722"/>
+                        app:tint="@color/colorPrimary"/>
 
                     <TextView
                         android:layout_width="0dp"
@@ -214,7 +214,7 @@
                         android:text="Kho Voucher &amp; Khuyến Mãi"
                         android:textSize="16sp"
                         android:textStyle="bold"
-                        android:textColor="#FF5722"
+                        android:textColor="@color/colorPrimary"
                         android:layout_marginStart="12dp"/>
 
                     <TextView
@@ -231,10 +231,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="🔥 Flash Sale: Giảm 50% cho đơn hàng đầu tiên!"
-                    android:textColor="#FF5722"
+                    android:textColor="@color/colorPrimary"
                     android:textStyle="italic"
                     android:layout_marginTop="8dp"
-                    android:background="#FFF3E0"
+                    android:background="#E3F2FD"
                     android:padding="8dp"/>
 
             </LinearLayout>

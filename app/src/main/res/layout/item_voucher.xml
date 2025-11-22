@@ -18,7 +18,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="3"
-            android:background="#FF5722"
+            android:background="@color/colorPrimary"
             android:gravity="center"
             android:orientation="vertical"
             android:padding="8dp">
@@ -81,7 +81,7 @@
                     android:layout_weight="1"
                     android:text="Còn lại: 85%"
                     android:textSize="12sp"
-                    android:textColor="#FF5722"/>
+                    android:textColor="@color/colorPrimary"/>
 
                 <Button
                     android:id="@+id/btnCollect"
@@ -89,7 +89,7 @@
                     android:layout_height="36dp"
                     android:text="Lưu"
                     android:textSize="12sp"
-                    android:backgroundTint="#FF5722"
+                    android:backgroundTint="@color/colorPrimary"
                     android:textColor="@android:color/white"/>
             </LinearLayout>
 
