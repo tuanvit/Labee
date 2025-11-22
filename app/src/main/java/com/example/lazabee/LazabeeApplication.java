@@ -1,21 +1,21 @@
 package com.example.lazabee;
 
 import android.app.Application;
-import com.example.lazabee.data.local.AppDatabase;
+import com.example.lazabee.database.AppDatabase;
 
 public class LazabeeApplication extends Application {
-    
-    private AppDatabase database;
-    
+    private static LazabeeApplication instance;
+
     @Override
     public void onCreate() {
         super.onCreate();
-        
-        // Khởi tạo database
-        database = AppDatabase.getInstance(this);
+        instance = this;
+
+        // Initialize Database
+        AppDatabase.getInstance(this);
     }
-    
-    public AppDatabase getDatabase() {
-        return database;
+
+    public static LazabeeApplication getInstance() {
+        return instance;
     }
 }
