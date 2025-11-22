@@ -127,4 +127,14 @@ public interface LabeeDao {
 
         @Query("UPDATE addresses SET isDefault = 1 WHERE id = :id")
         void setDefaultAddress(int id);
+
+        // Admin
+        @Query("SELECT * FROM orders ORDER BY id DESC")
+        List<Order> getAllOrders();
+
+        @Update
+        void updateProduct(Product product);
+
+        @Delete
+        void deleteProduct(Product product);
 }

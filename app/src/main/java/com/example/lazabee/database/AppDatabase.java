@@ -14,7 +14,7 @@ import com.example.lazabee.model.Product;
 import com.example.lazabee.model.User;
 
 @Database(entities = { User.class, Product.class, Order.class, CartItem.class, OrderItem.class,
-        Address.class }, version = 3, exportSchema = false)
+        Address.class }, version = 4, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
     public abstract LabeeDao labeeDao();
 
