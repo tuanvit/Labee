@@ -41,13 +41,20 @@ public class UserProfileActivity extends AppCompatActivity {
     private void initViews() {
         tvFullName = findViewById(R.id.tvFullName);
         tvUsername = findViewById(R.id.tvUsername);
-        tvEmail = findViewById(R.id.tvEmail);
-        tvPhone = findViewById(R.id.tvPhone);
         btnBack = findViewById(R.id.btnBack);
         ivAvatar = findViewById(R.id.ivAvatar);
+        btnSettings = findViewById(R.id.btnSettings);
         btnLogout = findViewById(R.id.btnLogout);
+
         btnOrderHistory = findViewById(R.id.btnOrderHistory);
         btnAddressManagement = findViewById(R.id.btnAddressManagement);
+        btnVoucherWallet = findViewById(R.id.btnVoucherWallet);
+        btnHelpCenter = findViewById(R.id.btnHelpCenter);
+
+        btnStatusWaitConfirm = findViewById(R.id.btnStatusWaitConfirm);
+        btnStatusWaitPickup = findViewById(R.id.btnStatusWaitPickup);
+        btnStatusDelivering = findViewById(R.id.btnStatusDelivering);
+        btnStatusRating = findViewById(R.id.btnStatusRating);
 
         // Add progressBar if not in layout
         progressBar = new ProgressBar(this);
@@ -78,6 +85,30 @@ public class UserProfileActivity extends AppCompatActivity {
             Intent intent = new Intent(this, AddressManagementActivity.class);
             startActivity(intent);
         });
+
+        btnVoucherWallet.setOnClickListener(v -> {
+            Intent intent = new Intent(this, VoucherListActivity.class);
+            startActivity(intent);
+        });
+
+        btnHelpCenter.setOnClickListener(v -> {
+            Toast.makeText(this, "Tính năng đang phát triển", Toast.LENGTH_SHORT).show();
+        });
+
+        btnSettings.setOnClickListener(v -> {
+            Toast.makeText(this, "Cài đặt tài khoản", Toast.LENGTH_SHORT).show();
+        });
+
+        // Order Status Clicks - For now, all go to OrderHistory
+        View.OnClickListener orderStatusListener = v -> {
+            Intent intent = new Intent(this, OrderHistoryActivity.class);
+            startActivity(intent);
+        };
+
+        btnStatusWaitConfirm.setOnClickListener(orderStatusListener);
+        btnStatusWaitPickup.setOnClickListener(orderStatusListener);
+        btnStatusDelivering.setOnClickListener(orderStatusListener);
+        btnStatusRating.setOnClickListener(orderStatusListener);
     }
 
     private void loadUserProfile() {
@@ -94,8 +125,6 @@ public class UserProfileActivity extends AppCompatActivity {
             // Display user info
             tvFullName.setText(user.fullName != null ? user.fullName : "Người dùng");
             tvUsername.setText("@" + (user.email != null ? user.email.split("@")[0] : "username"));
-            tvEmail.setText(user.email != null ? user.email : "N/A");
-            tvPhone.setText(user.phone != null ? user.phone : "Chưa cập nhật");
         } else {
             Toast.makeText(this, "Không thể tải thông tin người dùng", Toast.LENGTH_SHORT).show();
         }
