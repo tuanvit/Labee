@@ -25,7 +25,7 @@ public class AdminProductListActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_admin_product_list.xml);
+        setContentView(R.layout.activity_admin_product_list);
 
         rvProducts = findViewById(R.id.rvProducts);
         fabAddProduct = findViewById(R.id.fabAddProduct);

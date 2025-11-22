@@ -106,7 +106,8 @@ public class AdminOrderDetailActivity extends AppCompatActivity {
         tvPaymentMethod.setText(order.paymentMethod);
 
         DecimalFormat formatter = new DecimalFormat("#,###");
-        tvSubtotal.setText(formatter.format(order.totalPrice - 30000) + "đ"); // Assuming fixed shipping fee for now or calculate from items
+        tvSubtotal.setText(formatter.format(order.totalPrice - 30000) + "đ"); // Assuming fixed shipping fee for now or
+                                                                              // calculate from items
         tvShippingFee.setText("30,000đ");
         tvTotalAmount.setText(formatter.format(order.totalPrice) + "đ");
 
