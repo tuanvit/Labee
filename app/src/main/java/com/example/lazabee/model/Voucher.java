@@ -12,7 +12,8 @@ public class Voucher implements Serializable {
     public String expiryDate;
     public boolean isCollected;
 
-    public Voucher(String id, String code, String title, String description, double discountAmount, int quantity, String expiryDate) {
+    public Voucher(String id, String code, String title, String description, double discountAmount, int quantity,
+            String expiryDate) {
         this.id = id;
         this.code = code;
         this.title = title;
