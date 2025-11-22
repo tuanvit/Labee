@@ -36,7 +36,7 @@ public class HomeActivity extends AppCompatActivity {
     private ChipGroup chipGroupCategories;
     private ImageView btnSearch;
     private LinearLayout btnHome, btnCart, btnOrders, btnProfile;
-    
+
     private ViewPager2 viewPagerBanner;
     private LinearLayout btnVoucherWallet;
     private Handler bannerHandler = new Handler(Looper.getMainLooper());
@@ -93,7 +93,7 @@ public class HomeActivity extends AppCompatActivity {
         progressBar = findViewById(R.id.progressBar);
         chipGroupCategories = findViewById(R.id.chipGroupCategories);
         btnSearch = findViewById(R.id.btnSearch);
-        
+
         viewPagerBanner = findViewById(R.id.viewPagerBanner);
         btnVoucherWallet = findViewById(R.id.btnVoucherWallet);
 
@@ -103,17 +103,16 @@ public class HomeActivity extends AppCompatActivity {
         btnOrders = findViewById(R.id.btnOrders);
         btnProfile = findViewById(R.id.btnProfile);
     }
-    
+
     private void setupBanner() {
         List<Integer> bannerImages = Arrays.asList(
-            R.drawable.banner_xmas2,
-            R.drawable.banner_xmas3,
-            R.drawable.banner_xmas4
-        );
-        
+                R.drawable.banner_xmas2,
+                R.drawable.banner_xmas3,
+                R.drawable.banner_xmas4);
+
         BannerAdapter bannerAdapter = new BannerAdapter(this, bannerImages);
         viewPagerBanner.setAdapter(bannerAdapter);
-        
+
         // Auto scroll
         viewPagerBanner.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
@@ -124,7 +123,7 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
     }
-    
+
     private void setupVoucher() {
         btnVoucherWallet.setOnClickListener(v -> {
             Intent intent = new Intent(this, VoucherListActivity.class);
@@ -141,7 +140,8 @@ public class HomeActivity extends AppCompatActivity {
         // Bottom navigation
         btnHome.setOnClickListener(v -> {
             // Scroll to top
-            if (rvProducts != null) rvProducts.smoothScrollToPosition(0);
+            if (rvProducts != null)
+                rvProducts.smoothScrollToPosition(0);
         });
 
         btnCart.setOnClickListener(v -> {
@@ -221,7 +221,7 @@ public class HomeActivity extends AppCompatActivity {
 
         progressBar.setVisibility(View.GONE);
     }
-    
+
     @Override
     protected void onPause() {
         super.onPause();
