@@ -18,10 +18,11 @@ import com.example.lazabee.model.User;
 
 public class UserProfileActivity extends AppCompatActivity {
 
-    private TextView tvFullName, tvUsername, tvEmail, tvPhone;
-    private ImageView btnBack, ivAvatar;
+    private TextView tvFullName, tvUsername;
+    private ImageView btnBack, ivAvatar, btnSettings;
     private Button btnLogout;
-    private LinearLayout btnOrderHistory, btnAddressManagement;
+    private LinearLayout btnOrderHistory, btnAddressManagement, btnVoucherWallet, btnHelpCenter;
+    private LinearLayout btnStatusWaitConfirm, btnStatusWaitPickup, btnStatusDelivering, btnStatusRating;
     private ProgressBar progressBar;
     private SharedPreferences sharedPreferences;
 
