@@ -138,7 +138,8 @@ public class ProductDetailActivity extends AppCompatActivity {
             btnAddToCart.setBackgroundColor(ContextCompat.getColor(this, android.R.color.darker_gray));
             btnBuyNow.setBackgroundColor(ContextCompat.getColor(this, android.R.color.darker_gray));
         } else {
-            tvDescription.setText("Còn lại: " + product.stock + "\n\n" + (product.description != null ? product.description : ""));
+            tvDescription.setText(
+                    "Còn lại: " + product.stock + "\n\n" + (product.description != null ? product.description : ""));
             btnAddToCart.setEnabled(true);
             btnBuyNow.setEnabled(true);
         }
