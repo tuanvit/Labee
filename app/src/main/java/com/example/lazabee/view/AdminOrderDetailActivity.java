@@ -23,7 +23,8 @@ import java.util.concurrent.Executors;
 
 public class AdminOrderDetailActivity extends AppCompatActivity {
 
-    private TextView tvOrderId, tvOrderStatus, tvOrderDate, tvShippingAddress, tvPhoneNumber, tvPaymentMethod, tvSubtotal, tvShippingFee, tvTotalAmount, tvOrderNote;
+    private TextView tvOrderId, tvOrderStatus, tvOrderDate, tvShippingAddress, tvPhoneNumber, tvPaymentMethod,
+            tvSubtotal, tvShippingFee, tvTotalAmount, tvOrderNote;
     private RecyclerView rvOrderItems;
     private ImageView btnBack;
     private Button btnStatusPending, btnStatusShipping, btnStatusCompleted, btnStatusCancelled;
@@ -105,7 +106,8 @@ public class AdminOrderDetailActivity extends AppCompatActivity {
         tvPaymentMethod.setText(order.paymentMethod);
 
         DecimalFormat formatter = new DecimalFormat("#,###");
-        tvSubtotal.setText(formatter.format(order.totalAmount - 30000) + "đ"); // Assuming fixed shipping fee for now or calculate from items
+        tvSubtotal.setText(formatter.format(order.totalAmount - 30000) + "đ"); // Assuming fixed shipping fee for now or
+                                                                               // calculate from items
         tvShippingFee.setText("30,000đ");
         tvTotalAmount.setText(formatter.format(order.totalAmount) + "đ");
 
