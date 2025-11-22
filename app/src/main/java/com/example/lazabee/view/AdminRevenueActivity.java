@@ -43,8 +43,9 @@ public class AdminRevenueActivity extends AppCompatActivity {
     private void loadStatistics() {
         // Total Revenue
         Long revenue = dao.getTotalRevenue();
-        if (revenue == null) revenue = 0L;
-        
+        if (revenue == null)
+            revenue = 0L;
+
         DecimalFormat formatter = new DecimalFormat("#,###");
         tvTotalRevenue.setText(formatter.format(revenue) + "đ");
 
@@ -53,13 +54,15 @@ public class AdminRevenueActivity extends AppCompatActivity {
         int completed = dao.getOrderCountByStatus("Completed");
         int pending = dao.getOrderCountByStatus("Pending");
         int cancelled = dao.getOrderCountByStatus("Cancelled");
-        // Note: "Shipping" is also a status, but for simplicity we might group it or just show these 3.
-        // Let's add Shipping to Pending count or show separately? 
+        // Note: "Shipping" is also a status, but for simplicity we might group it or
+        // just show these 3.
+        // Let's add Shipping to Pending count or show separately?
         // For now, let's just show these specific counts.
         // Actually, let's check if we have "Shipping" status. Yes we do.
         int shipping = dao.getOrderCountByStatus("Shipping");
-        
-        // Let's group Pending + Shipping as "Active/Pending" for the UI label "Đang xử lý"
+
+        // Let's group Pending + Shipping as "Active/Pending" for the UI label "Đang xử
+        // lý"
         // Or just show Pending. The UI says "Đang xử lý" (Processing).
         // Let's sum Pending + Shipping for that box.
         int processing = pending + shipping;
@@ -69,7 +72,7 @@ public class AdminRevenueActivity extends AppCompatActivity {
         tvPendingOrders.setText(String.valueOf(processing));
         tvCancelledOrders.setText(String.valueOf(cancelled));
     }
-    
+
     @Override
     protected void onResume() {
         super.onResume();
