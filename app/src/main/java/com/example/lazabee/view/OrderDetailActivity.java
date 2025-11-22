@@ -4,14 +4,15 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.*;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.lazabee.R;
 import com.example.lazabee.adapter.OrderItemAdapter;
-import com.example.lazabee.data.model.order.OrderResponse;
-import com.example.lazabee.viewmodel.OrderViewModel;
+import com.example.lazabee.database.AppDatabase;
+import com.example.lazabee.model.Order;
+import com.example.lazabee.model.OrderItemDetail;
 import java.text.DecimalFormat;
+import java.util.List;
 
 public class OrderDetailActivity extends AppCompatActivity {
 
@@ -24,23 +25,31 @@ public class OrderDetailActivity extends AppCompatActivity {
     private Button btnCancelOrder;
     private ProgressBar progressBar;
 
-    private OrderViewModel orderViewModel;
     private OrderItemAdapter orderItemAdapter;
-    private OrderResponse currentOrder;
+    private Order currentOrder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_order_detail);
 
-        String orderId = getIntent().getStringExtra("orderId");
+        String orderIdStr = getIntent().getStringExtra("orderId");
+        int orderId = -1;
+        try {
+            orderId = Integer.parseInt(orderIdStr);
+        } catch (NumberFormatException e) {
+            // Try getting as int if passed as int
+            orderId = getIntent().getIntExtra("orderId", -1);
+        }
 
         initViews();
-        initViewModel();
         setupRecyclerView();
 
-        if (orderId != null) {
+        if (orderId != -1) {
             loadOrderDetail(orderId);
+        } else {
+            Toast.makeText(this, "Invalid Order ID", Toast.LENGTH_SHORT).show();
+            finish();
         }
     }
 
@@ -63,88 +72,74 @@ public class OrderDetailActivity extends AppCompatActivity {
         btnBack.setOnClickListener(v -> finish());
     }
 
-    private void initViewModel() {
-        orderViewModel = new ViewModelProvider(this).get(OrderViewModel.class);
-    }
-
     private void setupRecyclerView() {
         rvOrderItems.setLayoutManager(new LinearLayoutManager(this));
     }
 
-    private void loadOrderDetail(String orderId) {
+    private void loadOrderDetail(int orderId) {
         progressBar.setVisibility(View.VISIBLE);
 
-        orderViewModel.getOrderById(orderId).observe(this, response -> {
-            progressBar.setVisibility(View.GONE);
+        // Direct Database Call (MVC)
+        AppDatabase db = AppDatabase.getInstance(this);
+        currentOrder = db.labeeDao().getOrderById(orderId);
+        List<OrderItemDetail> items = db.labeeDao().getOrderItems(orderId);
 
-            if (response != null && response.isSuccess() && response.getData() != null) {
-                currentOrder = response.getData();
-                displayOrderDetail(currentOrder);
-            } else {
-                String errorMessage = response != null ? response.getMessage() : "Failed to load order";
-                Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show();
-            }
-        });
+        progressBar.setVisibility(View.GONE);
+
+        if (currentOrder != null) {
+            displayOrderDetail(currentOrder, items);
+        } else {
+            Toast.makeText(this, "Failed to load order", Toast.LENGTH_SHORT).show();
+        }
     }
 
-    private void displayOrderDetail(OrderResponse order) {
-        tvOrderId.setText("Order #" + order.getOrderId());
-        tvOrderStatus.setText(order.getStatus());
-        tvOrderDate.setText(order.getCreatedAt());
+    private void displayOrderDetail(Order order, List<OrderItemDetail> items) {
+        tvOrderId.setText("Order #" + order.id);
+        tvOrderStatus.setText(order.status);
+        tvOrderDate.setText(order.date);
 
-        // Address - Backend trả về shippingAddress dạng String, không phải object
-        if (order.getShippingAddress() != null) {
-            tvShippingAddress.setText(order.getShippingAddress());
-        }
-
-        // Phone number - Backend trả về riêng field recipientPhone
-        if (order.getRecipientPhone() != null) {
-            tvPhoneNumber.setText(order.getRecipientPhone());
-        }
+        // Address - Hardcoded for now as we don't store address in Order table yet
+        tvShippingAddress.setText("Địa chỉ mặc định");
+        tvPhoneNumber.setText("0901234567");
 
         // Order items
-        if (order.getItems() != null) {
-            orderItemAdapter = new OrderItemAdapter(this, order.getItems());
+        if (items != null) {
+            orderItemAdapter = new OrderItemAdapter(this, items);
             rvOrderItems.setAdapter(orderItemAdapter);
         }
 
         // Payment
-        tvPaymentMethod.setText(order.getPaymentMethod());
+        tvPaymentMethod.setText("COD"); // Hardcoded
 
-        // Note - OrderResponse mới không có field note
+        // Note
         tvOrderNote.setVisibility(View.GONE);
 
         // Total
         DecimalFormat formatter = new DecimalFormat("#,###");
-        double subtotal = order.getTotalAmount() - 30000; // Assuming fixed shipping
+        double subtotal = order.totalPrice - 30000; // Assuming fixed shipping
         tvSubtotal.setText(formatter.format(subtotal) + "đ");
         tvShipping.setText("30,000đ");
-        tvTotal.setText(formatter.format(order.getTotalAmount()) + "đ");
+        tvTotal.setText(formatter.format(order.totalPrice) + "đ");
 
-        // Cancel button - only show if status is PENDING
-        if ("PENDING".equals(order.getStatus())) {
+        // Cancel button - only show if status is Pending
+        if ("Pending".equals(order.status)) {
             btnCancelOrder.setVisibility(View.VISIBLE);
-            btnCancelOrder.setOnClickListener(v -> cancelOrder(order.getOrderId()));
+            btnCancelOrder.setOnClickListener(v -> cancelOrder(order.id));
         } else {
             btnCancelOrder.setVisibility(View.GONE);
         }
     }
 
-    private void cancelOrder(String orderId) {
+    private void cancelOrder(int orderId) {
         progressBar.setVisibility(View.VISIBLE);
         btnCancelOrder.setEnabled(false);
 
-        orderViewModel.cancelOrder(orderId).observe(this, response -> {
-            progressBar.setVisibility(View.GONE);
-            btnCancelOrder.setEnabled(true);
+        AppDatabase.getInstance(this).labeeDao().cancelOrder(orderId);
 
-            if (response != null && response.isSuccess()) {
-                Toast.makeText(this, "Order cancelled successfully", Toast.LENGTH_SHORT).show();
-                loadOrderDetail(orderId); // Reload to update status
-            } else {
-                String errorMessage = response != null ? response.getMessage() : "Failed to cancel order";
-                Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show();
-            }
-        });
+        progressBar.setVisibility(View.GONE);
+        btnCancelOrder.setEnabled(true);
+
+        Toast.makeText(this, "Order cancelled successfully", Toast.LENGTH_SHORT).show();
+        loadOrderDetail(orderId); // Reload to update status
     }
 }

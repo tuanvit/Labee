@@ -6,9 +6,12 @@ import androidx.room.Query;
 import androidx.room.Update;
 import androidx.room.Delete;
 
+import com.example.lazabee.model.Address;
 import com.example.lazabee.model.CartItem;
 import com.example.lazabee.model.CartItemDetail;
 import com.example.lazabee.model.Order;
+import com.example.lazabee.model.OrderItem;
+import com.example.lazabee.model.OrderItemDetail;
 import com.example.lazabee.model.Product;
 import com.example.lazabee.model.User;
 
@@ -33,8 +36,14 @@ public interface LabeeDao {
     @Query("SELECT * FROM products")
     List<Product> getAllProducts();
 
+    @Query("SELECT * FROM products LIMIT :limit OFFSET :offset")
+    List<Product> getProducts(int limit, int offset);
+
     @Query("SELECT * FROM products WHERE name LIKE '%' || :keyword || '%'")
     List<Product> searchProducts(String keyword);
+
+    @Query("SELECT * FROM products WHERE id = :id")
+    Product getProductById(int id);
 
     @Insert
     void insertProduct(Product product);
@@ -71,8 +80,45 @@ public interface LabeeDao {
 
     // Order
     @Insert
-    void insertOrder(Order order);
+    long insertOrder(Order order);
 
-    @Query("SELECT * FROM orders WHERE userId = :userId")
+    @Insert
+    void insertOrderItems(List<OrderItem> items);
+
+    @Query("SELECT * FROM orders WHERE userId = :userId ORDER BY id DESC")
     List<Order> getOrders(int userId);
+
+    @Query("SELECT * FROM orders WHERE id = :orderId")
+    Order getOrderById(int orderId);
+
+    @Query("SELECT oi.id, oi.orderId, oi.productId, oi.quantity, oi.price, p.name as productName, p.imageResName as productImage "
+            +
+            "FROM order_items oi INNER JOIN products p ON oi.productId = p.id " +
+            "WHERE oi.orderId = :orderId")
+    List<OrderItemDetail> getOrderItems(int orderId);
+
+    @Query("UPDATE orders SET status = 'Cancelled' WHERE id = :orderId")
+    void cancelOrder(int orderId);
+
+    // Address
+    @Query("SELECT * FROM addresses WHERE userId = :userId")
+    List<Address> getAddresses(int userId);
+
+    @Insert
+    void insertAddress(Address address);
+
+    @Update
+    void updateAddress(Address address);
+
+    @Delete
+    void deleteAddress(Address address);
+
+    @Query("SELECT * FROM addresses WHERE id = :id")
+    Address getAddressById(int id);
+
+    @Query("UPDATE addresses SET isDefault = 0 WHERE userId = :userId")
+    void clearDefaultAddress(int userId);
+
+    @Query("UPDATE addresses SET isDefault = 1 WHERE id = :id")
+    void setDefaultAddress(int id);
 }

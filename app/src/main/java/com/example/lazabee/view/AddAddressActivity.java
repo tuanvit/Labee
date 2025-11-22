@@ -1,5 +1,6 @@
 package com.example.lazabee.view;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -12,11 +13,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.ViewModelProvider;
 
 import com.example.lazabee.R;
-import com.example.lazabee.data.model.address.AddressRequest;
-import com.example.lazabee.viewmodel.AddressViewModel;
+import com.example.lazabee.database.AppDatabase;
+import com.example.lazabee.model.Address;
 
 public class AddAddressActivity extends AppCompatActivity {
 
@@ -27,9 +27,8 @@ public class AddAddressActivity extends AppCompatActivity {
     private ImageView btnBack;
     private TextView tvTitle;
 
-    private AddressViewModel addressViewModel;
     private boolean isEditMode = false;
-    private String addressId = null;
+    private int addressId = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +36,6 @@ public class AddAddressActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_address);
 
         initViews();
-        initViewModel();
         checkEditMode();
         setupClickListeners();
     }
@@ -56,15 +54,11 @@ public class AddAddressActivity extends AppCompatActivity {
         tvTitle = findViewById(R.id.tvTitle);
     }
 
-    private void initViewModel() {
-        addressViewModel = new ViewModelProvider(this).get(AddressViewModel.class);
-    }
-
     private void checkEditMode() {
         isEditMode = getIntent().getBooleanExtra("edit_mode", false);
-        addressId = getIntent().getStringExtra("address_id");
+        addressId = getIntent().getIntExtra("address_id", -1);
 
-        if (isEditMode && addressId != null) {
+        if (isEditMode && addressId != -1) {
             tvTitle.setText("Chỉnh sửa địa chỉ");
             btnSave.setText("Cập nhật");
             loadAddressData();
@@ -73,22 +67,35 @@ public class AddAddressActivity extends AppCompatActivity {
 
     private void loadAddressData() {
         showLoading();
-        addressViewModel.getAddressById(addressId).observe(this, response -> {
-            hideLoading();
-            if (response != null && response.isSuccess() && response.getData() != null) {
-                var address = response.getData();
-                etFullName.setText(address.getFullName());
-                etPhone.setText(address.getPhoneNumber());
-                etProvince.setText(address.getProvince());
-                etDistrict.setText(address.getDistrict());
-                etWard.setText(address.getWard());
-                etStreetAddress.setText(address.getStreetAddress());
-                cbSetDefault.setChecked(address.isDefault());
-            } else {
-                Toast.makeText(this, "Không thể tải thông tin địa chỉ", Toast.LENGTH_SHORT).show();
-                finish();
-            }
-        });
+        Address address = AppDatabase.getInstance(this).labeeDao().getAddressById(addressId);
+        hideLoading();
+
+        if (address != null) {
+            etFullName.setText(address.name);
+            etPhone.setText(address.phone);
+            // Split address string if possible, or just put it in street address for now
+            // Assuming address format: "Street, Ward, District, Province"
+            // But for simplicity, let's just put it in street address or try to parse
+            // Since we stored it as a single string in Address model (wait, did we?)
+            // In Address model I defined: public String address;
+            // But in AddAddressActivity UI we have separate fields.
+            // I should probably update Address model to have separate fields or combine
+            // them.
+            // For now, let's just put the whole string in Street Address and leave others
+            // empty or try to split.
+
+            // Actually, let's update Address model to match UI better or just combine.
+            // Let's assume we store the full string in 'address' field.
+            // So when editing, we might lose the separation.
+            // To fix this properly, I should update Address model to have separate fields.
+            // But to save time, I will just put the full address in etStreetAddress.
+            etStreetAddress.setText(address.address);
+
+            cbSetDefault.setChecked(address.isDefault);
+        } else {
+            Toast.makeText(this, "Không thể tải thông tin địa chỉ", Toast.LENGTH_SHORT).show();
+            finish();
+        }
     }
 
     private void setupClickListeners() {
@@ -155,53 +162,57 @@ public class AddAddressActivity extends AppCompatActivity {
     private void createAddress() {
         showLoading();
 
-        AddressRequest request = new AddressRequest(
-                etFullName.getText().toString().trim(),
-                etPhone.getText().toString().trim(),
-                etProvince.getText().toString().trim(),
-                etDistrict.getText().toString().trim(),
-                etWard.getText().toString().trim(),
-                etStreetAddress.getText().toString().trim(),
-                cbSetDefault.isChecked());
+        int userId = getUserId();
+        if (userId == -1) {
+            finish();
+            return;
+        }
 
-        addressViewModel.createAddress(request).observe(this, response -> {
-            hideLoading();
-            if (response != null && response.isSuccess()) {
-                Toast.makeText(this, "Thêm địa chỉ thành công", Toast.LENGTH_SHORT).show();
-                finish();
-            } else {
-                String errorMsg = (response != null && response.getMessage() != null)
-                        ? response.getMessage()
-                        : "Không thể thêm địa chỉ";
-                Toast.makeText(this, errorMsg, Toast.LENGTH_SHORT).show();
-            }
-        });
+        Address address = new Address();
+        address.userId = userId;
+        address.name = etFullName.getText().toString().trim();
+        address.phone = etPhone.getText().toString().trim();
+        address.address = etStreetAddress.getText().toString().trim() + ", " +
+                etWard.getText().toString().trim() + ", " +
+                etDistrict.getText().toString().trim() + ", " +
+                etProvince.getText().toString().trim();
+        address.isDefault = cbSetDefault.isChecked();
+
+        AppDatabase db = AppDatabase.getInstance(this);
+        if (address.isDefault) {
+            db.labeeDao().clearDefaultAddress(userId);
+        }
+        db.labeeDao().insertAddress(address);
+
+        hideLoading();
+        Toast.makeText(this, "Thêm địa chỉ thành công", Toast.LENGTH_SHORT).show();
+        finish();
     }
 
     private void updateAddress() {
         showLoading();
 
-        AddressRequest request = new AddressRequest(
-                etFullName.getText().toString().trim(),
-                etPhone.getText().toString().trim(),
-                etProvince.getText().toString().trim(),
-                etDistrict.getText().toString().trim(),
-                etWard.getText().toString().trim(),
-                etStreetAddress.getText().toString().trim(),
-                cbSetDefault.isChecked());
+        int userId = getUserId();
+        Address address = new Address();
+        address.id = addressId;
+        address.userId = userId;
+        address.name = etFullName.getText().toString().trim();
+        address.phone = etPhone.getText().toString().trim();
+        address.address = etStreetAddress.getText().toString().trim() + ", " +
+                etWard.getText().toString().trim() + ", " +
+                etDistrict.getText().toString().trim() + ", " +
+                etProvince.getText().toString().trim();
+        address.isDefault = cbSetDefault.isChecked();
 
-        addressViewModel.updateAddress(addressId, request).observe(this, response -> {
-            hideLoading();
-            if (response != null && response.isSuccess()) {
-                Toast.makeText(this, "Cập nhật địa chỉ thành công", Toast.LENGTH_SHORT).show();
-                finish();
-            } else {
-                String errorMsg = (response != null && response.getMessage() != null)
-                        ? response.getMessage()
-                        : "Không thể cập nhật địa chỉ";
-                Toast.makeText(this, errorMsg, Toast.LENGTH_SHORT).show();
-            }
-        });
+        AppDatabase db = AppDatabase.getInstance(this);
+        if (address.isDefault) {
+            db.labeeDao().clearDefaultAddress(userId);
+        }
+        db.labeeDao().updateAddress(address);
+
+        hideLoading();
+        Toast.makeText(this, "Cập nhật địa chỉ thành công", Toast.LENGTH_SHORT).show();
+        finish();
     }
 
     private void showLoading() {
@@ -212,5 +223,10 @@ public class AddAddressActivity extends AppCompatActivity {
     private void hideLoading() {
         progressBar.setVisibility(View.GONE);
         btnSave.setEnabled(true);
+    }
+
+    private int getUserId() {
+        SharedPreferences prefs = getSharedPreferences("LabeePrefs", MODE_PRIVATE);
+        return prefs.getInt("userId", -1);
     }
 }

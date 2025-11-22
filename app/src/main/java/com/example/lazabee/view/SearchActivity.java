@@ -190,7 +190,7 @@ public class SearchActivity extends AppCompatActivity {
 
         // Direct Database Call (MVC)
         List<Product> products = AppDatabase.getInstance(this).labeeDao().searchProducts(keyword);
-        
+
         hideLoading();
 
         if (products != null && !products.isEmpty()) {

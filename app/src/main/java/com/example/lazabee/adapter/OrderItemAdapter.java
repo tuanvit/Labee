@@ -8,18 +8,17 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-import com.bumptech.glide.Glide;
 import com.example.lazabee.R;
-import com.example.lazabee.data.model.order.OrderItemResponse;
+import com.example.lazabee.model.OrderItemDetail;
 import java.text.DecimalFormat;
 import java.util.List;
 
 public class OrderItemAdapter extends RecyclerView.Adapter<OrderItemAdapter.ViewHolder> {
 
     private Context context;
-    private List<OrderItemResponse> items;
+    private List<OrderItemDetail> items;
 
-    public OrderItemAdapter(Context context, List<OrderItemResponse> items) {
+    public OrderItemAdapter(Context context, List<OrderItemDetail> items) {
         this.context = context;
         this.items = items;
     }
@@ -33,20 +32,25 @@ public class OrderItemAdapter extends RecyclerView.Adapter<OrderItemAdapter.View
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        OrderItemResponse item = items.get(position);
+        OrderItemDetail item = items.get(position);
 
-        holder.tvProductName.setText(item.getProduct().getName());
-        holder.tvQuantity.setText("x" + item.getQuantity());
+        holder.tvProductName.setText(item.productName);
+        holder.tvQuantity.setText("x" + item.quantity);
 
         DecimalFormat formatter = new DecimalFormat("#,###");
-        holder.tvPrice.setText(formatter.format(item.getPrice()) + "đ");
-        holder.tvSubtotal.setText(formatter.format(item.getPrice() * item.getQuantity()) + "đ");
+        holder.tvPrice.setText(formatter.format(item.price) + "đ");
+        holder.tvSubtotal.setText(formatter.format((long) item.price * item.quantity) + "đ");
 
-        if (item.getProduct().getImageUrl() != null) {
-            Glide.with(context)
-                    .load(item.getProduct().getImageUrl())
-                    .placeholder(R.drawable.img_shoes)
-                    .into(holder.ivProductImage);
+        // Load image from resources
+        if (item.productImage != null) {
+            int resId = context.getResources().getIdentifier(item.productImage, "drawable", context.getPackageName());
+            if (resId != 0) {
+                holder.ivProductImage.setImageResource(resId);
+            } else {
+                holder.ivProductImage.setImageResource(R.drawable.ic_launcher_foreground);
+            }
+        } else {
+            holder.ivProductImage.setImageResource(R.drawable.ic_launcher_foreground);
         }
     }
 

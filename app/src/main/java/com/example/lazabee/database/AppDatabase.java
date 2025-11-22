@@ -6,12 +6,15 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
+import com.example.lazabee.model.Address;
 import com.example.lazabee.model.CartItem;
 import com.example.lazabee.model.Order;
+import com.example.lazabee.model.OrderItem;
 import com.example.lazabee.model.Product;
 import com.example.lazabee.model.User;
 
-@Database(entities = { User.class, Product.class, Order.class, CartItem.class }, version = 1)
+@Database(entities = { User.class, Product.class, Order.class, CartItem.class, OrderItem.class,
+        Address.class }, version = 3, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
     public abstract LabeeDao labeeDao();
 

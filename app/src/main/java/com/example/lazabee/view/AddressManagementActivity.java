@@ -2,6 +2,7 @@ package com.example.lazabee.view;
 
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -10,14 +11,13 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.lazabee.R;
 import com.example.lazabee.adapter.AddressAdapter;
-import com.example.lazabee.data.model.address.AddressResponse;
-import com.example.lazabee.viewmodel.AddressViewModel;
+import com.example.lazabee.database.AppDatabase;
+import com.example.lazabee.model.Address;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,9 +29,8 @@ public class AddressManagementActivity extends AppCompatActivity implements Addr
     private LinearLayout layoutEmptyState;
     private ImageView btnBack, btnAddAddress;
 
-    private AddressViewModel addressViewModel;
     private AddressAdapter addressAdapter;
-    private List<AddressResponse> addressList = new ArrayList<>();
+    private List<Address> addressList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +38,6 @@ public class AddressManagementActivity extends AppCompatActivity implements Addr
         setContentView(R.layout.activity_address_management);
 
         initViews();
-        initViewModel();
         setupRecyclerView();
         setupClickListeners();
         loadAddresses();
@@ -51,10 +49,6 @@ public class AddressManagementActivity extends AppCompatActivity implements Addr
         layoutEmptyState = findViewById(R.id.layoutEmptyState);
         btnBack = findViewById(R.id.btnBack);
         btnAddAddress = findViewById(R.id.btnAddAddress);
-    }
-
-    private void initViewModel() {
-        addressViewModel = new ViewModelProvider(this).get(AddressViewModel.class);
     }
 
     private void setupRecyclerView() {
@@ -75,69 +69,60 @@ public class AddressManagementActivity extends AppCompatActivity implements Addr
     private void loadAddresses() {
         showLoading();
 
-        addressViewModel.getAddresses().observe(this, response -> {
-            hideLoading();
+        int userId = getUserId();
+        if (userId == -1) {
+            finish();
+            return;
+        }
 
-            if (response != null && response.isSuccess() && response.getData() != null) {
-                addressList.clear();
-                addressList.addAll(response.getData());
-                addressAdapter.updateAddresses(addressList);
+        // Direct Database Call (MVC)
+        List<Address> addresses = AppDatabase.getInstance(this).labeeDao().getAddresses(userId);
 
-                if (addressList.isEmpty()) {
-                    showEmptyState();
-                } else {
-                    hideEmptyState();
-                }
-            } else {
-                String errorMsg = (response != null && response.getMessage() != null)
-                        ? response.getMessage()
-                        : "Không thể tải danh sách địa chỉ";
-                Toast.makeText(this, errorMsg, Toast.LENGTH_SHORT).show();
+        hideLoading();
+
+        if (addresses != null) {
+            addressList.clear();
+            addressList.addAll(addresses);
+            addressAdapter.updateAddresses(addressList);
+
+            if (addressList.isEmpty()) {
                 showEmptyState();
-            }
-        });
-    }
-
-    @Override
-    public void onSetDefault(AddressResponse address) {
-        addressViewModel.setDefaultAddress(address.getAddressId()).observe(this, response -> {
-            if (response != null && response.isSuccess()) {
-                Toast.makeText(this, "Đã đặt làm địa chỉ mặc định", Toast.LENGTH_SHORT).show();
-                loadAddresses(); // Reload to update UI
             } else {
-                String errorMsg = (response != null && response.getMessage() != null)
-                        ? response.getMessage()
-                        : "Không thể đặt địa chỉ mặc định";
-                Toast.makeText(this, errorMsg, Toast.LENGTH_SHORT).show();
+                hideEmptyState();
             }
-        });
+        } else {
+            showEmptyState();
+        }
     }
 
     @Override
-    public void onEdit(AddressResponse address) {
+    public void onSetDefault(Address address) {
+        int userId = getUserId();
+        AppDatabase db = AppDatabase.getInstance(this);
+        db.labeeDao().clearDefaultAddress(userId);
+        db.labeeDao().setDefaultAddress(address.id);
+
+        Toast.makeText(this, "Đã đặt làm địa chỉ mặc định", Toast.LENGTH_SHORT).show();
+        loadAddresses(); // Reload to update UI
+    }
+
+    @Override
+    public void onEdit(Address address) {
         Intent intent = new Intent(this, AddAddressActivity.class);
-        intent.putExtra("address_id", address.getAddressId());
+        intent.putExtra("address_id", address.id);
         intent.putExtra("edit_mode", true);
         startActivity(intent);
     }
 
     @Override
-    public void onDelete(AddressResponse address) {
+    public void onDelete(Address address) {
         new AlertDialog.Builder(this)
                 .setTitle("Xóa địa chỉ")
                 .setMessage("Bạn có chắc muốn xóa địa chỉ này?")
                 .setPositiveButton("Xóa", (dialog, which) -> {
-                    addressViewModel.deleteAddress(address.getAddressId()).observe(this, response -> {
-                        if (response != null && response.isSuccess()) {
-                            Toast.makeText(this, "Đã xóa địa chỉ", Toast.LENGTH_SHORT).show();
-                            loadAddresses(); // Reload
-                        } else {
-                            String errorMsg = (response != null && response.getMessage() != null)
-                                    ? response.getMessage()
-                                    : "Không thể xóa địa chỉ";
-                            Toast.makeText(this, errorMsg, Toast.LENGTH_SHORT).show();
-                        }
-                    });
+                    AppDatabase.getInstance(this).labeeDao().deleteAddress(address);
+                    Toast.makeText(this, "Đã xóa địa chỉ", Toast.LENGTH_SHORT).show();
+                    loadAddresses(); // Reload
                 })
                 .setNegativeButton("Hủy", null)
                 .show();
@@ -167,5 +152,10 @@ public class AddressManagementActivity extends AppCompatActivity implements Addr
 
     private void hideEmptyState() {
         layoutEmptyState.setVisibility(View.GONE);
+    }
+
+    private int getUserId() {
+        SharedPreferences prefs = getSharedPreferences("LabeePrefs", MODE_PRIVATE);
+        return prefs.getInt("userId", -1);
     }
 }

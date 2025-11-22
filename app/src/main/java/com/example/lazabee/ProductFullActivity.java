@@ -12,17 +12,17 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.lazabee.adapter.ProductAdapter;
-import com.example.lazabee.data.model.Product;
+import com.example.lazabee.database.AppDatabase;
+import com.example.lazabee.model.Product;
 import com.example.lazabee.view.ProductDetailActivity;
 import com.example.lazabee.view.SearchActivity;
-import com.example.lazabee.viewmodel.ProductViewModel;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class ProductFullActivity extends AppCompatActivity {
@@ -33,7 +33,6 @@ public class ProductFullActivity extends AppCompatActivity {
     private RecyclerView rvProducts;
     private ProgressBar progressBar, progressBarLoadMore;
 
-    private ProductViewModel productViewModel;
     private ProductAdapter productAdapter;
     private List<Product> productList = new ArrayList<>();
 
@@ -50,7 +49,6 @@ public class ProductFullActivity extends AppCompatActivity {
         setContentView(R.layout.activity_product_list);
 
         initViews();
-        initViewModel();
         setupRecyclerView();
         setupClickListeners();
         loadProducts();
@@ -68,10 +66,6 @@ public class ProductFullActivity extends AppCompatActivity {
         progressBar = findViewById(R.id.progressBar);
         progressBarLoadMore = findViewById(R.id.progressBarLoadMore);
         layoutEmptyState = findViewById(R.id.layoutEmptyState);
-    }
-
-    private void initViewModel() {
-        productViewModel = new ViewModelProvider(this).get(ProductViewModel.class);
     }
 
     private void setupRecyclerView() {
@@ -124,32 +118,28 @@ public class ProductFullActivity extends AppCompatActivity {
 
         showLoading();
 
-        productViewModel.getProducts(currentPage, pageSize).observe(this, response -> {
-            hideLoading();
-            isLoading = false;
+        // Direct Database Call (MVC)
+        List<Product> products = AppDatabase.getInstance(this).labeeDao().getProducts(pageSize, currentPage * pageSize);
 
-            if (response != null && response.isSuccess() && response.getData() != null) {
-                List<Product> products = response.getData().getContent();
-                productList.addAll(products);
-                productAdapter.updateProducts(productList);
+        hideLoading();
+        isLoading = false;
 
-                updateProductsCount();
+        if (products != null) {
+            productList.addAll(products);
+            productAdapter.updateProducts(productList);
 
-                hasMorePages = !response.getData().isLast();
+            updateProductsCount();
 
-                if (productList.isEmpty()) {
-                    showEmptyState();
-                } else {
-                    hideEmptyState();
-                }
-            } else {
+            hasMorePages = products.size() >= pageSize;
+
+            if (productList.isEmpty()) {
                 showEmptyState();
-                String errorMsg = (response != null && response.getMessage() != null)
-                        ? response.getMessage()
-                        : "Không thể tải sản phẩm";
-                Toast.makeText(this, errorMsg, Toast.LENGTH_SHORT).show();
+            } else {
+                hideEmptyState();
             }
-        });
+        } else {
+            showEmptyState();
+        }
     }
 
     private void loadMoreProducts() {
@@ -161,21 +151,22 @@ public class ProductFullActivity extends AppCompatActivity {
 
         progressBarLoadMore.setVisibility(View.VISIBLE);
 
-        productViewModel.getProducts(currentPage, pageSize).observe(this, response -> {
-            progressBarLoadMore.setVisibility(View.GONE);
-            isLoading = false;
+        List<Product> products = AppDatabase.getInstance(this).labeeDao().getProducts(pageSize, currentPage * pageSize);
 
-            if (response != null && response.isSuccess() && response.getData() != null) {
-                List<Product> products = response.getData().getContent();
-                int oldSize = productList.size();
-                productList.addAll(products);
-                productAdapter.notifyItemRangeInserted(oldSize, products.size());
+        progressBarLoadMore.setVisibility(View.GONE);
+        isLoading = false;
 
-                updateProductsCount();
+        if (products != null && !products.isEmpty()) {
+            int oldSize = productList.size();
+            productList.addAll(products);
+            productAdapter.notifyItemRangeInserted(oldSize, products.size());
 
-                hasMorePages = !response.getData().isLast();
-            }
-        });
+            updateProductsCount();
+
+            hasMorePages = products.size() >= pageSize;
+        } else {
+            hasMorePages = false;
+        }
     }
 
     private void showSortDialog() {
@@ -239,28 +230,29 @@ public class ProductFullActivity extends AppCompatActivity {
     private void sortProductsLocally() {
         switch (currentSortBy) {
             case "price_asc":
-                productList.sort((p1, p2) -> Double.compare(p1.getPrice(), p2.getPrice()));
+                Collections.sort(productList, (p1, p2) -> Double.compare(p1.price, p2.price));
                 break;
             case "price_desc":
-                productList.sort((p1, p2) -> Double.compare(p2.getPrice(), p1.getPrice()));
+                Collections.sort(productList, (p1, p2) -> Double.compare(p2.price, p1.price));
                 break;
             case "name":
-                productList.sort((p1, p2) -> p1.getName().compareToIgnoreCase(p2.getName()));
+                Collections.sort(productList, (p1, p2) -> p1.name.compareToIgnoreCase(p2.name));
                 break;
             case "rating":
-                productList.sort((p1, p2) -> Double.compare(p2.getRating(), p1.getRating()));
+                // Rating not implemented in Product model yet, so ignore or sort by ID
                 break;
             default:
-                loadProducts(); // Reload with default order
-                return;
+                // Reload to reset order (or just sort by ID)
+                Collections.sort(productList, (p1, p2) -> Integer.compare(p1.id, p2.id));
+                break;
         }
         productAdapter.updateProducts(productList);
     }
 
     private void openProductDetail(Product product) {
         Intent intent = new Intent(this, ProductDetailActivity.class);
-        intent.putExtra("product_id", product.getProductId());
-        intent.putExtra("product_name", product.getName());
+        intent.putExtra("product_id", product.id);
+        intent.putExtra("product_name", product.name);
         startActivity(intent);
     }
 

@@ -10,25 +10,25 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.lazabee.R;
-import com.example.lazabee.data.model.address.AddressResponse;
+import com.example.lazabee.model.Address;
 
 import java.util.List;
 
 public class AddressAdapter extends RecyclerView.Adapter<AddressAdapter.AddressViewHolder> {
 
     private Context context;
-    private List<AddressResponse> addressList;
+    private List<Address> addressList;
     private OnAddressActionListener listener;
 
     public interface OnAddressActionListener {
-        void onSetDefault(AddressResponse address);
+        void onSetDefault(Address address);
 
-        void onEdit(AddressResponse address);
+        void onEdit(Address address);
 
-        void onDelete(AddressResponse address);
+        void onDelete(Address address);
     }
 
-    public AddressAdapter(Context context, List<AddressResponse> addressList, OnAddressActionListener listener) {
+    public AddressAdapter(Context context, List<Address> addressList, OnAddressActionListener listener) {
         this.context = context;
         this.addressList = addressList;
         this.listener = listener;
@@ -43,20 +43,16 @@ public class AddressAdapter extends RecyclerView.Adapter<AddressAdapter.AddressV
 
     @Override
     public void onBindViewHolder(@NonNull AddressViewHolder holder, int position) {
-        AddressResponse address = addressList.get(position);
+        Address address = addressList.get(position);
 
-        holder.tvRecipientName.setText(address.getFullName());
-        holder.tvPhone.setText(address.getPhoneNumber());
+        holder.tvRecipientName.setText(address.name);
+        holder.tvPhone.setText(address.phone);
 
         // Build full address
-        String fullAddress = address.getStreetAddress() + ", " +
-                address.getWard() + ", " +
-                address.getDistrict() + ", " +
-                address.getProvince();
-        holder.tvAddress.setText(fullAddress);
+        holder.tvAddress.setText(address.address);
 
         // Show/hide default badge
-        if (address.isDefault()) {
+        if (address.isDefault) {
             holder.tvDefaultBadge.setVisibility(View.VISIBLE);
             holder.btnSetDefault.setVisibility(View.GONE);
         } else {
@@ -84,7 +80,7 @@ public class AddressAdapter extends RecyclerView.Adapter<AddressAdapter.AddressV
         return addressList.size();
     }
 
-    public void updateAddresses(List<AddressResponse> newAddresses) {
+    public void updateAddresses(List<Address> newAddresses) {
         this.addressList = newAddresses;
         notifyDataSetChanged();
     }

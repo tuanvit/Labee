@@ -13,6 +13,7 @@ import com.example.lazabee.adapter.CheckoutItemAdapter;
 import com.example.lazabee.database.AppDatabase;
 import com.example.lazabee.model.CartItemDetail;
 import com.example.lazabee.model.Order;
+import com.example.lazabee.model.OrderItem;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -151,7 +152,19 @@ public class CheckoutActivity extends AppCompatActivity {
         order.status = "Pending";
 
         AppDatabase db = AppDatabase.getInstance(this);
-        db.labeeDao().insertOrder(order);
+        long orderId = db.labeeDao().insertOrder(order);
+
+        // Create Order Items
+        List<OrderItem> orderItems = new ArrayList<>();
+        for (CartItemDetail cartItem : cartItems) {
+            OrderItem orderItem = new OrderItem();
+            orderItem.orderId = (int) orderId;
+            orderItem.productId = cartItem.productId;
+            orderItem.quantity = cartItem.quantity;
+            orderItem.price = cartItem.price;
+            orderItems.add(orderItem);
+        }
+        db.labeeDao().insertOrderItems(orderItems);
 
         // Clear Cart
         db.labeeDao().clearCart(userId);
@@ -163,8 +176,7 @@ public class CheckoutActivity extends AppCompatActivity {
 
         // Navigate to OrderSuccessActivity
         Intent intent = new Intent(CheckoutActivity.this, OrderSuccessActivity.class);
-        // intent.putExtra("orderId", ...); // Need to get inserted ID, but for now just
-        // navigate
+        intent.putExtra("orderId", String.valueOf(orderId));
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
         finish();

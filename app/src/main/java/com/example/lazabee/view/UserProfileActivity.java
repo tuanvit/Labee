@@ -1,6 +1,7 @@
 package com.example.lazabee.view;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -10,27 +11,28 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.ViewModelProvider;
+
 import com.example.lazabee.R;
-import com.example.lazabee.data.model.auth.AuthResponse;
-import com.example.lazabee.viewmodel.AuthViewModel;
+import com.example.lazabee.database.AppDatabase;
+import com.example.lazabee.model.User;
 
 public class UserProfileActivity extends AppCompatActivity {
 
-    private AuthViewModel authViewModel;
     private TextView tvFullName, tvUsername, tvEmail, tvPhone;
     private ImageView btnBack, ivAvatar;
     private Button btnLogout;
     private LinearLayout btnOrderHistory, btnAddressManagement;
     private ProgressBar progressBar;
+    private SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_profile);
 
+        sharedPreferences = getSharedPreferences("LabeePrefs", MODE_PRIVATE);
+
         initViews();
-        initViewModel();
         setupClickListeners();
         loadUserProfile();
     }
@@ -50,15 +52,15 @@ public class UserProfileActivity extends AppCompatActivity {
         progressBar = new ProgressBar(this);
     }
 
-    private void initViewModel() {
-        authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
-    }
-
     private void setupClickListeners() {
         btnBack.setOnClickListener(v -> finish());
 
         btnLogout.setOnClickListener(v -> {
-            authViewModel.logout();
+            // Clear user session
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.clear();
+            editor.apply();
+
             Toast.makeText(this, "Đăng xuất thành công", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(this, LoginActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -78,25 +80,23 @@ public class UserProfileActivity extends AppCompatActivity {
     }
 
     private void loadUserProfile() {
-        authViewModel.getProfile().observe(this, response -> {
-            if (response != null && response.isSuccess() && response.getData() != null) {
-                com.example.lazabee.data.model.user.UserProfileResponse user = response.getData();
+        int userId = sharedPreferences.getInt("userId", -1);
+        if (userId == -1) {
+            Toast.makeText(this, "Không tìm thấy thông tin người dùng", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
 
-                // Display user info
-                tvFullName.setText(user.getFullName() != null ? user.getFullName() : "Người dùng");
-                tvUsername.setText("@" + (user.getEmail() != null ? user.getEmail().split("@")[0] : "username"));
-                tvEmail.setText(user.getEmail() != null ? user.getEmail() : "N/A");
-                tvPhone.setText(user.getPhoneNumber() != null ? user.getPhoneNumber() : "Chưa cập nhật");
+        User user = AppDatabase.getInstance(this).labeeDao().getUserById(userId);
 
-                android.util.Log.d("UserProfileActivity", "Profile loaded - Email: " + user.getEmail());
-
-            } else {
-                String errorMsg = (response != null && response.getMessage() != null)
-                        ? response.getMessage()
-                        : "Không thể tải thông tin người dùng";
-                android.util.Log.e("UserProfileActivity", "Load profile failed: " + errorMsg);
-                Toast.makeText(this, errorMsg, Toast.LENGTH_SHORT).show();
-            }
-        });
+        if (user != null) {
+            // Display user info
+            tvFullName.setText(user.fullName != null ? user.fullName : "Người dùng");
+            tvUsername.setText("@" + (user.email != null ? user.email.split("@")[0] : "username"));
+            tvEmail.setText(user.email != null ? user.email : "N/A");
+            tvPhone.setText(user.phone != null ? user.phone : "Chưa cập nhật");
+        } else {
+            Toast.makeText(this, "Không thể tải thông tin người dùng", Toast.LENGTH_SHORT).show();
+        }
     }
 }
