@@ -103,6 +103,9 @@ public interface LabeeDao {
         @Query("UPDATE orders SET status = 'Cancelled' WHERE id = :orderId")
         void cancelOrder(int orderId);
 
+        @Query("UPDATE orders SET status = :status WHERE id = :orderId")
+        void updateOrderStatus(int orderId, String status);
+
         // Address
         @Query("SELECT * FROM addresses WHERE userId = :userId")
         List<Address> getAddresses(int userId);

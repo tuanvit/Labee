@@ -102,7 +102,7 @@
                     android:text="Đang xử lý"
                     android:textSize="14sp"
                     android:textStyle="bold"
-                    android:textColor="#FF9800"
+                    android:textColor="@color/colorPrimary"
                     android:background="@drawable/count_bg"
                     android:paddingHorizontal="12dp"
                     android:paddingVertical="4dp" />
@@ -320,7 +320,7 @@
                     android:text="0đ"
                     android:textSize="18sp"
                     android:textStyle="bold"
-                    android:textColor="#FF6B00" />
+                    android:textColor="@color/colorPrimary" />
 
             </LinearLayout>
 
@@ -344,9 +344,23 @@
             android:text="Hủy đơn hàng"
             android:textSize="16sp"
             android:textStyle="bold"
-            android:textColor="@android:color/white"
-            android:background="@drawable/delete_button_background"
+            android:textColor="#F44336"
+            android:background="@drawable/bg_button_outline_red"
+            app:backgroundTint="@null"
             android:layout_margin="16dp"
+            android:visibility="gone" />
+
+        <!-- Simulate Delivery Button (For Testing) -->
+        <Button
+            android:id="@+id/btnSimulateDelivery"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Mô phỏng giao hàng (Test)"
+            android:textSize="14sp"
+            android:textColor="@color/colorPrimary"
+            android:background="@android:color/transparent"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginBottom="16dp"
             android:visibility="gone" />
 
         <ProgressBar

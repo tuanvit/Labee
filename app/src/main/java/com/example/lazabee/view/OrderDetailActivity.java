@@ -22,7 +22,7 @@ public class OrderDetailActivity extends AppCompatActivity {
     private RecyclerView rvOrderItems;
     private TextView tvPaymentMethod, tvOrderNote;
     private TextView tvSubtotal, tvShipping, tvTotal;
-    private Button btnCancelOrder;
+    private Button btnCancelOrder, btnSimulateDelivery;
     private ProgressBar progressBar;
 
     private OrderItemAdapter orderItemAdapter;
@@ -67,6 +67,7 @@ public class OrderDetailActivity extends AppCompatActivity {
         tvShipping = findViewById(R.id.tvShippingFee);
         tvTotal = findViewById(R.id.tvTotalAmount);
         btnCancelOrder = findViewById(R.id.btnCancelOrder);
+        btnSimulateDelivery = findViewById(R.id.btnSimulateDelivery);
         progressBar = findViewById(R.id.progressBar);
 
         btnBack.setOnClickListener(v -> finish());
@@ -98,6 +99,16 @@ public class OrderDetailActivity extends AppCompatActivity {
         tvOrderStatus.setText(order.status);
         tvOrderDate.setText(order.date);
 
+        // Status Color Logic
+        if ("Pending".equals(order.status)) {
+            tvOrderStatus.setTextColor(getResources().getColor(R.color.colorPrimary));
+            tvOrderStatus.setBackgroundResource(R.drawable.count_bg); // You might want a blue tinted bg here
+        } else if ("Completed".equals(order.status)) {
+            tvOrderStatus.setTextColor(getResources().getColor(android.R.color.holo_green_dark));
+        } else if ("Cancelled".equals(order.status)) {
+            tvOrderStatus.setTextColor(getResources().getColor(android.R.color.holo_red_dark));
+        }
+
         // Address - Hardcoded for now as we don't store address in Order table yet
         tvShippingAddress.setText("Địa chỉ mặc định");
         tvPhoneNumber.setText("0901234567");
@@ -125,9 +136,26 @@ public class OrderDetailActivity extends AppCompatActivity {
         if ("Pending".equals(order.status)) {
             btnCancelOrder.setVisibility(View.VISIBLE);
             btnCancelOrder.setOnClickListener(v -> cancelOrder(order.id));
+            
+            // Show Simulate Delivery button for testing
+            btnSimulateDelivery.setVisibility(View.VISIBLE);
+            btnSimulateDelivery.setOnClickListener(v -> simulateDelivery(order.id));
         } else {
             btnCancelOrder.setVisibility(View.GONE);
+            btnSimulateDelivery.setVisibility(View.GONE);
         }
+    }
+
+    private void simulateDelivery(int orderId) {
+        progressBar.setVisibility(View.VISIBLE);
+        
+        // Simulate a delay then update status
+        new android.os.Handler().postDelayed(() -> {
+            AppDatabase.getInstance(this).labeeDao().updateOrderStatus(orderId, "Completed");
+            progressBar.setVisibility(View.GONE);
+            Toast.makeText(this, "Đơn hàng đã được giao thành công (Mô phỏng)", Toast.LENGTH_SHORT).show();
+            loadOrderDetail(orderId);
+        }, 1500);
     }
 
     private void cancelOrder(int orderId) {
