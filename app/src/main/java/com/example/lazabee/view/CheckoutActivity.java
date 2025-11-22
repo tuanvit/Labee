@@ -35,6 +35,7 @@ public class CheckoutActivity extends AppCompatActivity {
 
     private CheckoutItemAdapter checkoutAdapter;
     private List<CartItemDetail> cartItems = new ArrayList<>();
+    private com.example.lazabee.model.Address currentAddress;
 
     private double subtotal = 0;
     private double shippingFee = 30000; // Fixed 30k
@@ -120,10 +121,12 @@ public class CheckoutActivity extends AppCompatActivity {
                 defaultAddress = addresses.get(0);
             }
 
+            currentAddress = defaultAddress;
             tvShippingAddress.setText(defaultAddress.name + " (" + defaultAddress.phone + ")");
             tvAddressDetails.setText(defaultAddress.address);
             btnPlaceOrder.setEnabled(true);
         } else {
+            currentAddress = null;
             tvShippingAddress.setText("Chưa có địa chỉ");
             tvAddressDetails.setText("Vui lòng thêm địa chỉ giao hàng");
             btnPlaceOrder.setEnabled(false);
@@ -178,6 +181,29 @@ public class CheckoutActivity extends AppCompatActivity {
         order.totalPrice = (int) (subtotal + shippingFee);
         order.date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(new Date());
         order.status = "Pending";
+        
+        if (currentAddress != null) {
+            order.address = currentAddress.address;
+            order.phoneNumber = currentAddress.phone;
+        } else {
+            order.address = "N/A";
+            order.phoneNumber = "N/A";
+        }
+        
+        order.note = etOrderNote.getText().toString();
+        
+        int selectedPaymentId = rgPaymentMethod.getCheckedRadioButtonId();
+        if (selectedPaymentId == R.id.rbCOD) {
+            order.paymentMethod = "COD";
+        } else if (selectedPaymentId == R.id.rbBankTransfer) {
+            order.paymentMethod = "Bank Transfer";
+        } else if (selectedPaymentId == R.id.rbCreditCard) {
+            order.paymentMethod = "Credit Card";
+        } else if (selectedPaymentId == R.id.rbEWallet) {
+            order.paymentMethod = "E-Wallet";
+        } else {
+            order.paymentMethod = "Unknown";
+        }
 
         AppDatabase db = AppDatabase.getInstance(this);
         long orderId = db.labeeDao().insertOrder(order);

@@ -11,4 +11,8 @@ public class Order {
     public int totalPrice;
     public String date;
     public String status; // "Pending", "Completed"
+    public String address;
+    public String phoneNumber;
+    public String paymentMethod;
+    public String note;
 }
