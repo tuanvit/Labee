@@ -129,7 +129,19 @@ public class ProductDetailActivity extends AppCompatActivity {
         if (tvRating != null)
             tvRating.setVisibility(View.GONE);
 
-        tvDescription.setText(product.description != null ? product.description : "Không có mô tả");
+        if (product.stock <= 0) {
+            tvDescription.setText("HẾT HÀNG\n\n" + (product.description != null ? product.description : ""));
+            btnAddToCart.setEnabled(false);
+            btnBuyNow.setEnabled(false);
+            btnAddToCart.setText("Hết hàng");
+            btnBuyNow.setText("Hết hàng");
+            btnAddToCart.setBackgroundColor(ContextCompat.getColor(this, android.R.color.darker_gray));
+            btnBuyNow.setBackgroundColor(ContextCompat.getColor(this, android.R.color.darker_gray));
+        } else {
+            tvDescription.setText("Còn lại: " + product.stock + "\n\n" + (product.description != null ? product.description : ""));
+            btnAddToCart.setEnabled(true);
+            btnBuyNow.setEnabled(true);
+        }
 
         // Load image from Drawable
         int resId = 0;
