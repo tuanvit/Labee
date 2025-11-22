@@ -38,8 +38,7 @@ public class HomeActivity extends AppCompatActivity {
     private LinearLayout btnHome, btnCart, btnOrders, btnProfile;
     
     private ViewPager2 viewPagerBanner;
-    private EditText etVoucherCode;
-    private Button btnApplyVoucher;
+    private LinearLayout btnVoucherWallet;
     private Handler bannerHandler = new Handler(Looper.getMainLooper());
     private Runnable bannerRunnable = new Runnable() {
         @Override
@@ -96,8 +95,7 @@ public class HomeActivity extends AppCompatActivity {
         btnSearch = findViewById(R.id.btnSearch);
         
         viewPagerBanner = findViewById(R.id.viewPagerBanner);
-        etVoucherCode = findViewById(R.id.etVoucherCode);
-        btnApplyVoucher = findViewById(R.id.btnApplyVoucher);
+        btnVoucherWallet = findViewById(R.id.btnVoucherWallet);
 
         // Bottom navigation
         btnHome = findViewById(R.id.btnHome);
@@ -108,9 +106,9 @@ public class HomeActivity extends AppCompatActivity {
     
     private void setupBanner() {
         List<Integer> bannerImages = Arrays.asList(
-            R.drawable.banner_sale,
-            R.drawable.big_sale_background,
-            R.drawable.img_ps // Placeholder
+            R.drawable.banner_xmas2,
+            R.drawable.banner_xmas3,
+            R.drawable.banner_xmas4
         );
         
         BannerAdapter bannerAdapter = new BannerAdapter(this, bannerImages);
@@ -128,14 +126,9 @@ public class HomeActivity extends AppCompatActivity {
     }
     
     private void setupVoucher() {
-        btnApplyVoucher.setOnClickListener(v -> {
-            String code = etVoucherCode.getText().toString().trim();
-            if (code.isEmpty()) {
-                Toast.makeText(this, "Vui lòng nhập mã giảm giá", Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(this, "Đã áp dụng mã: " + code, Toast.LENGTH_SHORT).show();
-                // Logic to apply voucher would go here
-            }
+        btnVoucherWallet.setOnClickListener(v -> {
+            Intent intent = new Intent(this, VoucherListActivity.class);
+            startActivity(intent);
         });
     }
 

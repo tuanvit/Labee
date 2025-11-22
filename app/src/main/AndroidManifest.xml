@@ -118,6 +118,11 @@
             android:exported="false"
             android:theme="@style/Theme.Lazabee.NoActionBar" />
 
+        <activity
+            android:name=".view.VoucherListActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Lazabee.NoActionBar" />
+
         <!-- Admin Activities -->
         <activity
             android:name=".view.AdminHomeActivity"

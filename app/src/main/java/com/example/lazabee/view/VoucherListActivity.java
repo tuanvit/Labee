@@ -45,7 +45,8 @@ public class VoucherListActivity extends AppCompatActivity {
 
     private void loadVouchers() {
         // Dummy data
-        voucherList.add(new Voucher("1", "FREESHIP", "Miễn phí vận chuyển", "Cho đơn hàng từ 0đ", 15000, 100, "31/12/2025"));
+        voucherList.add(
+                new Voucher("1", "FREESHIP", "Miễn phí vận chuyển", "Cho đơn hàng từ 0đ", 15000, 100, "31/12/2025"));
         voucherList.add(new Voucher("2", "GIAM50K", "Giảm 50k", "Cho đơn hàng từ 200k", 50000, 50, "31/12/2025"));
         voucherList.add(new Voucher("3", "GIAM100K", "Giảm 100k", "Cho đơn hàng từ 500k", 100000, 20, "31/12/2025"));
         voucherList.add(new Voucher("4", "LABEE20", "Giảm 20%", "Tối đa 50k", 50000, 200, "31/12/2025"));
