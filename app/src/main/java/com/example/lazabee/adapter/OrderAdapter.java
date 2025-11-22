@@ -53,7 +53,8 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
         DecimalFormat formatter = new DecimalFormat("#,###");
         holder.tvTotalAmount.setText(formatter.format(order.totalPrice) + "đ");
 
-        // holder.tvItemCount.setText(order.getItems() != null ? order.getItems().size() + " items" : "0 items");
+        // holder.tvItemCount.setText(order.getItems() != null ? order.getItems().size()
+        // + " items" : "0 items");
         holder.tvItemCount.setVisibility(View.GONE); // Hide item count for now as we don't join tables here
 
         holder.itemView.setOnClickListener(v -> {

@@ -46,7 +46,8 @@ public class OrderHistoryActivity extends AppCompatActivity {
 
     private void setupRecyclerView() {
         orderAdapter = new OrderAdapter(this, orderList, order -> {
-            // Intent intent = new Intent(OrderHistoryActivity.this, OrderDetailActivity.class);
+            // Intent intent = new Intent(OrderHistoryActivity.this,
+            // OrderDetailActivity.class);
             // intent.putExtra("orderId", order.id);
             // startActivity(intent);
             Toast.makeText(this, "Chi tiết đơn hàng: " + order.id, Toast.LENGTH_SHORT).show();
@@ -59,7 +60,7 @@ public class OrderHistoryActivity extends AppCompatActivity {
 
     private void loadOrders() {
         progressBar.setVisibility(View.VISIBLE);
-        
+
         int userId = getUserId();
         if (userId == -1) {
             finish();
@@ -68,7 +69,7 @@ public class OrderHistoryActivity extends AppCompatActivity {
 
         // Direct Database Call (MVC)
         List<Order> orders = AppDatabase.getInstance(this).labeeDao().getOrders(userId);
-        
+
         progressBar.setVisibility(View.GONE);
 
         if (orders != null && !orders.isEmpty()) {
@@ -79,7 +80,7 @@ public class OrderHistoryActivity extends AppCompatActivity {
             Toast.makeText(this, "Bạn chưa có đơn hàng nào", Toast.LENGTH_SHORT).show();
         }
     }
-    
+
     private int getUserId() {
         SharedPreferences prefs = getSharedPreferences("LabeePrefs", MODE_PRIVATE);
         return prefs.getInt("userId", -1);
