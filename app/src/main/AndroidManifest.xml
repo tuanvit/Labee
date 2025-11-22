@@ -143,6 +143,11 @@
             android:name=".view.AdminOrderDetailActivity"
             android:exported="false"
             android:theme="@style/Theme.Lazabee.NoActionBar" />
+
+        <activity
+            android:name=".view.AdminRevenueActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Lazabee.NoActionBar" />
     </application>
 
 </manifest>

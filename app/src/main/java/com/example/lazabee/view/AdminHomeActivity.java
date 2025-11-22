@@ -11,7 +11,7 @@ import com.example.lazabee.R;
 
 public class AdminHomeActivity extends AppCompatActivity {
 
-    private Button btnManageProducts, btnManageOrders, btnLogout;
+    private Button btnManageProducts, btnManageOrders, btnRevenueStats, btnLogout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,6 +20,7 @@ public class AdminHomeActivity extends AppCompatActivity {
 
         btnManageProducts = findViewById(R.id.btnManageProducts);
         btnManageOrders = findViewById(R.id.btnManageOrders);
+        btnRevenueStats = findViewById(R.id.btnRevenueStats);
         btnLogout = findViewById(R.id.btnLogout);
 
         btnManageProducts.setOnClickListener(v -> {
@@ -28,6 +29,10 @@ public class AdminHomeActivity extends AppCompatActivity {
 
         btnManageOrders.setOnClickListener(v -> {
             startActivity(new Intent(this, AdminOrderListActivity.class));
+        });
+
+        btnRevenueStats.setOnClickListener(v -> {
+            startActivity(new Intent(this, AdminRevenueActivity.class));
         });
 
         btnLogout.setOnClickListener(v -> {
