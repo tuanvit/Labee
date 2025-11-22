@@ -190,41 +190,40 @@
                 android:paddingHorizontal="16dp"
                 android:paddingBottom="8dp">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Khuyến mãi &amp; Voucher"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    android:textColor="@android:color/black"
-                    android:layout_marginBottom="8dp"/>
-
                 <LinearLayout
+                    android:id="@+id/btnVoucherWallet"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:weightSum="10">
+                    android:background="@drawable/bg_button_outline_red"
+                    android:padding="12dp"
+                    android:gravity="center_vertical"
+                    android:clickable="true"
+                    android:focusable="true">
 
-                    <EditText
-                        android:id="@+id/etVoucherCode"
-                        android:layout_width="0dp"
-                        android:layout_height="48dp"
-                        android:layout_weight="7"
-                        android:background="@drawable/bg_edittext"
-                        android:hint="Nhập mã giảm giá"
-                        android:paddingHorizontal="12dp"
-                        android:textSize="14sp"
-                        android:layout_marginEnd="8dp"/>
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/ic_inventory"
+                        app:tint="#FF5722"/>
 
-                    <Button
-                        android:id="@+id/btnApplyVoucher"
+                    <TextView
                         android:layout_width="0dp"
-                        android:layout_height="48dp"
-                        android:layout_weight="3"
-                        android:text="Áp dụng"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Kho Voucher &amp; Khuyến Mãi"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:textColor="#FF5722"
+                        android:layout_marginStart="12dp"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Xem thêm >"
                         android:textSize="12sp"
-                        android:backgroundTint="@color/colorPrimary"
-                        android:textColor="@android:color/white"/>
+                        android:textColor="#757575"/>
+
                 </LinearLayout>
                 
                 <!-- Fake Sale Banner/Text -->
