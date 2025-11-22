@@ -217,6 +217,9 @@ public class CheckoutActivity extends AppCompatActivity {
             orderItem.quantity = cartItem.quantity;
             orderItem.price = cartItem.price;
             orderItems.add(orderItem);
+
+            // Decrease stock
+            db.labeeDao().decreaseStock(cartItem.productId, cartItem.quantity);
         }
         db.labeeDao().insertOrderItems(orderItems);
 

@@ -210,6 +210,11 @@ public class ProductDetailActivity extends AppCompatActivity {
         if (currentProduct == null)
             return;
 
+        if (currentProduct.stock < quantity) {
+            Toast.makeText(this, "Sản phẩm không đủ số lượng tồn kho", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         int userId = getUserId();
         if (userId == -1) {
             Toast.makeText(this, "Vui lòng đăng nhập lại", Toast.LENGTH_SHORT).show();
@@ -222,6 +227,10 @@ public class ProductDetailActivity extends AppCompatActivity {
         CartItem existingItem = db.labeeDao().getCartItem(userId, productId);
 
         if (existingItem != null) {
+            if (existingItem.quantity + quantity > currentProduct.stock) {
+                Toast.makeText(this, "Tổng số lượng trong giỏ hàng vượt quá tồn kho", Toast.LENGTH_SHORT).show();
+                return;
+            }
             existingItem.quantity += quantity;
             db.labeeDao().updateCartItem(existingItem);
         } else {
