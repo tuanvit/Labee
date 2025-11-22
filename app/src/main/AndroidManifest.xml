@@ -117,6 +117,32 @@
             android:name=".view.AddAddressActivity"
             android:exported="false"
             android:theme="@style/Theme.Lazabee.NoActionBar" />
+
+        <!-- Admin Activities -->
+        <activity
+            android:name=".view.AdminHomeActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Lazabee.NoActionBar" />
+
+        <activity
+            android:name=".view.AdminProductListActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Lazabee.NoActionBar" />
+
+        <activity
+            android:name=".view.AdminProductEditActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Lazabee.NoActionBar" />
+
+        <activity
+            android:name=".view.AdminOrderListActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Lazabee.NoActionBar" />
+
+        <activity
+            android:name=".view.AdminOrderDetailActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Lazabee.NoActionBar" />
     </application>
 
 </manifest>
