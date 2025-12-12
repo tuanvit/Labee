@@ -44,6 +44,7 @@ public class OrderHistoryActivity extends AppCompatActivity {
         btnBack.setOnClickListener(v -> finish());
     }
 
+    // Du lieu duoc dua vao orderAdapter roi hien len RecyclerView
     private void setupRecyclerView() {
         orderAdapter = new OrderAdapter(this, orderList, order -> {
             Intent intent = new Intent(OrderHistoryActivity.this, OrderDetailActivity.class);
@@ -65,7 +66,7 @@ public class OrderHistoryActivity extends AppCompatActivity {
             return;
         }
 
-        // Direct Database Call (MVC)
+        // Direct Database Call (MVC) lay danh sach don hang tu db
         List<Order> orders = AppDatabase.getInstance(this).labeeDao().getOrders(userId);
 
         progressBar.setVisibility(View.GONE);
