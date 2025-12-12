@@ -26,6 +26,7 @@ public class VoucherAdapter extends RecyclerView.Adapter<VoucherAdapter.VoucherV
         this.voucherList = voucherList;
     }
 
+    // Khởi tạoo layout item và tạo VoucherViewHolder
     @NonNull
     @Override
     public VoucherViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -33,6 +34,7 @@ public class VoucherAdapter extends RecyclerView.Adapter<VoucherAdapter.VoucherV
         return new VoucherViewHolder(view);
     }
 
+    // gắn dữ liệu lên view
     @Override
     public void onBindViewHolder(@NonNull VoucherViewHolder holder, int position) {
         Voucher voucher = voucherList.get(position);
