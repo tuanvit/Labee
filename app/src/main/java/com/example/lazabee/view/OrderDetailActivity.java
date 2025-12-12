@@ -94,6 +94,7 @@ public class OrderDetailActivity extends AppCompatActivity {
         }
     }
 
+    // Hiển thị chi tiết đơn hàng
     private void displayOrderDetail(Order order, List<OrderItemDetail> items) {
         tvOrderId.setText("Order #" + order.id);
         tvOrderStatus.setText(order.status);
@@ -136,7 +137,7 @@ public class OrderDetailActivity extends AppCompatActivity {
         if ("Pending".equals(order.status)) {
             btnCancelOrder.setVisibility(View.VISIBLE);
             btnCancelOrder.setOnClickListener(v -> cancelOrder(order.id));
-            
+
             // Show Simulate Delivery button for testing
             btnSimulateDelivery.setVisibility(View.VISIBLE);
             btnSimulateDelivery.setOnClickListener(v -> simulateDelivery(order.id));
@@ -146,9 +147,10 @@ public class OrderDetailActivity extends AppCompatActivity {
         }
     }
 
+    // Gia lap Giao hàng
     private void simulateDelivery(int orderId) {
         progressBar.setVisibility(View.VISIBLE);
-        
+
         // Simulate a delay then update status
         new android.os.Handler().postDelayed(() -> {
             AppDatabase.getInstance(this).labeeDao().updateOrderStatus(orderId, "Completed");
@@ -158,6 +160,7 @@ public class OrderDetailActivity extends AppCompatActivity {
         }, 1500);
     }
 
+    // Hủy đơn hàng
     private void cancelOrder(int orderId) {
         progressBar.setVisibility(View.VISIBLE);
         btnCancelOrder.setEnabled(false);
