@@ -5,16 +5,16 @@
 <h1 align="center">🐝 Labee - E-Commerce Android App</h1>
 
 <p align="center">
-  <strong>Ứng dụng thương mại điện tử Android với kiến trúc MVC và Room Database</strong>
+  <strong>A full-featured E-commerce Android application built with MVC architecture and Room Database</strong>
 </p>
 
 <p align="center">
-  <a href="#features">Features</a> •
-  <a href="#screenshots">Screenshots</a> •
-  <a href="#installation">Installation</a> •
-  <a href="#architecture">Architecture</a> •
-  <a href="#contributing">Contributing</a> •
-  <a href="#license">License</a>
+  <a href="#-features">Features</a> •
+  <a href="#-screenshots">Screenshots</a> •
+  <a href="#-installation">Installation</a> •
+  <a href="#-architecture">Architecture</a> •
+  <a href="#-contributing">Contributing</a> •
+  <a href="#-license">License</a>
 </p>
 
 <p align="center">
@@ -29,177 +29,179 @@
   <img src="https://img.shields.io/badge/Database-Room%20(SQLite)-green?style=flat-square" alt="Database">
   <img src="https://img.shields.io/badge/License-MIT-yellow?style=flat-square" alt="License">
   <img src="https://img.shields.io/badge/Version-1.0.0-red?style=flat-square" alt="Version">
+  <img src="https://img.shields.io/badge/Build-Passing-brightgreen?style=flat-square" alt="Build">
+  <img src="https://img.shields.io/badge/PRs-Welcome-brightgreen?style=flat-square" alt="PRs Welcome">
 </p>
 
 ---
 
-## 📋 Mục Lục
+## 📋 Table of Contents
 
-- [Giới Thiệu](#-giới-thiệu)
-- [Tính Năng](#-tính-năng)
-- [Công Nghệ Sử Dụng](#-công-nghệ-sử-dụng)
-- [Cấu Trúc Dự Án](#-cấu-trúc-dự-án)
-- [Cơ Sở Dữ Liệu](#-cơ-sở-dữ-liệu)
-- [Cài Đặt](#-cài-đặt)
-- [Hướng Dẫn Sử Dụng](#-hướng-dẫn-sử-dụng)
+- [Overview](#-overview)
+- [Features](#-features)
+- [Tech Stack](#-tech-stack)
+- [Project Structure](#-project-structure)
+- [Database Schema](#-database-schema)
+- [Installation](#-installation)
+- [Usage Guide](#-usage-guide)
 - [API Documentation](#-api-documentation)
 - [Contributing](#-contributing)
 - [Code of Conduct](#-code-of-conduct)
 - [License](#-license)
-- [Tác Giả](#-tác-giả)
+- [Contributors](#-contributors)
 
 ---
 
-## 🎯 Giới Thiệu
+## 🎯 Overview
 
-**Labee** là ứng dụng thương mại điện tử Android được phát triển bằng Java, cung cấp trải nghiệm mua sắm trực tuyến hoàn chỉnh cho người dùng và công cụ quản lý hiệu quả cho quản trị viên.
+**Labee** is a comprehensive e-commerce Android application developed in Java, providing a complete online shopping experience for customers and efficient management tools for administrators.
 
-### Đối tượng sử dụng:
-- **👤 Khách hàng (Customer)**: Tìm kiếm, mua sắm sản phẩm, quản lý đơn hàng
-- **👨‍💼 Quản trị viên (Admin)**: Quản lý sản phẩm, đơn hàng, thống kê doanh thu
-
----
-
-## ✨ Tính Năng
-
-### 🔐 Xác Thực (Authentication)
-
-| Tính năng | Mô tả | Activity |
-|-----------|-------|----------|
-| Đăng nhập | Email/Password với phân quyền Admin/Customer | `LoginActivity` |
-| Đăng ký | Tạo tài khoản mới | `RegisterActivity` |
-| Quên mật khẩu | Gửi yêu cầu reset password | `ForgotPasswordActivity` |
-| Xác thực OTP | Xác nhận mã OTP qua email | `VerifyCodeActivity` |
-| Đặt lại mật khẩu | Tạo mật khẩu mới | `CreateNewPasswordActivity` |
-
-### 🛒 Người Dùng (Customer)
-
-<details>
-<summary><b>🏠 Trang Chủ & Sản Phẩm</b></summary>
-
-| Tính năng | Mô tả |
-|-----------|-------|
-| Banner quảng cáo | Auto-scroll banner (3s/lần) |
-| Danh mục sản phẩm | Electronics, Fashion, Home, Sports, Beauty |
-| Tìm kiếm | Tìm theo tên sản phẩm |
-| Chi tiết sản phẩm | Hình ảnh, giá, mô tả, tồn kho |
-| Xem tất cả | Grid view toàn bộ sản phẩm |
-
-</details>
-
-<details>
-<summary><b>🛒 Giỏ Hàng & Thanh Toán</b></summary>
-
-| Tính năng | Mô tả |
-|-----------|-------|
-| Thêm vào giỏ | Thêm sản phẩm với số lượng |
-| Quản lý giỏ hàng | Tăng/giảm/xóa sản phẩm |
-| Checkout | Chọn địa chỉ, phương thức thanh toán |
-| Đặt hàng | Xác nhận và tạo đơn hàng |
-
-</details>
-
-<details>
-<summary><b>📦 Quản Lý Đơn Hàng</b></summary>
-
-| Tính năng | Mô tả |
-|-----------|-------|
-| Lịch sử đơn hàng | Xem danh sách đơn đã đặt |
-| Chi tiết đơn hàng | Thông tin sản phẩm, địa chỉ, trạng thái |
-| Hủy đơn hàng | Hủy đơn ở trạng thái Pending |
-
-</details>
-
-<details>
-<summary><b>📍 Quản Lý Địa Chỉ</b></summary>
-
-| Tính năng | Mô tả |
-|-----------|-------|
-| Danh sách địa chỉ | Xem các địa chỉ đã lưu |
-| CRUD địa chỉ | Thêm/Sửa/Xóa địa chỉ |
-| Địa chỉ mặc định | Đặt địa chỉ mặc định |
-
-</details>
-
-<details>
-<summary><b>🎫 Voucher & Khuyến Mãi</b></summary>
-
-| Tính năng | Mô tả |
-|-----------|-------|
-| Danh sách voucher | Xem mã giảm giá có sẵn |
-| Thu thập voucher | Lưu mã vào ví voucher |
-
-</details>
-
-### 👨‍💼 Quản Trị Viên (Admin)
-
-| Tính năng | Mô tả | Activity |
-|-----------|-------|----------|
-| Dashboard | Trang chủ quản trị | `AdminHomeActivity` |
-| Quản lý sản phẩm | CRUD sản phẩm | `AdminProductListActivity`, `AdminProductEditActivity` |
-| Quản lý đơn hàng | Xem và cập nhật trạng thái | `AdminOrderListActivity`, `AdminOrderDetailActivity` |
-| Thống kê doanh thu | Báo cáo doanh thu, số đơn | `AdminRevenueActivity` |
+### Target Users:
+- **👤 Customers**: Browse, search, purchase products and manage orders
+- **👨‍💼 Administrators**: Manage products, orders, and view revenue statistics
 
 ---
 
-## 🛠 Công Nghệ Sử Dụng
+## ✨ Features
 
-### Core
-| Công nghệ | Phiên bản | Mô tả |
-|-----------|-----------|-------|
-| **Java** | 11 | Ngôn ngữ lập trình chính |
-| **Android SDK** | 36 | Target SDK |
-| **Gradle** | 8.12.3 | Build system |
+### 🔐 Authentication
 
-### Android Jetpack & Libraries
-| Library | Phiên bản | Mục đích |
-|---------|-----------|----------|
-| **Room Database** | 2.6.1 | Local database (SQLite) |
+| Feature | Description | Activity |
+|---------|-------------|----------|
+| Login | Email/Password with Admin/Customer role separation | `LoginActivity` |
+| Register | Create new user account | `RegisterActivity` |
+| Forgot Password | Request password reset | `ForgotPasswordActivity` |
+| OTP Verification | Verify OTP code via email | `VerifyCodeActivity` |
+| Reset Password | Create new password | `CreateNewPasswordActivity` |
+
+### 🛒 Customer Features
+
+<details>
+<summary><b>🏠 Home & Products</b></summary>
+
+| Feature | Description |
+|---------|-------------|
+| Promotional Banner | Auto-scroll banner (3s interval) |
+| Product Categories | Electronics, Fashion, Home, Sports, Beauty |
+| Search | Search products by name |
+| Product Details | View images, price, description, stock |
+| View All | Grid view of all products |
+
+</details>
+
+<details>
+<summary><b>🛒 Cart & Checkout</b></summary>
+
+| Feature | Description |
+|---------|-------------|
+| Add to Cart | Add products with quantity |
+| Cart Management | Increase/decrease/remove items |
+| Checkout | Select address, payment method |
+| Place Order | Confirm and create order |
+
+</details>
+
+<details>
+<summary><b>📦 Order Management</b></summary>
+
+| Feature | Description |
+|---------|-------------|
+| Order History | View list of placed orders |
+| Order Details | Product info, address, status |
+| Cancel Order | Cancel orders with Pending status |
+
+</details>
+
+<details>
+<summary><b>📍 Address Management</b></summary>
+
+| Feature | Description |
+|---------|-------------|
+| Address List | View saved addresses |
+| CRUD Operations | Add/Edit/Delete addresses |
+| Default Address | Set default shipping address |
+
+</details>
+
+<details>
+<summary><b>🎫 Vouchers & Promotions</b></summary>
+
+| Feature | Description |
+|---------|-------------|
+| Voucher List | View available discount codes |
+| Collect Voucher | Save codes to voucher wallet |
+
+</details>
+
+### 👨‍💼 Admin Features
+
+| Feature | Description | Activity |
+|---------|-------------|----------|
+| Dashboard | Admin home with navigation | `AdminHomeActivity` |
+| Product Management | CRUD operations for products | `AdminProductListActivity`, `AdminProductEditActivity` |
+| Order Management | View and update order status | `AdminOrderListActivity`, `AdminOrderDetailActivity` |
+| Revenue Statistics | Revenue reports and order counts | `AdminRevenueActivity` |
+
+---
+
+## 🛠 Tech Stack
+
+### Core Technologies
+| Technology | Version | Description |
+|------------|---------|-------------|
+| **Java** | 11 | Primary programming language |
+| **Android SDK** | 36 | Target SDK version |
+| **Gradle** | 8.12.3 | Build automation system |
+
+### Libraries & Frameworks
+| Library | Version | Purpose |
+|---------|---------|---------|
+| **Room Database** | 2.6.1 | Local SQLite database |
 | **Material Design** | 1.13.0 | UI Components |
-| **RecyclerView** | 1.3.0 | Hiển thị danh sách |
+| **RecyclerView** | 1.3.0 | List display |
 | **ViewPager2** | 1.1.0 | Banner slider |
-| **CardView** | 1.0.0 | Card UI |
-| **Glide** | 4.15.1 | Image loading |
-| **Gson** | 2.10.1 | JSON processing |
+| **CardView** | 1.0.0 | Card UI elements |
+| **Glide** | 4.15.1 | Image loading & caching |
+| **Gson** | 2.10.1 | JSON serialization |
 | **Google Play Services Auth** | 20.7.0 | Google Sign-In |
 
 ---
 
-## 📁 Cấu Trúc Dự Án
+## 📁 Project Structure
 
 ```
 app/src/main/java/com/example/lazabee/
 │
 ├── 📂 adapter/                     # RecyclerView Adapters
-│   ├── AddressAdapter.java         # Adapter địa chỉ
-│   ├── CartItemAdapter.java        # Adapter giỏ hàng
-│   ├── CheckoutItemAdapter.java    # Adapter checkout
-│   ├── OrderAdapter.java           # Adapter đơn hàng
-│   ├── OrderItemAdapter.java       # Adapter chi tiết đơn
-│   ├── ProductAdapter.java         # Adapter sản phẩm
-│   └── VoucherAdapter.java         # Adapter voucher
+│   ├── AddressAdapter.java         # Address list adapter
+│   ├── CartItemAdapter.java        # Cart items adapter
+│   ├── CheckoutItemAdapter.java    # Checkout items adapter
+│   ├── OrderAdapter.java           # Orders list adapter
+│   ├── OrderItemAdapter.java       # Order items adapter
+│   ├── ProductAdapter.java         # Products grid adapter
+│   └── VoucherAdapter.java         # Vouchers list adapter
 │
 ├── 📂 database/                    # Room Database
 │   ├── AppDatabase.java            # Database configuration
 │   └── LabeeDao.java               # Data Access Object
 │
 ├── 📂 model/                       # Data Models (Entities)
-│   ├── User.java                   # Entity người dùng
-│   ├── Product.java                # Entity sản phẩm
-│   ├── Order.java                  # Entity đơn hàng
-│   ├── OrderItem.java              # Entity chi tiết đơn
-│   ├── OrderItemDetail.java        # POJO chi tiết đơn + tên SP
-│   ├── CartItem.java               # Entity giỏ hàng
-│   ├── CartItemDetail.java         # POJO giỏ hàng + thông tin SP
-│   ├── Address.java                # Entity địa chỉ
-│   └── Voucher.java                # Entity voucher
+│   ├── User.java                   # User entity
+│   ├── Product.java                # Product entity
+│   ├── Order.java                  # Order entity
+│   ├── OrderItem.java              # Order item entity
+│   ├── OrderItemDetail.java        # Order item with product info (POJO)
+│   ├── CartItem.java               # Cart item entity
+│   ├── CartItemDetail.java         # Cart item with product info (POJO)
+│   ├── Address.java                # Address entity
+│   └── Voucher.java                # Voucher entity
 │
 ├── 📂 utils/                       # Utilities
-│   ├── Constants.java              # Hằng số
+│   ├── Constants.java              # App constants
 │   ├── NetworkUtils.java           # Network utilities
-│   └── SharedPreferencesManager.java # Quản lý session
+│   └── SharedPreferencesManager.java # Session management
 │
-├── 📂 view/                        # Activities (UI)
+├── 📂 view/                        # Activities (UI Screens)
 │   │
 │   │── 🔐 Authentication
 │   ├── LoginActivity.java
@@ -252,7 +254,7 @@ app/src/main/res/
 │   ├── banner_*.png                # Banner images
 │   └── *_background.xml            # Shape drawables
 │
-└── 📂 values/                      # Resources values
+└── 📂 values/                      # Resource values
     ├── colors.xml
     ├── strings.xml
     └── themes.xml
@@ -260,7 +262,7 @@ app/src/main/res/
 
 ---
 
-## 🗄 Cơ Sở Dữ Liệu
+## 🗄 Database Schema
 
 ### ERD (Entity Relationship Diagram)
 
@@ -307,70 +309,97 @@ app/src/main/res/
 └─────────────┘
 ```
 
-### Bảng Dữ Liệu
+### Table Definitions
 
 <details>
-<summary><b>📊 Chi tiết các bảng</b></summary>
+<summary><b>📊 Detailed Table Schemas</b></summary>
 
-#### Users
+#### Users Table
 | Column | Type | Description |
 |--------|------|-------------|
 | id | INTEGER | Primary Key, Auto Increment |
-| email | TEXT | Unique, Email đăng nhập |
-| password | TEXT | Mật khẩu |
-| fullName | TEXT | Họ và tên |
-| phone | TEXT | Số điện thoại |
-| address | TEXT | Địa chỉ |
+| email | TEXT | Unique, Login email |
+| password | TEXT | User password |
+| fullName | TEXT | Full name |
+| phone | TEXT | Phone number |
+| address | TEXT | Address |
 | role | TEXT | "admin" / "customer" |
 
-#### Products
+#### Products Table
 | Column | Type | Description |
 |--------|------|-------------|
 | id | INTEGER | Primary Key, Auto Increment |
-| name | TEXT | Tên sản phẩm |
-| price | INTEGER | Giá (VNĐ) |
-| description | TEXT | Mô tả |
-| imageResName | TEXT | Tên file hình trong drawable |
-| category | TEXT | Danh mục |
-| stock | INTEGER | Số lượng tồn kho |
+| name | TEXT | Product name |
+| price | INTEGER | Price (VND) |
+| description | TEXT | Product description |
+| imageResName | TEXT | Drawable resource name |
+| category | TEXT | Product category |
+| stock | INTEGER | Stock quantity |
 
-#### Orders
+#### Orders Table
 | Column | Type | Description |
 |--------|------|-------------|
 | id | INTEGER | Primary Key, Auto Increment |
 | userId | INTEGER | FK → users.id |
-| totalPrice | INTEGER | Tổng tiền |
-| date | TEXT | Ngày đặt |
+| totalPrice | INTEGER | Total amount |
+| date | TEXT | Order date |
 | status | TEXT | Pending/Shipping/Completed/Cancelled |
-| address | TEXT | Địa chỉ giao |
-| phoneNumber | TEXT | SĐT nhận hàng |
+| address | TEXT | Shipping address |
+| phoneNumber | TEXT | Contact phone |
 | paymentMethod | TEXT | COD/Bank/Card/EWallet |
-| note | TEXT | Ghi chú |
+| note | TEXT | Order notes |
+
+#### Order Items Table
+| Column | Type | Description |
+|--------|------|-------------|
+| id | INTEGER | Primary Key, Auto Increment |
+| orderId | INTEGER | FK → orders.id |
+| productId | INTEGER | FK → products.id |
+| quantity | INTEGER | Item quantity |
+| price | INTEGER | Price at purchase time |
+
+#### Cart Items Table
+| Column | Type | Description |
+|--------|------|-------------|
+| id | INTEGER | Primary Key, Auto Increment |
+| userId | INTEGER | FK → users.id |
+| productId | INTEGER | FK → products.id |
+| quantity | INTEGER | Item quantity |
+
+#### Addresses Table
+| Column | Type | Description |
+|--------|------|-------------|
+| id | INTEGER | Primary Key, Auto Increment |
+| userId | INTEGER | FK → users.id |
+| name | TEXT | Recipient name |
+| phone | TEXT | Recipient phone |
+| address | TEXT | Full address |
+| isDefault | BOOLEAN | Default address flag |
 
 </details>
 
 ---
 
-## 🚀 Cài Đặt
+## 🚀 Installation
 
-### Yêu Cầu Hệ Thống
+### Prerequisites
 
-- **Android Studio**: Arctic Fox (2020.3.1) trở lên
-- **JDK**: 11 hoặc cao hơn
+- **Android Studio**: Arctic Fox (2020.3.1) or later
+- **JDK**: 11 or higher
 - **Android SDK**: API 24+ (Android 7.0 Nougat)
 - **Gradle**: 8.0+
 
-### Các Bước Cài Đặt
+### Setup Instructions
 
-1. **Clone repository**
+1. **Clone the repository**
    ```bash
    git clone https://github.com/your-username/labee.git
    cd labee
    ```
 
-2. **Mở project trong Android Studio**
+2. **Open in Android Studio**
    ```
-   File → Open → Chọn thư mục project
+   File → Open → Select project folder
    ```
 
 3. **Sync Gradle**
@@ -380,10 +409,10 @@ app/src/main/res/
 
 4. **Build & Run**
    ```
-   Run → Run 'app' hoặc nhấn Shift + F10
+   Run → Run 'app' or press Shift + F10
    ```
 
-### Tài Khoản Test
+### Test Accounts
 
 | Role | Email | Password |
 |------|-------|----------|
@@ -392,121 +421,125 @@ app/src/main/res/
 
 ---
 
-## 📖 Hướng Dẫn Sử Dụng
+## 📖 Usage Guide
 
-### Khách Hàng
+### For Customers
 
-1. **Đăng ký/Đăng nhập** → Tạo tài khoản hoặc đăng nhập
-2. **Trang chủ** → Duyệt sản phẩm theo danh mục hoặc tìm kiếm
-3. **Chi tiết sản phẩm** → Xem thông tin và thêm vào giỏ
-4. **Giỏ hàng** → Kiểm tra và điều chỉnh đơn hàng
-5. **Thanh toán** → Chọn địa chỉ, phương thức thanh toán
-6. **Theo dõi đơn hàng** → Xem trạng thái trong lịch sử đơn
+1. **Register/Login** → Create account or sign in
+2. **Home Screen** → Browse products by category or search
+3. **Product Details** → View info and add to cart
+4. **Cart** → Review and adjust order
+5. **Checkout** → Select address, payment method
+6. **Track Orders** → View status in order history
 
-### Quản Trị Viên
+### For Administrators
 
-1. **Đăng nhập** với tài khoản Admin
-2. **Dashboard** → Truy cập các chức năng quản lý
-3. **Quản lý sản phẩm** → Thêm/Sửa/Xóa sản phẩm
-4. **Quản lý đơn hàng** → Cập nhật trạng thái đơn
-5. **Thống kê** → Xem báo cáo doanh thu
+1. **Login** with Admin account
+2. **Dashboard** → Access management features
+3. **Product Management** → Add/Edit/Delete products
+4. **Order Management** → Update order status
+5. **Statistics** → View revenue reports
 
 ---
 
 ## 📚 API Documentation
 
-Chi tiết API documentation có thể xem tại: [docs/API-DOCUMENTATION.md](docs/API-DOCUMENTATION.md)
+For detailed API documentation, see: [docs/API-DOCUMENTATION.md](docs/API-DOCUMENTATION.md)
 
 ### Quick Reference
 
 | Endpoint | Method | Description |
 |----------|--------|-------------|
-| `/api/v1/auth/login` | POST | Đăng nhập |
-| `/api/v1/auth/register` | POST | Đăng ký |
-| `/api/v1/products` | GET | Danh sách sản phẩm |
-| `/api/v1/cart` | GET/POST | Giỏ hàng |
-| `/api/v1/orders` | GET/POST | Đơn hàng |
+| `/api/v1/auth/login` | POST | User login |
+| `/api/v1/auth/register` | POST | User registration |
+| `/api/v1/products` | GET | Get product list |
+| `/api/v1/cart` | GET/POST | Cart operations |
+| `/api/v1/orders` | GET/POST | Order operations |
 
 ---
 
 ## 🤝 Contributing
 
-Chúng tôi hoan nghênh mọi đóng góp! Vui lòng đọc [CONTRIBUTING.md](CONTRIBUTING.md) để biết thêm chi tiết.
+We welcome contributions! Please read our contributing guidelines before submitting PRs.
 
-### Quy Trình Đóng Góp
+### How to Contribute
 
-1. **Fork** repository
-2. **Clone** fork về máy
+1. **Fork** the repository
+2. **Clone** your fork
    ```bash
    git clone https://github.com/your-username/labee.git
    ```
-3. **Tạo branch** cho feature/fix
+3. **Create a branch** for your feature
    ```bash
    git checkout -b feature/amazing-feature
    ```
-4. **Commit** changes
+4. **Commit** your changes
    ```bash
    git commit -m "feat: add amazing feature"
    ```
-5. **Push** to branch
+5. **Push** to your branch
    ```bash
    git push origin feature/amazing-feature
    ```
-6. Tạo **Pull Request**
+6. Open a **Pull Request**
 
 ### Commit Convention
 
-```
-feat:     Tính năng mới
-fix:      Sửa lỗi
-docs:     Thay đổi documentation
-style:    Format code (không ảnh hưởng logic)
-refactor: Refactor code
-test:     Thêm tests
-chore:    Maintenance tasks
-```
+We follow [Conventional Commits](https://www.conventionalcommits.org/):
+
+| Type | Description |
+|------|-------------|
+| `feat` | New feature |
+| `fix` | Bug fix |
+| `docs` | Documentation changes |
+| `style` | Code style changes (formatting, no logic change) |
+| `refactor` | Code refactoring |
+| `test` | Adding tests |
+| `chore` | Maintenance tasks |
 
 ---
 
 ## 📜 Code of Conduct
 
-### Cam Kết Của Chúng Tôi
+### Our Pledge
 
-Chúng tôi cam kết tạo ra một môi trường thân thiện, an toàn và chào đón tất cả mọi người, bất kể:
-- Kinh nghiệm
-- Giới tính, bản dạng giới và biểu hiện giới
-- Xu hướng tính dục
-- Khuyết tật
-- Ngoại hình
-- Kích thước cơ thể
-- Chủng tộc, dân tộc
-- Tuổi tác
-- Tôn giáo
-- Quốc tịch
+We are committed to providing a friendly, safe, and welcoming environment for all, regardless of:
+- Experience level
+- Gender identity and expression
+- Sexual orientation
+- Disability
+- Personal appearance
+- Body size
+- Race, ethnicity
+- Age
+- Religion
+- Nationality
 
-### Tiêu Chuẩn Hành Vi
+### Expected Behavior
 
-**✅ Hành vi được khuyến khích:**
-- Sử dụng ngôn ngữ thân thiện và hòa nhập
-- Tôn trọng các quan điểm và trải nghiệm khác nhau
-- Chấp nhận phê bình mang tính xây dựng
-- Tập trung vào những gì tốt nhất cho cộng đồng
-- Thể hiện sự đồng cảm với các thành viên khác
+**✅ Encouraged:**
+- Use welcoming and inclusive language
+- Respect differing viewpoints and experiences
+- Accept constructive criticism gracefully
+- Focus on what's best for the community
+- Show empathy towards other community members
 
-**❌ Hành vi không được chấp nhận:**
-- Ngôn ngữ hoặc hình ảnh mang tính tình dục
-- Trolling, bình luận xúc phạm hoặc tấn công cá nhân
-- Quấy rối công khai hoặc riêng tư
-- Công bố thông tin cá nhân của người khác
-- Các hành vi không phù hợp trong môi trường chuyên nghiệp
+**❌ Unacceptable:**
+- Sexualized language or imagery
+- Trolling, insulting comments, or personal attacks
+- Public or private harassment
+- Publishing others' private information
+- Other conduct inappropriate in a professional setting
 
-### Thực Thi
+### Enforcement
 
-Các trường hợp vi phạm có thể được báo cáo qua email của team. Tất cả các báo cáo sẽ được xem xét và điều tra.
+Violations may be reported to the project team. All reports will be reviewed and investigated.
 
 ---
 
 ## 📄 License
+
+This project is licensed under the MIT License.
 
 ```
 MIT License
@@ -534,16 +567,18 @@ SOFTWARE.
 
 ---
 
-## 👥 Tác Giả
+## 👥 Contributors
 
 <table>
   <tr>
     <td align="center">
       <a href="https://github.com/your-username">
-        <img src="https://via.placeholder.com/100" width="100px;" alt=""/>
+        <img src="https://via.placeholder.com/100" width="100px;" alt="Team Avatar"/>
         <br />
-        <sub><b>Team Labee</b></sub>
+        <sub><b>Labee Team</b></sub>
       </a>
+      <br />
+      <sub>Project Lead</sub>
     </td>
   </tr>
 </table>
@@ -552,17 +587,18 @@ SOFTWARE.
 
 ## 🙏 Acknowledgments
 
-- [Android Developers](https://developer.android.com/) - Documentation & Guides
-- [Material Design](https://material.io/) - Design Guidelines
-- [Glide](https://github.com/bumptech/glide) - Image Loading Library
-- [Room Database](https://developer.android.com/training/data-storage/room) - Local Database
+- [Android Developers](https://developer.android.com/) - Official documentation & guides
+- [Material Design](https://material.io/) - Design system & components
+- [Glide](https://github.com/bumptech/glide) - Image loading library
+- [Room Database](https://developer.android.com/training/data-storage/room) - SQLite abstraction
 
 ---
 
-## 📞 Liên Hệ
+## 📞 Contact
 
 - **Email**: labee.team@example.com
 - **Issues**: [GitHub Issues](https://github.com/your-username/labee/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/your-username/labee/discussions)
 
 ---
 
