@@ -73,22 +73,7 @@ public class AddAddressActivity extends AppCompatActivity {
         if (address != null) {
             etFullName.setText(address.name);
             etPhone.setText(address.phone);
-            // Split address string if possible, or just put it in street address for now
-            // Assuming address format: "Street, Ward, District, Province"
-            // But for simplicity, let's just put it in street address or try to parse
-            // Since we stored it as a single string in Address model (wait, did we?)
-            // In Address model I defined: public String address;
-            // But in AddAddressActivity UI we have separate fields.
-            // I should probably update Address model to have separate fields or combine
-            // them.
-            // For now, let's just put the whole string in Street Address and leave others
-            // empty or try to split.
 
-            // Actually, let's update Address model to match UI better or just combine.
-            // Let's assume we store the full string in 'address' field.
-            // So when editing, we might lose the separation.
-            // To fix this properly, I should update Address model to have separate fields.
-            // But to save time, I will just put the full address in etStreetAddress.
             etStreetAddress.setText(address.address);
 
             cbSetDefault.setChecked(address.isDefault);
