@@ -369,110 +369,19 @@ For detailed API documentation, see: [docs/API-DOCUMENTATION.md](docs/API-DOCUME
 
 ## 🤝 Contributing
 
-We welcome contributions! Please read our contributing guidelines before submitting PRs.
-
-### How to Contribute
-
-1. **Fork** the repository
-2. **Clone** your fork
-   ```bash
-   git clone https://github.com/your-username/labee.git
-   ```
-3. **Create a branch** for your feature
-   ```bash
-   git checkout -b feature/amazing-feature
-   ```
-4. **Commit** your changes
-   ```bash
-   git commit -m "feat: add amazing feature"
-   ```
-5. **Push** to your branch
-   ```bash
-   git push origin feature/amazing-feature
-   ```
-6. Open a **Pull Request**
-
-### Commit Convention
-
-We follow [Conventional Commits](https://www.conventionalcommits.org/):
-
-| Type | Description |
-|------|-------------|
-| `feat` | New feature |
-| `fix` | Bug fix |
-| `docs` | Documentation changes |
-| `style` | Code style changes (formatting, no logic change) |
-| `refactor` | Code refactoring |
-| `test` | Adding tests |
-| `chore` | Maintenance tasks |
+We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.md) for details on how to submit pull requests, report issues, and request features.
 
 ---
 
 ## 📜 Code of Conduct
 
-### Our Pledge
-
-We are committed to providing a friendly, safe, and welcoming environment for all, regardless of:
-- Experience level
-- Gender identity and expression
-- Sexual orientation
-- Disability
-- Personal appearance
-- Body size
-- Race, ethnicity
-- Age
-- Religion
-- Nationality
-
-### Expected Behavior
-
-**✅ Encouraged:**
-- Use welcoming and inclusive language
-- Respect differing viewpoints and experiences
-- Accept constructive criticism gracefully
-- Focus on what's best for the community
-- Show empathy towards other community members
-
-**❌ Unacceptable:**
-- Sexualized language or imagery
-- Trolling, insulting comments, or personal attacks
-- Public or private harassment
-- Publishing others' private information
-- Other conduct inappropriate in a professional setting
-
-### Enforcement
-
-Violations may be reported to the project team. All reports will be reviewed and investigated.
+Please note that this project is released with a [Code of Conduct](CODE_OF_CONDUCT.md). By participating in this project you agree to abide by its terms.
 
 ---
 
 ## 📄 License
 
-This project is licensed under the MIT License.
-
-```
-MIT License
-
-Copyright (c) 2024 Labee Team
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-```
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ---
 
